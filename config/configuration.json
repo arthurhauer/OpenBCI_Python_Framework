@@ -1,0 +1,13 @@
+{
+  "general": {
+    "maximum-parallel-jobs": -1,
+    "sampling-frequency": 500
+  },
+  "open_bci": {
+    "log_level": "TRACE",
+    "board": "CYTON_BOARD",
+    "communication": {
+      "serial_port": "COM4"
+    }
+  }
+}
