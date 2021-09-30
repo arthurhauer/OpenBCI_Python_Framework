@@ -1,7 +1,6 @@
-from brainflow import BrainFlowInputParams, BoardShim, BoardIds
+from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
 from nptyping import NDArray, Float
 
-from board_communication.log_level import LogLevel
 from config.configuration import Configuration
 
 
@@ -14,11 +13,11 @@ class OpenBCIBoard:
         self._get_board()
 
     def _set_log_level(self):
-        log_level = LogLevel[Configuration.get_open_bci_log_level()]
-        if log_level is LogLevel.INFO:
-            BoardShim.enable_board_logger()
-        elif log_level is LogLevel.TRACE:
-            BoardShim.enable_dev_board_logger()
+        log_level = Configuration.get_open_bci_log_level()
+        if log_level is None:
+            log_level = "OFF"
+        log_level = "LEVEL_" + log_level
+        BoardShim.set_log_level(LogLevels[log_level])
 
     def _get_board_type(self) -> int:
         return BoardIds[Configuration.get_open_bci_board()]
