@@ -8,6 +8,20 @@
     "board": "CYTON_BOARD",
     "communication": {
       "serial_port": "COM4"
+    },
+    "preprocessing": {
+      "filter": [
+        {
+          "type": "BANDPASS",
+          "parameters": {
+            "filter": "BUTTERWORTH",
+            "order": 2,
+            "center_freq": 51,
+            "band_width": 100
+          }
+        }
+      ]
     }
   }
+}
 }

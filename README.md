@@ -1,6 +1,6 @@
 OpenBCI - Python interface framework
 
-Configuração física: 
+#Configuração física: 
     
 Cython deve estar com chave na posição 'PC'
 
