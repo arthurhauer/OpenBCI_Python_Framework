@@ -1,27 +1,34 @@
 {
   "general": {
     "maximum-parallel-jobs": -1,
-    "sampling-frequency": 500
+    "graph": {
+      "window-size": 4
+    }
   },
   "open_bci": {
     "log_level": "TRACE",
     "board": "CYTON_BOARD",
+    "data-callback-frequency-ms": 50,
     "communication": {
       "serial_port": "COM4"
-    },
-    "preprocessing": {
-      "filter": [
-        {
-          "type": "BANDPASS",
-          "parameters": {
-            "filter": "BUTTERWORTH",
-            "order": 2,
-            "center_freq": 51,
-            "band_width": 100
-          }
-        }
-      ]
     }
-  }
-}
+  },
+  "preprocessing": [
+    {
+      "type": "DETREND",
+      "parameters": {
+        "type": "CONSTANT"
+      }
+    },
+    {
+      "type": "FILTER",
+      "parameters": {
+        "type": "BANDPASS",
+        "filter": "BUTTERWORTH",
+        "order": 2,
+        "center_freq": 51,
+        "band_width": 100
+      }
+    }
+  ]
 }

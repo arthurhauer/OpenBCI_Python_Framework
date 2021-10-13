@@ -1,10 +1,10 @@
 from threading import Thread
+from typing import List
 
 import time
 from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
-from nptyping import NDArray, Float
 
-from board_communication.models.board_data import BoardData
+from models.data.board_data import BoardData
 from config.configuration import Configuration
 
 
@@ -12,12 +12,15 @@ class OpenBCIBoard:
     def __init__(self) -> None:
         super().__init__()
         self._board = None
+        self._timestamp_channel = None
         self._eeg_channels = None
+        self._eeg_channel_names = None
         self._accelerometer_channels = None
+        self._sampling_rate = None
         self._set_log_level()
         self._get_board()
-        self._get_eeg_channels()
-        self._get_accelerometer_channels()
+        self.get_eeg_channels()
+        self.get_accelerometer_channels()
         self._run_stream_loop: bool = False
         self._data_loop_thread: Thread = Thread(target=self._stream_data_loop)
         self._data_callback = None
@@ -55,12 +58,27 @@ class OpenBCIBoard:
             self._board = BoardShim(self._get_board_type(), self._get_brain_flow_input_parameters())
         return self._board
 
-    def _get_eeg_channels(self) -> list:
+    def get_sampling_rate(self) -> int:
+        if self._sampling_rate is None:
+            self._sampling_rate = BoardShim.get_sampling_rate(self._get_board().board_id)
+        return self._sampling_rate
+
+    def get_eeg_channel_names(self) -> List[str]:
+        if self._eeg_channel_names is None:
+            self._eeg_channel_names = BoardShim.get_eeg_names(self._get_board().board_id)
+        return self._eeg_channel_names
+
+    def get_timestamp_channel(self) -> int:
+        if self._timestamp_channel is None:
+            self._timestamp_channel = BoardShim.get_timestamp_channel(self._get_board().board_id)
+        return self._timestamp_channel
+
+    def get_eeg_channels(self) -> List[int]:
         if self._eeg_channels is None:
             self._eeg_channels = BoardShim.get_eeg_channels(self._get_board().board_id)
         return self._eeg_channels
 
-    def _get_accelerometer_channels(self) -> list:
+    def get_accelerometer_channels(self) -> List[int]:
         if self._accelerometer_channels is None:
             self._accelerometer_channels = BoardShim.get_accel_channels(self._get_board().board_id)
         return self._accelerometer_channels
@@ -75,14 +93,14 @@ class OpenBCIBoard:
         time.sleep(2)
 
     def get_data(self) -> BoardData:
-        data = BoardData()
-        data.append_data(self._get_board().get_board_data(), self._get_eeg_channels(),
-                         self._get_accelerometer_channels())
-        return data
+        data = self._get_board().get_board_data()
+        wrapped = BoardData(self.get_eeg_channel_names(), data[self.get_timestamp_channel()],
+                            data[self.get_eeg_channels()], data[self.get_accelerometer_channels()])
+        return wrapped
 
     def _stream_data_loop(self):
         while self._run_stream_loop:
-            time.sleep(1)
+            time.sleep(Configuration.get_open_bci_data_callback_frequency_ms() / 1000)
             self._data_callback(self.get_data())
 
     def start_data_loop(self):

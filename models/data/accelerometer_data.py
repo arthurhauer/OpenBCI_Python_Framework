@@ -3,16 +3,23 @@ from nptyping import NDArray, Float
 
 
 class AccelerometerData:
-    def __init__(self) -> None:
+    def __init__(self, data: NDArray[Float] = None) -> None:
         super().__init__()
         self._x = None
         self._y = None
         self._z = None
+        if data is not None:
+            self.append_raw_data(data)
 
-    def append_data(self, data: NDArray[Float]):
+    def append_raw_data(self, data: NDArray[Float]):
         self.append_x_axis(data[0][:])
         self.append_y_axis(data[1][:])
         self.append_z_axis(data[2][:])
+
+    def append_data(self,data):
+        self.append_x_axis(data.get_x_axis())
+        self.append_y_axis(data.get_y_axis())
+        self.append_z_axis(data.get_z_axis())
 
     def append_x_axis(self, data: NDArray[Float]):
         if self._x is None:

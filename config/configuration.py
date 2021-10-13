@@ -28,6 +28,14 @@ class Configuration:
     def get_sampling_frequency() -> int:
         return Configuration.get_general_settings()['sampling-frequency']
 
+    @staticmethod
+    def get_graphing_settings() -> dict:
+        return Configuration.get_general_settings()['graph']
+
+    @staticmethod
+    def get_graphing_window_size() -> int:
+        return Configuration.get_graphing_settings()['window-size']
+
     # end_region General Settings
 
     # ----------------------------------------------------------------------------------------------------------------------#
@@ -54,5 +62,8 @@ class Configuration:
     def get_open_bci_communication_serial_port() -> str:
         return Configuration.get_open_bci_communication()['serial_port']
 
+    @staticmethod
+    def get_open_bci_data_callback_frequency_ms() -> int:
+        return Configuration.get_open_bci_settings()['data-callback-frequency-ms']
         # end_region Open-BCI Settings
     # ----------------------------------------------------------------------------------------------------------------------#
