@@ -1,5 +1,4 @@
 import time
-
 from application import Application
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@
     "board": "CYTON_BOARD",
     "data-callback-frequency-ms": 50,
     "communication": {
-      "serial_port": "COM4"
+      "serial_port": "/dev/ttyUSB0"
     }
   },
   "preprocessing": [
