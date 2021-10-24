@@ -1,6 +1,7 @@
-class Detrend:
+from models.preprocessing.processor import Processor
+
+
+class Detrend(Processor):
     def __init__(self, parameters: dict) -> None:
-        super().__init__()
-        if parameters['type'] is None:
-            raise Exception('preprocessing.detrend.invalid.parameters.must.have.type')
+        super(Processor).__init__(parameters)
         

@@ -15,12 +15,6 @@
   },
   "preprocessing": [
     {
-      "type": "DETREND",
-      "parameters": {
-        "type": "CONSTANT"
-      }
-    },
-    {
       "type": "FILTER",
       "parameters": {
         "type": "BANDPASS",

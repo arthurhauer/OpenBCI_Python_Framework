@@ -6,6 +6,7 @@ from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
 
 from models.data.board_data import BoardData
 from config.configuration import Configuration
+from preprocessing.preprocessing import PreProcessing
 
 
 class OpenBCIBoard:
@@ -24,6 +25,7 @@ class OpenBCIBoard:
         self._run_stream_loop: bool = False
         self._data_loop_thread: Thread = Thread(target=self._stream_data_loop)
         self._data_callback = None
+        self._preprocessing = PreProcessing()
 
     def _set_log_level(self):
         log_level = Configuration.get_open_bci_log_level()
@@ -94,6 +96,7 @@ class OpenBCIBoard:
 
     def get_data(self) -> BoardData:
         data = self._get_board().get_board_data()
+        self._preprocessing.process(data)
         wrapped = BoardData(self.get_eeg_channel_names(), data[self.get_timestamp_channel()],
                             data[self.get_eeg_channels()], data[self.get_accelerometer_channels()])
         return wrapped

@@ -67,3 +67,18 @@ class Configuration:
         return Configuration.get_open_bci_settings()['data-callback-frequency-ms']
         # end_region Open-BCI Settings
     # ----------------------------------------------------------------------------------------------------------------------#
+
+    # region Pre-Processing Settings
+
+    @staticmethod
+    def get_preprocessing_settings() -> list:
+        return Configuration._config()['preprocessing']
+
+    @staticmethod
+    def get_proprocessing_setting_at_index(index:int) -> dict:
+        setting = Configuration.get_preprocessing_settings()[index]
+        setting['sampling_rate'] = Configuration.get_sampling_frequency()
+        return setting
+
+        # end_region Pre-Processing Settings
+    # ----------------------------------------------------------------------------------------------------------------------#
