@@ -1,7 +1,6 @@
-from models.preprocessing.processor import Processor
+from models.preprocessing.node import PreProcessingNode
 
 
-class Detrend(Processor):
+class Detrend(PreProcessingNode):
     def __init__(self, parameters: dict) -> None:
-        super(Processor).__init__(parameters)
-        
+        super().__init__(parameters)

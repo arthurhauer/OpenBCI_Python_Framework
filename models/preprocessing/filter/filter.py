@@ -3,10 +3,10 @@ from abc import ABC
 from brainflow import FilterTypes
 
 from config.configuration import Configuration
-from models.preprocessing.processor import Processor
+from models.preprocessing.node import PreProcessingNode
 
 
-class Filter(Processor):
+class Filter(PreProcessingNode):
     _filter: FilterTypes
     _sampling_rate: int
     _ripple: float

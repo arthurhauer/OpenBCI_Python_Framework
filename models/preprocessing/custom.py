@@ -1,7 +1,7 @@
-from models.preprocessing.processor import Processor
+from models.preprocessing.node import PreProcessingNode
 
 
-class Custom(Processor):
+class Custom(PreProcessingNode):
 
     def __init__(self,parameters:dict) -> None:
-        super().__init__()
+        super().__init__(parameters)
