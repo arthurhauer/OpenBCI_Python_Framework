@@ -12,7 +12,7 @@ class PreProcessing:
 
     @property
     def _pipeline(self):
-        if self._pipeline is None:
+        if self.__pipeline is None:
             self.__pipeline = []
             for preprocessing_node_settings in Configuration.get_preprocessing_settings():
                 self.__pipeline.append(PreProcessingNode(preprocessing_node_settings))

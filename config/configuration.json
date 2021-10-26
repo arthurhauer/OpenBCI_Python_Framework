@@ -1,5 +1,6 @@
 {
   "general": {
+    "simulated": false,
     "maximum-parallel-jobs": -1,
     "graph": {
       "window-size": 4
@@ -10,7 +11,7 @@
     "board": "CYTON_BOARD",
     "data-callback-frequency-ms": 50,
     "communication": {
-      "serial_port": "/dev/ttyUSB0"
+      "serial_port": "COM4"
     }
   },
   "preprocessing": [
@@ -20,8 +21,37 @@
         "type": "BANDPASS",
         "filter": "BUTTERWORTH",
         "order": 2,
-        "center_freq": 51,
-        "band_width": 100
+        "center-freq": 51,
+        "band-width": 100
+      }
+    },
+    {
+      "type": "FILTER",
+      "parameters": {
+        "type": "BANDSTOP",
+        "filter": "BESSEL",
+        "order": 2,
+        "center-freq": 51,
+        "band-width": 100
+      }
+    },
+    {
+      "type": "FILTER",
+      "parameters": {
+        "type": "HIGHPASS",
+        "filter": "CHEBYSHEV_TYPE_1",
+        "order": 2,
+        "ripple": 2,
+        "cutoff-freq": 1
+      }
+    },
+    {
+      "type": "FILTER",
+      "parameters": {
+        "type": "LOWPASS",
+        "filter": "BUTTERWORTH",
+        "order": 2,
+        "cutoff-freq": 100
       }
     }
   ]

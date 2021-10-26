@@ -25,6 +25,10 @@ class Configuration:
         return Configuration.get_general_settings()['maximum-parallel-jobs']
 
     @staticmethod
+    def set_sampling_frequency(sampling_frequency: int):
+        Configuration.get_general_settings()['sampling-frequency'] = sampling_frequency
+
+    @staticmethod
     def get_sampling_frequency() -> int:
         return Configuration.get_general_settings()['sampling-frequency']
 
@@ -66,6 +70,7 @@ class Configuration:
     def get_open_bci_data_callback_frequency_ms() -> int:
         return Configuration.get_open_bci_settings()['data-callback-frequency-ms']
         # end_region Open-BCI Settings
+
     # ----------------------------------------------------------------------------------------------------------------------#
 
     # region Pre-Processing Settings
@@ -75,10 +80,8 @@ class Configuration:
         return Configuration._config()['preprocessing']
 
     @staticmethod
-    def get_proprocessing_setting_at_index(index:int) -> dict:
-        setting = Configuration.get_preprocessing_settings()[index]
-        setting['sampling_rate'] = Configuration.get_sampling_frequency()
-        return setting
+    def get_proprocessing_setting_at_index(index: int) -> dict:
+        return Configuration.get_preprocessing_settings()[index]
 
         # end_region Pre-Processing Settings
     # ----------------------------------------------------------------------------------------------------------------------#

@@ -63,6 +63,7 @@ class OpenBCIBoard:
     def get_sampling_rate(self) -> int:
         if self._sampling_rate is None:
             self._sampling_rate = BoardShim.get_sampling_rate(self._get_board().board_id)
+            Configuration.set_sampling_frequency(self._sampling_rate)
         return self._sampling_rate
 
     def get_eeg_channel_names(self) -> List[str]:
@@ -96,7 +97,8 @@ class OpenBCIBoard:
 
     def get_data(self) -> BoardData:
         data = self._get_board().get_board_data()
-        self._preprocessing.process(data)
+        for count,channel in enumerate(self.get_eeg_channels()):
+            self._preprocessing.process(data[channel])
         wrapped = BoardData(self.get_eeg_channel_names(), data[self.get_timestamp_channel()],
                             data[self.get_eeg_channels()], data[self.get_accelerometer_channels()])
         return wrapped

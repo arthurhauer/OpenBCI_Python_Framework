@@ -4,9 +4,10 @@ import abc
 class Processor:
     _action = lambda data: None
     _type: str
-    def __init__(self,parameters:dict) -> None:
+
+    def __init__(self, parameters: dict) -> None:
         super().__init__()
-        if parameters['type'] is None:
+        if 'type' not in parameters:
             raise Exception('preprocessing.processor.invalid.parameters.must.have.type')
         self._type = parameters['type']
 
