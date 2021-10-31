@@ -1,0 +1,5 @@
+pyqtgraph~=0.12.3
+numpy~=1.21.2
+nptyping~=1.4.4
+brainflow~=4.6.1
+setuptools~=45.2.0
