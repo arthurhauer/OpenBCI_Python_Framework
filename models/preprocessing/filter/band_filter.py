@@ -16,26 +16,40 @@ class BandFilter(Filter):
             raise ValueError('preprocessing.filter.bandfilter.invalid.parameters.must.have.band-width')
         self._band_width = parameters['band-width']
         if self._type == 'BANDPASS':
-            self._set_bandpass()
+            self.process = self._set_bandpass
         elif self._type == 'BANDSTOP':
-            self._set_bandstop()
+            self.process = self._set_bandstop
         else:
             raise ValueError("Invalid band filter type " + super()._type)
 
-    def _set_bandpass(self):
-        self._action = lambda data: DataFilter.perform_bandpass(data,
-                                                                self._sampling_rate,
-                                                                self._center_freq,
-                                                                self._band_width,
-                                                                self._order,
-                                                                self._filter,
-                                                                self._ripple)
+    def _set_bandpass(self, data):
+        DataFilter.perform_bandpass(data,
+                                    self._sampling_rate,
+                                    self._center_freq,
+                                    self._band_width,
+                                    self._order,
+                                    self._filter,
+                                    self._ripple)
+        # self._action = lambda data: DataFilter.perform_bandpass(data,
+        #                                                         self._sampling_rate,
+        #                                                         self._center_freq,
+        #                                                         self._band_width,
+        #                                                         self._order,
+        #                                                         self._filter,
+        #                                                         self._ripple)
 
-    def _set_bandstop(self):
-        self._action = lambda data: DataFilter.perform_bandstop(data,
-                                                                self._sampling_rate,
-                                                                self._center_freq,
-                                                                self._band_width,
-                                                                self._order,
-                                                                self._filter,
-                                                                self._ripple)
+    def _set_bandstop(self, data):
+        DataFilter.perform_bandstop(data,
+                                    self._sampling_rate,
+                                    self._center_freq,
+                                    self._band_width,
+                                    self._order,
+                                    self._filter,
+                                    self._ripple)
+        # self._action = lambda data: DataFilter.perform_bandstop(data,
+        #                                                         self._sampling_rate,
+        #                                                         self._center_freq,
+        #                                                         self._band_width,
+        #                                                         self._order,
+        #                                                         self._filter,
+        #                                                         self._ripple)

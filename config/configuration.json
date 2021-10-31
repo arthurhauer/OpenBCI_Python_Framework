@@ -11,7 +11,7 @@
     "board": "CYTON_BOARD",
     "data-callback-frequency-ms": 50,
     "communication": {
-      "serial_port": "COM4"
+      "serial_port": "/dev/ttyUSB0"
     }
   },
   "preprocessing": [
@@ -52,6 +52,24 @@
         "filter": "BUTTERWORTH",
         "order": 2,
         "cutoff-freq": 100
+      }
+    },
+    {
+      "type": "DETREND",
+      "parameters": {
+        "type": "LINEAR"
+      }
+    },
+    {
+      "type": "DETREND",
+      "parameters": {
+        "type": "CONSTANT"
+      }
+    },
+    {
+      "type": "DETREND",
+      "parameters": {
+        "type": "NONE"
       }
     }
   ]

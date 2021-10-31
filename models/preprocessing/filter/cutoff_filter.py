@@ -11,26 +11,25 @@ class CutOffFilter(Filter):
         if 'cutoff-freq' not in parameters:
             raise ValueError('preprocessing.filter.bandfilter.invalid.parameters.must.have.cutoff-freq')
         self._cutoff_freq = parameters['cutoff-freq']
-
         if self._type == 'LOWPASS':
-            self._set_lowpass()
+            self.process = self._set_lowpass
         elif self._type == 'HIGHPASS':
-            self._set_highpass()
+            self.process = self._set_highpass
         else:
             raise ValueError("Invalid cutoff filter type " + self._type)
 
-    def _set_lowpass(self):
-        self._action = lambda data: DataFilter.perform_lowpass(data,
-                                                               self._sampling_rate,
-                                                               self._cutoff_freq,
-                                                               self._order,
-                                                               self._filter,
-                                                               self._ripple)
+    def _set_lowpass(self, data):
+        DataFilter.perform_lowpass(data,
+                                   self._sampling_rate,
+                                   self._cutoff_freq,
+                                   self._order,
+                                   self._filter,
+                                   self._ripple)
 
-    def _set_highpass(self):
-        self._action = lambda data: DataFilter.perform_highpass(data,
-                                                                self._sampling_rate,
-                                                                self._cutoff_freq,
-                                                                self._order,
-                                                                self._filter,
-                                                                self._ripple)
+    def _set_highpass(self, data):
+        DataFilter.perform_highpass(data,
+                                    self._sampling_rate,
+                                    self._cutoff_freq,
+                                    self._order,
+                                    self._filter,
+                                    self._ripple)
