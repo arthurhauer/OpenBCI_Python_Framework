@@ -14,6 +14,9 @@ class Filter(PreProcessingNode):
 
     def __init__(self, parameters: dict) -> None:
         super().__init__(parameters)
+        if 'type' not in parameters:
+            raise Exception('preprocessing.node.invalid.parameters.must.have.type')
+        self._type = parameters['type']
         if 'filter' not in parameters:
             raise ValueError('preprocessing.filter.invalid.parameters.must.have.filter')
         elif parameters['filter'] not in ['BESSEL', 'BUTTERWORTH', 'CHEBYSHEV_TYPE_1']:

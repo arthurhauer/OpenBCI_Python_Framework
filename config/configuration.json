@@ -16,60 +16,11 @@
   },
   "preprocessing": [
     {
-      "type": "FILTER",
+      "type": "CUSTOM",
       "parameters": {
-        "type": "BANDPASS",
-        "filter": "BUTTERWORTH",
-        "order": 2,
-        "center-freq": 51,
-        "band-width": 100
-      }
-    },
-    {
-      "type": "FILTER",
-      "parameters": {
-        "type": "BANDSTOP",
-        "filter": "BESSEL",
-        "order": 2,
-        "center-freq": 51,
-        "band-width": 100
-      }
-    },
-    {
-      "type": "FILTER",
-      "parameters": {
-        "type": "HIGHPASS",
-        "filter": "CHEBYSHEV_TYPE_1",
-        "order": 2,
-        "ripple": 2,
-        "cutoff-freq": 1
-      }
-    },
-    {
-      "type": "FILTER",
-      "parameters": {
-        "type": "LOWPASS",
-        "filter": "BUTTERWORTH",
-        "order": 2,
-        "cutoff-freq": 100
-      }
-    },
-    {
-      "type": "DETREND",
-      "parameters": {
-        "type": "LINEAR"
-      }
-    },
-    {
-      "type": "DETREND",
-      "parameters": {
-        "type": "CONSTANT"
-      }
-    },
-    {
-      "type": "DETREND",
-      "parameters": {
-        "type": "NONE"
+        "file": "example.py",
+        "parameter-1": 100,
+        "parameter-2": 1
       }
     }
   ]
