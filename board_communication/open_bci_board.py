@@ -23,7 +23,7 @@ class OpenBCIBoard:
         self.get_eeg_channels()
         self.get_accelerometer_channels()
         self._run_stream_loop: bool = False
-        self._data_loop_thread: Thread = Thread(target=self._stream_data_loop)
+        self._data_loop_thread: Thread = Thread(target=self._stream_data_loop, daemon=True)
         self._data_callback = None
         self._preprocessing = PreProcessing()
 
@@ -97,7 +97,7 @@ class OpenBCIBoard:
 
     def get_data(self) -> BoardData:
         data = self._get_board().get_board_data()
-        for count,channel in enumerate(self.get_eeg_channels()):
+        for count, channel in enumerate(self.get_eeg_channels()):
             self._preprocessing.process(data[channel])
         wrapped = BoardData(self.get_eeg_channel_names(), data[self.get_timestamp_channel()],
                             data[self.get_eeg_channels()], data[self.get_accelerometer_channels()])

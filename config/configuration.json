@@ -8,7 +8,7 @@
   },
   "open_bci": {
     "log_level": "TRACE",
-    "board": "CYTON_BOARD",
+    "board": "SYNTHETIC_BOARD",
     "data-callback-frequency-ms": 50,
     "communication": {
       "serial_port": "/dev/ttyUSB0"
@@ -16,11 +16,18 @@
   },
   "preprocessing": [
     {
-      "type": "CUSTOM",
+      "type": "DOWNSAMPLE",
       "parameters": {
-        "file": "example.py",
-        "parameter-1": 100,
-        "parameter-2": 1
+        "type": "MEDIAN",
+        "period": 100
+      }
+    },
+
+    {
+      "type": "DENOISE",
+      "parameters": {
+        "type": "MEDIAN",
+        "period": 100
       }
     }
   ]

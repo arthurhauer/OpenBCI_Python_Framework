@@ -2,6 +2,10 @@ import enum
 
 
 class PreProcessingType(enum.IntEnum):
-    DETREND = 0
-    FILTER = 1
-    CUSTOM = 2
+    CUSTOM = 0
+    DETREND = 1
+    FILTER = 2
+    DOWNSAMPLE = 3
+    DENOISE = 4
+    TRANSFORM = 5
+    SMOOTH = 6
