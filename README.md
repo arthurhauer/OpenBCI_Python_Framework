@@ -131,6 +131,36 @@ Here we can configure the board we'll be working with
 
 ## Pre-Processing
 
+Pre-processing steps are configured as a JSON list, as such:
+
+```
+"preprocessing":[]
+```
+
+Then, each step is executed in the same order it was declared in respect to other steps. For instance, if one declares something like the following, the framework will first detrend the data, and then apply a lowpass filter.
+
+```
+"preprocessing":[
+    {
+    "type":"DETREND",       // Preprocessing node type
+    "parameters":{          // Node parameters
+        "type": "LINEAR"    // Detrend type
+        }
+    },
+    {
+    {
+    "type":"FILTER",               // Preprocessing node type
+    "parameters":{                 // Node parameters
+        "type": "LOWPASS",         // Filter action
+        "filter": "BUTTERWORTH",   // Filter type
+        "order": 1,                // Filter order
+        "cutoff-freq": 50,         // Cut-off frequency
+        }
+    }
+]
+```
+
+
 Allowed preprocessing node "type" values: 
 > "CUSTOM"
 
@@ -205,7 +235,7 @@ In the following example, we configure a 80Hz high pass 3rd order Butterworth fi
 {
     "type":"FILTER",               // Preprocessing node type
     "parameters":{                 // Node parameters
-        "type": "LOWPASS",         // Filter action
+        "type": "HIGHPASS",        // Filter action
         "filter": "BUTTERWORTH",   // Filter type
         "order": 3,                // Filter order
         "cutoff-freq": 80,         // Cut-off frequency
