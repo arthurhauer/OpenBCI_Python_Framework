@@ -18,7 +18,7 @@ Allowed "filter" parameter values: "BESSEL" | "BUTTERWORTH" | "CHEBYSHEV_TYPE_1"
 #### Band Pass
 
 In the following example, we configure a 50Hz-150Hz band pass 2nd order Bessel filter
-
+```
 {
     "type":"FILTER",            // Preprocessing node type
     "parameters":{              // Node parameters
@@ -29,11 +29,11 @@ In the following example, we configure a 50Hz-150Hz band pass 2nd order Bessel f
         "band-width": 50        // Band width
     }
 }
-
+```
 #### Band Stop
 
 In the following example, we configure a 30Hz-70Hz band pass 2nd order type 1 Chebyshev filter, with 0.2 ripple
-
+```
 {
     "type":"FILTER",                    // Preprocessing node type
     "parameters":{                      // Node parameters
@@ -45,12 +45,12 @@ In the following example, we configure a 30Hz-70Hz band pass 2nd order type 1 Ch
         "band-width": 20                // Band width
     }
 }
-
+```
 ### Cut-Off
 #### Low Pass
 
 In the following example, we configure a 50Hz low pass 1st order Butterworth filter
-
+```
 {
     "type":"FILTER",               // Preprocessing node type
     "parameters":{                 // Node parameters
@@ -60,11 +60,11 @@ In the following example, we configure a 50Hz low pass 1st order Butterworth fil
         "cutoff-freq": 50,         // Cut-off frequency
     }
 }
-
+```
 #### High Pass
 
 In the following example, we configure a 80Hz high pass 3rd order Butterworth filter
-
+```
 {
     "type":"FILTER",               // Preprocessing node type
     "parameters":{                 // Node parameters
@@ -74,3 +74,4 @@ In the following example, we configure a 80Hz high pass 3rd order Butterworth fi
         "cutoff-freq": 80,         // Cut-off frequency
     }
 }
+```
