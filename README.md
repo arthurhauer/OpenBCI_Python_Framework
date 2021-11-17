@@ -6,18 +6,153 @@ CYTON switch must have 'PC' selected
 
 Dongle switch must have 'GPIO_6' selected
 
-# Pre-Processing Node configuration examples:
+# Using with Windows
+
+To use with Windows, simply specify wich COM port your board is using.
+
+# Using with Linux
+
+To use with Linux, run python as sudo, and specify the path to the serial port your board is using.
+
+# Configuration JSON
+
+## General
+
+Here, we configure our framework to work with as many parallel threads as the host can handle, while also setting our GUI graph window size to 4.
+
+```
+"general":{
+    "maximum-parallel-jobs":-1,     \\ Maximum parallel jobs. Set to -1 to infinite, 1 for 1 and so on
+    "graph": {                      \\ Graphing options
+      "window-size": 4              \\ Graphing window size
+    }
+}
+```
+
+## Open-BCI
+Allowed "board" parameter values:
+
+>"PLAYBACK_FILE_BOARD"
+ 
+>"STREAMING_BOARD"
+
+>"SYNTHETIC_BOARD"
+
+>"CYTON_BOARD"
+
+>"GANGLION_BOARD"
+
+>"CYTON_DAISY_BOARD"
+
+>"GALEA_BOARD"
+
+>"GANGLION_WIFI_BOARD"
+
+>"CYTON_WIFI_BOARD"
+
+>"CYTON_DAISY_WIFI_BOARD"
+
+>"BRAINBIT_BOARD"
+
+>"UNICORN_BOARD"
+
+>"CALLIBRI_EEG_BOARD"
+
+>"CALLIBRI_EMG_BOARD"
+
+>"CALLIBRI_ECG_BOARD"
+
+>"NOTION_1_BOARD"
+
+>"NOTION_2_BOARD"
+
+>"IRONBCI_BOARD"
+
+>"GFORCE_PRO_BOARD"
+
+>"FREEEEG32_BOARD"
+
+>"BRAINBIT_BLED_BOARD"
+
+>"GFORCE_DUAL_BOARD"
+
+>"GALEA_SERIAL_BOARD"
+
+>"MUSE_S_BLED_BOARD"
+
+>"MUSE_2_BLED_BOARD"
+
+>"CROWN_BOARD"
+
+>"ANT_NEURO_EE_410_BOARD"
+
+>"ANT_NEURO_EE_411_BOARD"
+
+>"ANT_NEURO_EE_430_BOARD"
+
+>"ANT_NEURO_EE_211_BOARD"
+
+>"ANT_NEURO_EE_212_BOARD"
+
+>"ANT_NEURO_EE_213_BOARD"
+
+>"ANT_NEURO_EE_214_BOARD"
+
+>"ANT_NEURO_EE_215_BOARD"
+
+>"ANT_NEURO_EE_221_BOARD"
+
+>"ANT_NEURO_EE_222_BOARD"
+
+>"ANT_NEURO_EE_223_BOARD"
+
+>"ANT_NEURO_EE_224_BOARD"
+
+>"ANT_NEURO_EE_225_BOARD"
+
+>"ENOPHONE_BOARD"
+
+>"MUSE_2_BOARD"
+
+>"MUSE_S_BOARD"
+
+Here we can configure the board we'll be working with
+
+```
+"open_bci": {
+    "log_level": "TRACE",               \\ Board log level
+    "board": "SYNTHETIC_BOARD",         \\ Board type
+    "data-callback-frequency-ms": 50,   \\ How much time to wait before getting new buffered data from the board
+    "communication": {                  \\ Communication configurations
+      "serial_port": "/dev/ttyUSB0"     \\ Serial port
+    }
+}
+```
+
+## Pre-Processing
 
 Allowed preprocessing node "type" values: 
-> "CUSTOM" | "DETREND" | "FILTER" | "DOWNSAMPLE"
+> "CUSTOM"
 
-## Filters
+> "DETREND"
+
+> "FILTER"
+
+> "DOWNSAMPLE"
+
+### Filters
 
 Allowed filter node "filter" parameter values:
-> "BESSEL" | "BUTTERWORTH" | "CHEBYSHEV_TYPE_1"
+> "BESSEL"
 
-### Band
-#### Band Pass
+> "BUTTERWORTH"
+
+> "CHEBYSHEV_TYPE_1"
+
+When using > "CHEBYSHEV_TYPE_1", one must provide a ripple value, declared as a float in the parameters field (see Band Stop example).
+
+#### Band
+##### Band Pass
 
 In the following example, we configure a 50Hz-150Hz band pass 2nd order Bessel filter
 ```
@@ -32,7 +167,7 @@ In the following example, we configure a 50Hz-150Hz band pass 2nd order Bessel f
     }
 }
 ```
-#### Band Stop
+##### Band Stop
 
 In the following example, we configure a 30Hz-70Hz band pass 2nd order type 1 Chebyshev filter, with 0.2 ripple
 ```
@@ -48,8 +183,8 @@ In the following example, we configure a 30Hz-70Hz band pass 2nd order type 1 Ch
     }
 }
 ```
-### Cut-Off
-#### Low Pass
+#### Cut-Off
+##### Low Pass
 
 In the following example, we configure a 50Hz low pass 1st order Butterworth filter
 ```
@@ -63,7 +198,7 @@ In the following example, we configure a 50Hz low pass 1st order Butterworth fil
     }
 }
 ```
-#### High Pass
+##### High Pass
 
 In the following example, we configure a 80Hz high pass 3rd order Butterworth filter
 ```
@@ -78,9 +213,13 @@ In the following example, we configure a 80Hz high pass 3rd order Butterworth fi
 }
 ```
 
-## Detrend
+### Detrend
 Allowed detrend node "type" parameter values:
-> "NONE" | "CONSTANT" | "LINEAR"
+> "NONE"
+
+> "CONSTANT"
+
+> INEAR"
 
 In the following example, we configure a linear detrend
 ```
@@ -92,9 +231,13 @@ In the following example, we configure a linear detrend
 }
 ```
 
-## Downsample
+### Downsample
 Allowed detrend node "type" parameter values:
-> "MEAN" | "MEDIAN" | "EACH"
+> "MEAN"
+
+>"MEDIAN"
+
+>"EACH"
 
 In the following example, we configure a median based downsampler
 ```
@@ -106,7 +249,7 @@ In the following example, we configure a median based downsampler
     }
 }
 ```
-## Custom
+### Custom
 
 In the following example, we configure a custom preprocessing node, based on user provided script.
 In this case, the custom script performs a rolling filtering of the input data.
