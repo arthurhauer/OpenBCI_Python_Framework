@@ -8,11 +8,13 @@ Dongle switch must have 'GPIO_6' selected
 
 # Pre-Processing Node configuration examples:
 
-Allowed preprocessing node "type" values: "CUSTOM" | "DETREND" | "FILTER" | "DOWNSAMPLE"
+Allowed preprocessing node "type" values: 
+> "CUSTOM" | "DETREND" | "FILTER" | "DOWNSAMPLE"
 
 ## Filters
 
-Allowed "filter" parameter values: "BESSEL" | "BUTTERWORTH" | "CHEBYSHEV_TYPE_1"
+Allowed filter node "filter" parameter values:
+> "BESSEL" | "BUTTERWORTH" | "CHEBYSHEV_TYPE_1"
 
 ### Band
 #### Band Pass
@@ -75,3 +77,59 @@ In the following example, we configure a 80Hz high pass 3rd order Butterworth fi
     }
 }
 ```
+
+## Detrend
+Allowed detrend node "type" parameter values:
+> "NONE" | "CONSTANT" | "LINEAR"
+
+In the following example, we configure a linear detrend
+```
+{
+    "type":"DETREND",       // Preprocessing node type
+    "parameters":{          // Node parameters
+        "type": "LINEAR"    // Detrend type
+    }
+}
+```
+
+## Downsample
+Allowed detrend node "type" parameter values:
+> "MEAN" | "MEDIAN" | "EACH"
+
+In the following example, we configure a median based downsampler
+```
+{
+    "type":"DOWNSAMPLE",    // Preprocessing node type
+    "parameters":{          // Node parameters
+        "type": "MEDIAN"    // Detrend type,
+        "period": 100       // Downsampling period, in samples
+    }
+}
+```
+## Custom
+
+In the following example, we configure a custom preprocessing node, based on user provided script.
+In this case, the custom script performs a rolling filtering of the input data.
+
+```
+{
+    "type":"CUSTOM",            // Preprocessing node type
+    "parameters":{              // Node parameters
+        "file": "example.py",   // File containing custom script, located in 'projectRoot/customs/',
+        "parameter-1": 100,     // First parameter passed to custom script
+        "parameter-2": 1,       // Second parameter passed to custom script
+    }
+}
+```
+In order to work properly, one must declare the custom script function like so:
+
+```
+def custom_process(parameters, data):
+    # All needed imports should be declared here (make sure needed packages are already installed)
+    from brainflow import DataFilter
+    # Modify the input data
+    DataFilter.perform_rolling_filter(data, parameters['parameter-1'], parameters['parameter-2'])
+```
+Also, each custom script file must contain exactly one function definition, and it's signature should be declared exactly as shown in the example above.
+
+Notice that the input data is modified in-place.
