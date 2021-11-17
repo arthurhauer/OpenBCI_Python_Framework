@@ -148,7 +148,6 @@ Then, each step is executed in the same order it was declared in respect to othe
         }
     },
     {
-    {
     "type":"FILTER",               // Preprocessing node type
     "parameters":{                 // Node parameters
         "type": "LOWPASS",         // Filter action
