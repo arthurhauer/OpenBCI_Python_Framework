@@ -8,6 +8,7 @@ from models.preprocessing.filter.band_filter import BandFilter
 from models.preprocessing.filter.cutoff_filter import CutOffFilter
 from models.preprocessing.filter.filter import Filter
 from models.preprocessing.node import PreProcessingNode
+from models.preprocessing.signal_check import SignalCheck
 from models.preprocessing.type import PreProcessingType
 
 
@@ -44,6 +45,8 @@ class PreProcessing:
             raise NotImplementedError("TRANSFORM is not implemented yet")
         elif preprocess_type == PreProcessingType.SMOOTH:
             raise NotImplementedError("SMOOTH is not implemented yet")
+        elif preprocess_type == PreProcessingType.SIGNAL_CHECK:
+            processor = SignalCheck(parameters)
         else:
             raise ValueError("Invalid preprocessing type " + node_settings['type'])
         return processor

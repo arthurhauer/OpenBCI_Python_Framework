@@ -9,3 +9,4 @@ class PreProcessingType(enum.IntEnum):
     DENOISE = 4
     TRANSFORM = 5
     SMOOTH = 6
+    SIGNAL_CHECK = 7

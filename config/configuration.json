@@ -12,23 +12,25 @@
     "data-callback-frequency-ms": 50,
     "communication": {
       "serial_port": "/dev/ttyUSB0"
+    },
+    "channel_mapping": {
+
     }
   },
   "preprocessing": [
     {
-      "type": "DOWNSAMPLE",
-      "parameters": {
-        "type": "MEDIAN",
-        "period": 100
-      }
-    },
-
-    {
-      "type": "DENOISE",
-      "parameters": {
-        "type": "MEDIAN",
-        "period": 100
-      }
-    }
+       "type": "SIGNAL_CHECK",
+       "parameters": {
+         "action": {
+           "file": "example_action.py",
+           "parameters": {
+             "parameter-1": "example-parameter!"
+           }
+         },
+         "power-grid-frequency": 60,
+         "min-amplitude": 200,
+         "min-rms": 5
+       }
+     }
   ]
 }
