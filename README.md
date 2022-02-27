@@ -316,6 +316,8 @@ On confirming that the signal is no good, the framework will execute a given use
 The definition of the user-defined action is made in a similar fashion as the custom preprocessing node, mentioned previously.
 In the following example, we configure a signal check preprocessing node, where the minimum signal amplitude should be 200 m.u., minimum signal RMS should be 5 uA, and the local powergrid frequency is 60hHz.
 
+WARNING: CURRENTLY, POWERGRID FREQUENCY CHECK IS NOT IMPLEMENTED!
+
 ```
     {
        "type": "SIGNAL_CHECK",                      // Preprocessing node type
@@ -326,7 +328,7 @@ In the following example, we configure a signal check preprocessing node, where 
              "parameter-1": "example-parameter!"    // First parameter passed to user-defined action
            }
          },
-         "power-grid-frequency": 60,                // Powergrid frequency
+         "power-grid-frequency": 60,                // Powergrid frequency (NOT IMPLEMENTED YET!)
          "min-amplitude": 200,                      // Minimum signal amplitude. Anything below this is considered bad.
          "min-rms": 5                               // Minimum signal RMS. Anything below this is considered bad.
        }
