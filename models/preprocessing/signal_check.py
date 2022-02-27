@@ -44,6 +44,7 @@ class SignalCheck(PreProcessingNode):
         self._min_amplitude = parameters['min-amplitude']
         self._min_rms = parameters['min-rms']
 
+        # TODO Include powergrid frequency check
         self._conditions = [
             lambda data: (max(data) - min(data)) < self._min_amplitude,
             lambda data: (np.sqrt(np.mean(data ** 2))) < self._min_rms
