@@ -6,6 +6,8 @@ from pyqtgraph.Qt import QtGui
 from models.preprocessing.custom import Custom
 from models.preprocessing.detrend import Detrend
 from models.preprocessing.downsample import Downsample
+from models.preprocessing.filter.band_filter import BandFilter
+from models.preprocessing.filter.cutoff_filter import CutOffFilter
 from models.preprocessing.signal_check import SignalCheck
 from preprocessing.preprocessing import PreProcessing
 
@@ -23,6 +25,13 @@ class Application:
     def as_sdk(cls):
         preprocessing: PreProcessing = PreProcessing()
         from brainflow import DataFilter
+        board = OpenBCIBoard(
+            log_level="INFO",
+            board="SYNTHETIC_BOARD",
+            communication={
+                'serial-port': "/dev/ttyUSB0"
+            }
+        )
         preprocessing.pipeline = [
             SignalCheck(
                 action=lambda param, condition, data: print(
@@ -59,14 +68,41 @@ class Application:
                     parameters['period'],
                     parameters['operation']
                 )
+            ),
+            BandFilter(
+                type='BANDPASS',
+                filter='BUTTERWORTH',
+                order=1,
+                sampling_frequency=board.get_sampling_rate(),
+                center_frequency=10,
+                band_width=10
+            ),
+            BandFilter(
+                type='BANDPASS',
+                filter='BUTTERWORTH',
+                order=1,
+                sampling_frequency=board.get_sampling_rate(),
+                center_frequency=10,
+                band_width=2
+            ),
+            CutOffFilter(
+                type='LOWPASS',
+                filter='BUTTERWORTH',
+                order=1,
+                sampling_frequency=board.get_sampling_rate(),
+                cutoff_frequency=18
+            ),
+            CutOffFilter(
+                type='HIGHPASS',
+                filter='BUTTERWORTH',
+                order=1,
+                sampling_frequency=board.get_sampling_rate(),
+                cutoff_frequency=2
             )
         ]
+        board.preprocessing = preprocessing
         return cls(
-            board=OpenBCIBoard(
-                preprocessing=preprocessing,
-                log_level="INFO",
-                board="SYNTHETIC_BOARD"
-            )
+            board=board
         )
 
     @classmethod

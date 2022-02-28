@@ -120,11 +120,11 @@ Here we can configure the board we'll be working with
 
 ```
 "open_bci": {
-    "log_level": "TRACE",               \\ Board log level
+    "log-level": "TRACE",               \\ Board log level
     "board": "SYNTHETIC_BOARD",         \\ Board type
     "data-callback-frequency-ms": 50,   \\ How much time to wait before getting new buffered data from the board
     "communication": {                  \\ Communication configurations
-      "serial_port": "/dev/ttyUSB0"     \\ Serial port
+      "serial-port": "/dev/ttyUSB0"     \\ Serial port
     }
 }
 ```
@@ -188,13 +188,13 @@ When using > "CHEBYSHEV_TYPE_1", one must provide a ripple value, declared as a 
 In the following example, we configure a 50Hz-150Hz band pass 2nd order Bessel filter
 ```
 {
-    "type":"FILTER",            // Preprocessing node type
-    "parameters":{              // Node parameters
-        "type": "BANDPASS",     // Filter action
-        "filter": "BESSEL",     // Filter type
-        "order": 2,             // Filter order
-        "center-freq": 100,     // Band center frequency
-        "band-width": 50        // Band width
+    "type":"FILTER",                // Preprocessing node type
+    "parameters":{                  // Node parameters
+        "type": "BANDPASS",         // Filter action
+        "filter": "BESSEL",         // Filter type
+        "order": 2,                 // Filter order
+        "center-frequency": 100,    // Band center frequency
+        "band-width": 50            // Band width
     }
 }
 ```
@@ -209,7 +209,7 @@ In the following example, we configure a 30Hz-70Hz band pass 2nd order type 1 Ch
         "filter": "CHEBYSHEV_TYPE_1",   // Filter type
         "order": 2,                     // Filter order
         "ripple": 0.2,                  // Chebyshev ripple
-        "center-freq": 50,              // Band center frequency
+        "center-frequency": 50,         // Band center frequency
         "band-width": 20                // Band width
     }
 }
@@ -225,7 +225,7 @@ In the following example, we configure a 50Hz low pass 1st order Butterworth fil
         "type": "LOWPASS",         // Filter action
         "filter": "BUTTERWORTH",   // Filter type
         "order": 1,                // Filter order
-        "cutoff-freq": 50,         // Cut-off frequency
+        "cutoff-frequency": 50,    // Cut-off frequency
     }
 }
 ```

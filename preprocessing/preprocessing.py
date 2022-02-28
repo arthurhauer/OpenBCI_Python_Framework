@@ -54,6 +54,7 @@ class PreProcessing:
     @staticmethod
     def _select_filter(parameters: dict) -> Filter:
         filter_type = parameters['type']
+        parameters['sampling-frequency'] = Configuration.get_sampling_frequency()
         if filter_type in ['BANDPASS', 'BANDSTOP']:
             return BandFilter(parameters)
         elif filter_type in ['LOWPASS', 'HIGHPASS']:

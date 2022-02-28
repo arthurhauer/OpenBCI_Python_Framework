@@ -10,61 +10,78 @@ from preprocessing.preprocessing import PreProcessing
 
 
 class OpenBCIBoard:
-    def __init__(self, preprocessing: PreProcessing, log_level: str = "OFF", board: str = "SYNTHETIC_BOARD") -> None:
+
+    def __init__(self,
+                 communication: dict,
+                 preprocessing: PreProcessing = None,
+                 log_level: str = "OFF",
+                 board: str = "SYNTHETIC_BOARD",
+                 ) -> None:
         super().__init__()
         self._board = None
         self._timestamp_channel = None
         self._eeg_channels = None
         self._eeg_channel_names = None
         self._accelerometer_channels = None
+        self._set_log_level(log_level=log_level)
+        self._set_brain_flow_input_parameters(communication)
+        self._get_board(board=board)
         self._sampling_rate = None
-        self._set_log_level()
-        self._get_board()
+        self.get_sampling_rate()
         self.get_eeg_channels()
         self.get_accelerometer_channels()
         self._run_stream_loop: bool = False
         self._data_loop_thread: Thread = Thread(target=self._stream_data_loop, daemon=True)
         self._data_callback = None
-        self._preprocessing = preprocessing
+        self.preprocessing = preprocessing
 
     @classmethod
     def from_config_json(cls):
         return cls(
             preprocessing=PreProcessing.from_config_json(),
             log_level=Configuration.get_open_bci_log_level(),
-            board=Configuration.get_open_bci_board()
+            board=Configuration.get_open_bci_board(),
+            communication=Configuration.get_open_bci_communication()
         )
 
-    def _set_log_level(self, log_level: str = "OFF"):
+    @staticmethod
+    def _set_log_level(log_level: str = "OFF"):
         if log_level is None:
             log_level = "OFF"
         log_level = "LEVEL_" + log_level
         BoardShim.set_log_level(LogLevels[log_level])
 
-    def _get_board_type(self, board: str = "SYNTHETIC_BOARD") -> int:
+    @staticmethod
+    def _get_board_type(board: str = "SYNTHETIC_BOARD") -> int:
         return BoardIds[board]
 
-    def _get_brain_flow_input_parameters(self) -> BrainFlowInputParams:
-        brain_flow_parameters = BrainFlowInputParams()
-        # TODO Adicionar outras formas de comunicação
-        # brain_flow_parameters.ip_port
-        # brain_flow_parameters.serial_port
-        # brain_flow_parameters.mac_address
-        # brain_flow_parameters.other_info
-        # brain_flow_parameters.serial_number
-        # brain_flow_parameters.ip_address
-        # brain_flow_parameters.ip_protocol
-        # brain_flow_parameters.timeout
-        # brain_flow_parameters.file
-        if Configuration.get_open_bci_communication_serial_port() is not None:
-            brain_flow_parameters.serial_port = Configuration.get_open_bci_communication_serial_port()
-        else:
-            raise Exception("configuration.openbci.communication.unsupported")
-        return brain_flow_parameters
+    def _set_brain_flow_input_parameters(self, parameters: dict):
+        self._brain_flow_parameters = BrainFlowInputParams()
+        if 'ip-port' in parameters:
+            self._brain_flow_parameters.ip_port = parameters['ip-port']
+        if 'mac-address' in parameters:
+            self._brain_flow_parameters.mac_address = parameters['mac-address']
+        if 'other-info' in parameters:
+            self._brain_flow_parameters.other_info = parameters['other-info']
+        if 'serial-number' in parameters:
+            self._brain_flow_parameters.serial_number = parameters['serial-number']
+        if 'ip-address' in parameters:
+            self._brain_flow_parameters.ip_address = parameters['ip-address']
+        if 'ip-protocol' in parameters:
+            self._brain_flow_parameters.ip_protocol = parameters['ip-protocol']
+        if 'timeout' in parameters:
+            self._brain_flow_parameters.ip_protocol = parameters['timeout']
+        if 'file' in parameters:
+            self._brain_flow_parameters.file = parameters['file']
+        if 'serial-port' in parameters:
+            self._brain_flow_parameters.serial_port = parameters['serial-port']
 
-    def _get_board(self) -> BoardShim:
+    def _get_brain_flow_input_parameters(self):
+        return self._brain_flow_parameters
+
+    def _get_board(self, board: str = "SYNTHETIC_BOARD") -> BoardShim:
         if self._board is None:
-            self._board = BoardShim(self._get_board_type(), self._get_brain_flow_input_parameters())
+            self._board = BoardShim(self._get_board_type(board=board), self._get_brain_flow_input_parameters())
         return self._board
 
     def get_sampling_rate(self) -> int:
@@ -105,7 +122,7 @@ class OpenBCIBoard:
     def get_data(self) -> BoardData:
         data = self._get_board().get_board_data()
         for count, channel in enumerate(self.get_eeg_channels()):
-            self._preprocessing.process(data[channel])
+            self.preprocessing.process(data[channel])
         wrapped = BoardData(self.get_eeg_channel_names(), data[self.get_timestamp_channel()],
                             data[self.get_eeg_channels()], data[self.get_accelerometer_channels()])
         return wrapped

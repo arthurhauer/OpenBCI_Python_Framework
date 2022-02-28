@@ -52,7 +52,7 @@ class Configuration:
 
     @staticmethod
     def get_open_bci_log_level() -> str:
-        return Configuration.get_open_bci_settings()['log_level']
+        return Configuration.get_open_bci_settings()['log-level']
 
     @staticmethod
     def get_open_bci_board() -> str:
@@ -64,7 +64,7 @@ class Configuration:
 
     @staticmethod
     def get_open_bci_communication_serial_port() -> str:
-        return Configuration.get_open_bci_communication()['serial_port']
+        return Configuration.get_open_bci_communication()['serial-port']
 
     @staticmethod
     def get_open_bci_data_callback_frequency_ms() -> int:
