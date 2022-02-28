@@ -15,15 +15,16 @@ from models.preprocessing.type import PreProcessingType
 class PreProcessing:
     pipeline: List[PreProcessingNode] = None
 
-    def __init__(self) -> None:
+    def __init__(self, pipeline: List[PreProcessingNode] = None) -> None:
         super().__init__()
+        self.pipeline = pipeline
 
     @classmethod
     def from_config_json(cls):
         pipeline = []
         for preprocessing_node_settings in Configuration.get_preprocessing_settings():
             pipeline.append(PreProcessing._select_processor(preprocessing_node_settings))
-        cls.pipeline = pipeline
+        return cls(pipeline=pipeline)
 
     @staticmethod
     def _select_processor(node_settings: dict) -> PreProcessingNode:
@@ -37,7 +38,7 @@ class PreProcessing:
         elif preprocess_type == PreProcessingType.FILTER:
             processor = PreProcessing._select_filter(parameters)
         elif preprocess_type == PreProcessingType.DOWNSAMPLE:
-            processor = Downsample(parameters)
+            processor = Downsample.from_config_json(parameters)
         elif preprocess_type == PreProcessingType.DENOISE:
             raise NotImplementedError("DENOISE is not implemented yet")
         elif preprocess_type == PreProcessingType.TRANSFORM:

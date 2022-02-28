@@ -8,8 +8,8 @@ from models.preprocessing.node import PreProcessingNode
 
 class SignalCheck(PreProcessingNode):
 
-    def __init__(self, action, action_parameters: dict, conditions: list) -> None:
-        super().__init__({})
+    def __init__(self, action, action_parameters: dict, conditions: dict) -> None:
+        super().__init__()
         self._action = action
         self._action_parameters = action_parameters
         self._conditions = conditions
@@ -18,13 +18,14 @@ class SignalCheck(PreProcessingNode):
     def from_predefined_conditions(cls, action, action_parameters, power_grid_frequency: float, min_amplitude: float,
                                    min_rms: float):
         # TODO Include powergrid frequency check
-        cls.__init__(
+        return cls(
             action=action,
             action_parameters=action_parameters,
-            conditions=[
-                lambda data: (max(data) - min(data)) < min_amplitude,
-                lambda data: (np.sqrt(np.mean(data ** 2))) < min_rms
-            ]
+            conditions={
+                'amplitude': lambda data: (max(data) - min(data)) < min_amplitude,
+                'rms': lambda data: (np.sqrt(np.mean(data ** 2))) < min_rms,
+                'frequency': lambda data: False
+            }
         )
 
     @classmethod
@@ -46,23 +47,26 @@ class SignalCheck(PreProcessingNode):
         if not os.path.isfile(action_path):
             raise ValueError(
                 'preprocessing.signal.check.invalid.parameters.action.file.doesnt.exist.' + parameters['action'])
-        # Setting instance attribute so the compiler won't complain
-        custom_action = None
+
         # Open and read the given custom python script
         file = open(action_path, 'r')
         script = file.read()
-        # Force instance attribute reference to user script-defined function
-        script += '\ncustom_action = action'
         # Compile the script
         compiled_script = compile(script, '', 'exec')
-        # Execute the script, setting self._action
-        exec(compiled_script)
-        action_parameters = {
-            key: parameters['action']['parameters'][key] for key in parameters['action']['parameters']
-        }
-        cls.from_predefined_conditions(
-            cls,
-            action=custom_action,
+        _locals = locals()
+        # Execute the script, setting custom_action on _locals dict
+        exec(compiled_script, _locals)
+        if 'custom_action' not in _locals:
+            raise ValueError(
+                'preprocessing.signal.check.invalid.parameters.custom_action.not.defined.in.script.%s' % action_path)
+
+        if 'parameters' not in parameters['action']:
+            action_parameters = {}
+        else:
+            action_parameters = parameters['action']['parameters']
+
+        return cls.from_predefined_conditions(
+            action=_locals['custom_action'],
             action_parameters=action_parameters,
             power_grid_frequency=parameters['power-grid-frequency'],
             min_amplitude=parameters['min-amplitude'],
@@ -70,6 +74,6 @@ class SignalCheck(PreProcessingNode):
         )
 
     def process(self, data):
-        for condition in self._conditions:
+        for name, condition in self._conditions.items():
             if condition(data):
-                self._action(self._action_parameters, data)
+                self._action(self._action_parameters, name, data)

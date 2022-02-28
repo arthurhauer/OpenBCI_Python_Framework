@@ -10,7 +10,7 @@ from preprocessing.preprocessing import PreProcessing
 
 
 class OpenBCIBoard:
-    def __init__(self,preprocessing:PreProcessing,log_level:str="OFF",board:str="SYNTHETIC_BOARD") -> None:
+    def __init__(self, preprocessing: PreProcessing, log_level: str = "OFF", board: str = "SYNTHETIC_BOARD") -> None:
         super().__init__()
         self._board = None
         self._timestamp_channel = None
@@ -27,22 +27,21 @@ class OpenBCIBoard:
         self._data_callback = None
         self._preprocessing = preprocessing
 
-
     @classmethod
     def from_config_json(cls):
-        cls.__init__(
+        return cls(
             preprocessing=PreProcessing.from_config_json(),
             log_level=Configuration.get_open_bci_log_level(),
             board=Configuration.get_open_bci_board()
         )
 
-    def _set_log_level(self,log_level:str="OFF"):
+    def _set_log_level(self, log_level: str = "OFF"):
         if log_level is None:
             log_level = "OFF"
         log_level = "LEVEL_" + log_level
         BoardShim.set_log_level(LogLevels[log_level])
 
-    def _get_board_type(self,board:str="SYNTHETIC_BOARD") -> int:
+    def _get_board_type(self, board: str = "SYNTHETIC_BOARD") -> int:
         return BoardIds[board]
 
     def _get_brain_flow_input_parameters(self) -> BrainFlowInputParams:

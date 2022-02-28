@@ -3,6 +3,10 @@ from board_communication.open_bci_board import OpenBCIBoard
 from graph.graph import Graph
 from pyqtgraph.Qt import QtGui
 
+from models.preprocessing.custom import Custom
+from models.preprocessing.detrend import Detrend
+from models.preprocessing.downsample import Downsample
+from models.preprocessing.signal_check import SignalCheck
 from preprocessing.preprocessing import PreProcessing
 
 
@@ -18,8 +22,46 @@ class Application:
     @classmethod
     def as_sdk(cls):
         preprocessing: PreProcessing = PreProcessing()
-        preprocessing.pipeline = []
-        cls.__init__(
+        from brainflow import DataFilter
+        preprocessing.pipeline = [
+            SignalCheck(
+                action=lambda param, condition, data: print(
+                    'Condition: %s\n'
+                    '\tMessage:Oh my, something went wrong here!\n'
+                    '\tParameter: \n'
+                    '\t\t%s'
+                    % (
+                        condition,
+                        param['parameter-1']
+                    )
+                ),
+                action_parameters={
+                    'parameter-1': 'Parameter 1!'
+                },
+                conditions={
+                    'Is greater than 0': lambda data: max(data) > 0
+                }
+            ),
+            Downsample(
+                type='MEAN',
+                period=100
+            ),
+            Detrend(
+                type='LINEAR'
+            ),
+            Custom(
+                process_parameters={
+                    'period': 100,
+                    'operation': 1
+                },
+                process=lambda parameters, data: DataFilter.perform_rolling_filter(
+                    data,
+                    parameters['period'],
+                    parameters['operation']
+                )
+            )
+        ]
+        return cls(
             board=OpenBCIBoard(
                 preprocessing=preprocessing,
                 log_level="INFO",
@@ -29,7 +71,7 @@ class Application:
 
     @classmethod
     def from_config_json(cls):
-        cls.__init__(
+        return cls(
             board=OpenBCIBoard.from_config_json()
         )
 

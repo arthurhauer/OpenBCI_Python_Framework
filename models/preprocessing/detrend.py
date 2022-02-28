@@ -4,13 +4,23 @@ from models.preprocessing.node import PreProcessingNode
 
 
 class Detrend(PreProcessingNode):
-    def __init__(self, parameters: dict) -> None:
-        super().__init__(parameters)
+    def __init__(self, type: str) -> None:
+        super().__init__()
+        if type is None:
+            raise Exception('preprocessing.detrend.invalid.parameters.must.have.type')
+        try:
+            self._type = type
+            self._detrend_type: DetrendOperations = DetrendOperations[self._type]
+        except KeyError:
+            raise KeyError('preprocessing.detrend.invalid.parameters.type.invalid.%s' % self._type)
+
+    @classmethod
+    def from_config_json(cls, parameters: dict):
         if 'type' not in parameters:
             raise Exception('preprocessing.detrend.invalid.parameters.must.have.type')
-        self._type = parameters['type']
-        self._detrend_type: DetrendOperations = DetrendOperations[self._type]
-        self.process = self._set_detrend
+        return cls(
+            type=parameters['type']
+        )
 
-    def _set_detrend(self, data):
+    def process(self, data):
         DataFilter.detrend(data, self._detrend_type)

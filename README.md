@@ -290,8 +290,10 @@ In this case, the custom script performs a rolling filtering of the input data.
     "type":"CUSTOM",            // Preprocessing node type
     "parameters":{              // Node parameters
         "file": "example.py",   // File containing custom script, located in 'projectRoot/customs/',
-        "parameter-1": 100,     // First parameter passed to custom script
-        "parameter-2": 1,       // Second parameter passed to custom script
+        "process-parameters":{  // Parameters passed to custom script
+            "parameter-1": 100, // First parameter passed to custom script
+            "parameter-2": 1,   // Second parameter passed to custom script
+        }
     }
 }
 ```
