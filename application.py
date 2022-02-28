@@ -3,15 +3,35 @@ from board_communication.open_bci_board import OpenBCIBoard
 from graph.graph import Graph
 from pyqtgraph.Qt import QtGui
 
+from preprocessing.preprocessing import PreProcessing
+
 
 class Application:
 
-    def __init__(self) -> None:
+    def __init__(self, board: OpenBCIBoard) -> None:
         super().__init__()
         # self.gui_thread = Thread(target=self._exec_app)
-        self.board = OpenBCIBoard()
+        self.board = board
         self.data = BoardData(self.board.get_eeg_channel_names())
         self.graph = Graph(self.board.get_sampling_rate(), self.board.get_eeg_channel_names())
+
+    @classmethod
+    def as_sdk(cls):
+        preprocessing: PreProcessing = PreProcessing()
+        preprocessing.pipeline = []
+        cls.__init__(
+            board=OpenBCIBoard(
+                preprocessing=preprocessing,
+                log_level="INFO",
+                board="SYNTHETIC_BOARD"
+            )
+        )
+
+    @classmethod
+    def from_config_json(cls):
+        cls.__init__(
+            board=OpenBCIBoard.from_config_json()
+        )
 
     def _exec_app(self):
         QtGui.QApplication.instance().exec_()

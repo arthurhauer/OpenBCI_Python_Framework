@@ -13,18 +13,17 @@ from models.preprocessing.type import PreProcessingType
 
 
 class PreProcessing:
-    __pipeline: List[PreProcessingNode] = None
+    pipeline: List[PreProcessingNode] = None
 
     def __init__(self) -> None:
         super().__init__()
 
-    @property
-    def _pipeline(self):
-        if self.__pipeline is None:
-            self.__pipeline = []
-            for preprocessing_node_settings in Configuration.get_preprocessing_settings():
-                self.__pipeline.append(PreProcessing._select_processor(preprocessing_node_settings))
-        return self.__pipeline
+    @classmethod
+    def from_config_json(cls):
+        pipeline = []
+        for preprocessing_node_settings in Configuration.get_preprocessing_settings():
+            pipeline.append(PreProcessing._select_processor(preprocessing_node_settings))
+        cls.pipeline = pipeline
 
     @staticmethod
     def _select_processor(node_settings: dict) -> PreProcessingNode:
@@ -46,7 +45,7 @@ class PreProcessing:
         elif preprocess_type == PreProcessingType.SMOOTH:
             raise NotImplementedError("SMOOTH is not implemented yet")
         elif preprocess_type == PreProcessingType.SIGNAL_CHECK:
-            processor = SignalCheck(parameters)
+            processor = SignalCheck.from_config_json(parameters)
         else:
             raise ValueError("Invalid preprocessing type " + node_settings['type'])
         return processor
@@ -62,5 +61,5 @@ class PreProcessing:
             raise ValueError("Invalid filter type " + filter_type)
 
     def process(self, data):
-        for node in self._pipeline:
+        for node in self.pipeline:
             node.process(data)
