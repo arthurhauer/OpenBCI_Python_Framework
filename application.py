@@ -4,6 +4,7 @@ from graph.graph import Graph
 from pyqtgraph.Qt import QtGui
 
 from models.preprocessing.custom import Custom
+from models.preprocessing.denoise import Denoise
 from models.preprocessing.detrend import Detrend
 from models.preprocessing.downsample import Downsample
 from models.preprocessing.filter.band_filter import BandFilter
@@ -14,12 +15,16 @@ from preprocessing.preprocessing import PreProcessing
 
 class Application:
 
-    def __init__(self, board: OpenBCIBoard) -> None:
+    def __init__(self, board: OpenBCIBoard = OpenBCIBoard.from_config_json()) -> None:
         super().__init__()
         # self.gui_thread = Thread(target=self._exec_app)
         self.board = board
         self.data = BoardData(self.board.get_eeg_channel_names())
         self.graph = Graph(self.board.get_sampling_rate(), self.board.get_eeg_channel_names())
+        self.start()
+        import time
+        time.sleep(60)
+        self.stop()
 
     @classmethod
     def as_sdk(cls):
@@ -98,6 +103,10 @@ class Application:
                 order=1,
                 sampling_frequency=board.get_sampling_rate(),
                 cutoff_frequency=2
+            ),
+            Denoise(
+                type='haar',
+                decomposition_level=2
             )
         ]
         board.preprocessing = preprocessing
@@ -105,19 +114,10 @@ class Application:
             board=board
         )
 
-    @classmethod
-    def from_config_json(cls):
-        return cls(
-            board=OpenBCIBoard.from_config_json()
-        )
-
-    def _exec_app(self):
-        QtGui.QApplication.instance().exec_()
-
     def start(self):
         self.board.start_stream_callback(self._on_data)
         # self.gui_thread.start()
-        self._exec_app()
+        QtGui.QApplication.instance().exec_()
 
     def stop(self):
         self.board.close_session()

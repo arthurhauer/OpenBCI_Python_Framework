@@ -2,6 +2,7 @@ from typing import List
 
 from config.configuration import Configuration
 from models.preprocessing.custom import Custom
+from models.preprocessing.denoise import Denoise
 from models.preprocessing.detrend import Detrend
 from models.preprocessing.downsample import Downsample
 from models.preprocessing.filter.band_filter import BandFilter
@@ -40,7 +41,7 @@ class PreProcessing:
         elif preprocess_type == PreProcessingType.DOWNSAMPLE:
             processor = Downsample.from_config_json(parameters)
         elif preprocess_type == PreProcessingType.DENOISE:
-            raise NotImplementedError("DENOISE is not implemented yet")
+            processor = Denoise.from_config_json(parameters)
         elif preprocess_type == PreProcessingType.TRANSFORM:
             raise NotImplementedError("TRANSFORM is not implemented yet")
         elif preprocess_type == PreProcessingType.SMOOTH:

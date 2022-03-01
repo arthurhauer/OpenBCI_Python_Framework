@@ -19,18 +19,11 @@
   },
   "preprocessing": [
     {
-       "type": "SIGNAL_CHECK",
-       "parameters": {
-         "action": {
-           "file": "example_action.py",
-           "parameters": {
-             "parameter-1": "example-parameter!"
-           }
-         },
-         "power-grid-frequency": 60,
-         "min-amplitude": 200,
-         "min-rms": 5
-       }
-     }
+      "type":"DENOISE",
+      "parameters":{
+        "type": "haar",
+        "decomposition-level": 2
+      }
+    }
   ]
 }
