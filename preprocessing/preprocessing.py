@@ -31,15 +31,22 @@ class PreProcessing:
     def _select_processor(node_settings: dict) -> PreProcessingNode:
         preprocess_type = PreProcessingType[node_settings['type']]
         parameters = node_settings['parameters']
+
+        parameters['sampling-frequency'] = Configuration.get_sampling_frequency()
+
         processor = None
         if preprocess_type == PreProcessingType.CUSTOM:
-            processor = Custom(parameters)
+            processor = Custom.from_config_json(parameters)
+
         elif preprocess_type == PreProcessingType.DETREND:
-            processor = Detrend(parameters)
+            processor = Detrend.from_config_json(parameters)
+
         elif preprocess_type == PreProcessingType.FILTER:
             processor = PreProcessing._select_filter(parameters)
+
         elif preprocess_type == PreProcessingType.DOWNSAMPLE:
             processor = Downsample.from_config_json(parameters)
+
         elif preprocess_type == PreProcessingType.DENOISE:
             processor = Denoise.from_config_json(parameters)
         elif preprocess_type == PreProcessingType.TRANSFORM:
@@ -55,11 +62,10 @@ class PreProcessing:
     @staticmethod
     def _select_filter(parameters: dict) -> Filter:
         filter_type = parameters['type']
-        parameters['sampling-frequency'] = Configuration.get_sampling_frequency()
         if filter_type in ['BANDPASS', 'BANDSTOP']:
-            return BandFilter(parameters)
+            return BandFilter.from_config_json(parameters)
         elif filter_type in ['LOWPASS', 'HIGHPASS']:
-            return CutOffFilter(parameters)
+            return CutOffFilter.from_config_json(parameters)
         else:
             raise ValueError("Invalid filter type " + filter_type)
 

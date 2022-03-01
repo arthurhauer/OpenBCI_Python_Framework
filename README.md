@@ -281,9 +281,39 @@ In the following example, we configure a median based downsampler
 }
 ```
 
-
 ### Denoise
+
 Allowed denoise node "type" parameter values:
+
+> "ENVIRONMENT"
+
+> "WAVELET"
+
+#### Environment
+Allowed environment denoise node "noise-type" parameter values:
+
+> "FIFTY"
+
+> "SIXTY"
+
+> "EACH"
+
+In the following example, we configure a 
+```
+{
+    "type":"DENOISE",               // Preprocessing node type
+    "parameters":{                  // Node parameters
+        "type": "ENVIRONMENT"       // Environment denoise,
+        "parameters:{               // Environment denoise parameters
+            "noise-type":"SIXTY"    // Enviroment noise type
+        }
+    }
+}
+```
+
+### Wavelet Denoise
+Allowed Wavelet Denoise node "wavelet" parameter values:
+
 > "haar"
 
 > "bior1.1"
@@ -377,10 +407,13 @@ Allowed denoise node "type" parameter values:
 In the following example, we configure a haar wavelet based denoiser
 ```
 {
-    "type":"DENOISE",               // Preprocessing node type
-    "parameters":{                  // Node parameters
-        "type": "haar",             // Wavelet
-        "decomposition-level": 2    // Decomposition level
+    "type":"DENOISE",                   // Preprocessing node type
+    "parameters":{                      // Node parameters
+        "type": "WAVELET",              // Wavelet denoise
+        "parameters":{                  // Wavelet denoise parameters
+            "wavelet":"haar",           // Wavelet        
+            "decomposition-level": 2    // Decomposition level
+        }
     }
 }
 ```

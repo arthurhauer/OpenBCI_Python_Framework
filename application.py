@@ -105,8 +105,14 @@ class Application:
                 cutoff_frequency=2
             ),
             Denoise(
-                type='haar',
+                type='WAVELET',
+                wavelet='haar',
                 decomposition_level=2
+            ),
+            Denoise(
+                type='ENVIRONMENT',
+                noise_type='SIXTY',
+                sampling_frequency=board.get_sampling_rate()
             )
         ]
         board.preprocessing = preprocessing

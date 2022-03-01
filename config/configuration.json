@@ -21,8 +21,20 @@
     {
       "type":"DENOISE",
       "parameters":{
-        "type": "haar",
-        "decomposition-level": 2
+        "type": "WAVELET",
+        "parameters": {
+          "wavelet": "haar",
+          "decomposition-level": 2
+        }
+      }
+    },
+    {
+      "type":"DENOISE",
+      "parameters":{
+        "type": "ENVIRONMENT",
+        "parameters": {
+          "noise-type": "SIXTY"
+        }
       }
     }
   ]

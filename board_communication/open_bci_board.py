@@ -37,12 +37,13 @@ class OpenBCIBoard:
 
     @classmethod
     def from_config_json(cls):
-        return cls(
-            preprocessing=PreProcessing.from_config_json(),
+        board = cls(
             log_level=Configuration.get_open_bci_log_level(),
             board=Configuration.get_open_bci_board(),
             communication=Configuration.get_open_bci_communication()
         )
+        board.preprocessing = PreProcessing.from_config_json()
+        return board
 
     @staticmethod
     def _set_log_level(log_level: str = "OFF"):
