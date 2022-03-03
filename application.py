@@ -10,6 +10,7 @@ from models.preprocessing.downsample import Downsample
 from models.preprocessing.filter.band_filter import BandFilter
 from models.preprocessing.filter.cutoff_filter import CutOffFilter
 from models.preprocessing.signal_check import SignalCheck
+from models.preprocessing.smooth import Smooth
 from preprocessing.preprocessing import PreProcessing
 
 
@@ -113,6 +114,10 @@ class Application:
                 type='ENVIRONMENT',
                 noise_type='SIXTY',
                 sampling_frequency=board.get_sampling_rate()
+            ),
+            Smooth(
+                type='MEAN',
+                period=100
             )
         ]
         board.preprocessing = preprocessing

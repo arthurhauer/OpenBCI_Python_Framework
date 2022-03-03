@@ -171,6 +171,10 @@ Allowed preprocessing node "type" values:
 
 > "SIGNAL_CHECK"
 
+> "SMOOTH"
+
+> "DENOISE"
+
 ### Filters
 
 Allowed filter node "filter" parameter values:
@@ -250,7 +254,7 @@ Allowed detrend node "type" parameter values:
 
 > "CONSTANT"
 
-> INEAR"
+> "LINEAR"
 
 In the following example, we configure a linear detrend
 ```
@@ -266,16 +270,16 @@ In the following example, we configure a linear detrend
 Allowed downsample node "type" parameter values:
 > "MEAN"
 
->"MEDIAN"
+> "MEDIAN"
 
->"EACH"
+> "EACH"
 
 In the following example, we configure a median based downsampler
 ```
 {
     "type":"DOWNSAMPLE",    // Preprocessing node type
     "parameters":{          // Node parameters
-        "type": "MEDIAN"    // Detrend type,
+        "type": "MEDIAN"    // Downsample type,
         "period": 100       // Downsampling period, in samples
     }
 }
@@ -414,6 +418,25 @@ In the following example, we configure a haar wavelet based denoiser
             "wavelet":"haar",           // Wavelet        
             "decomposition-level": 2    // Decomposition level
         }
+    }
+}
+```
+
+### Smooth
+Allowed smooth node "type" parameter values:
+> "MEAN"
+
+> "MEDIAN"
+
+> "EACH"
+
+In the following example, we configure a median based rolling filter
+```
+{
+    "type":"SMOOTH",    // Preprocessing node type
+    "parameters":{          // Node parameters
+        "type": "MEDIAN"    // Smoothing type,
+        "period": 100       // Smoothing period, in samples
     }
 }
 ```
