@@ -1,12 +1,10 @@
 from typing import List
 
-import numpy
 import pyqtgraph as pg
 from nptyping import Float
 from numpy.typing import NDArray
 from pyqtgraph.Qt import QtGui
 
-from models.data.board_data import BoardData
 from config.configuration import Configuration
 from models.data.channel import Channel
 

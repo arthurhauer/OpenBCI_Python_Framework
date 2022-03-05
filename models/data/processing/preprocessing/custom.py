@@ -1,10 +1,10 @@
 import os.path
 
 from globals.globals import CUSTOMS_DIR
-from models.preprocessing.node import PreProcessingNode
+from models.data.processing.processing_node import ProcessingNode
 
 
-class Custom(PreProcessingNode):
+class Custom(ProcessingNode):
 
     def __init__(self, process, process_parameters) -> None:
         super().__init__()

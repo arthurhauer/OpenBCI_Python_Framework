@@ -1,9 +1,9 @@
 from brainflow import DataFilter, DetrendOperations
 
-from models.preprocessing.node import PreProcessingNode
+from models.data.processing.processing_node import ProcessingNode
 
 
-class Detrend(PreProcessingNode):
+class Detrend(ProcessingNode):
     def __init__(self, type: str) -> None:
         super().__init__()
         if type is None:

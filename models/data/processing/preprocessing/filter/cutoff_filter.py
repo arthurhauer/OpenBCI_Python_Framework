@@ -1,6 +1,6 @@
 from brainflow import DataFilter
 
-from models.preprocessing.filter.filter import Filter
+from models.data.processing.preprocessing.filter.filter import Filter
 
 
 class CutOffFilter(Filter):

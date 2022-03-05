@@ -6,7 +6,6 @@ from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
 from nptyping import Float
 from numpy.typing import NDArray
 
-from models.data.board_data import BoardData
 from config.configuration import Configuration
 from preprocessing.preprocessing import PreProcessing
 

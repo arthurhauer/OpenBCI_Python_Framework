@@ -1,7 +1,7 @@
 import abc
 
 
-class PreProcessingNode:
+class ProcessingNode:
     _type: str
 
     def __init__(self, parameters: dict = {}) -> None:

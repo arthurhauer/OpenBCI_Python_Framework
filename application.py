@@ -1,24 +1,21 @@
-from threading import Thread
-
 import numpy
 from nptyping import Float
 from numpy.typing import NDArray
 
 from config.configuration import Configuration
-from models.data.board_data import BoardData
 from board_communication.open_bci_board import OpenBCIBoard
 from graph.graph import Graph
 from pyqtgraph.Qt import QtGui
 
 from models.data.channel import Channel
-from models.preprocessing.custom import Custom
-from models.preprocessing.denoise import Denoise
-from models.preprocessing.detrend import Detrend
-from models.preprocessing.downsample import Downsample
-from models.preprocessing.filter.band_filter import BandFilter
-from models.preprocessing.filter.cutoff_filter import CutOffFilter
-from models.preprocessing.signal_check import SignalCheck
-from models.preprocessing.smooth import Smooth
+from models.data.processing.preprocessing.custom import Custom
+from models.data.processing.preprocessing.denoise import Denoise
+from models.data.processing.preprocessing.detrend import Detrend
+from models.data.processing.preprocessing.downsample import Downsample
+from models.data.processing.preprocessing.filter.band_filter import BandFilter
+from models.data.processing.preprocessing.filter.cutoff_filter import CutOffFilter
+from models.data.processing.preprocessing.signal_check import SignalCheck
+from models.data.processing.preprocessing.smooth import Smooth
 from preprocessing.preprocessing import PreProcessing
 
 

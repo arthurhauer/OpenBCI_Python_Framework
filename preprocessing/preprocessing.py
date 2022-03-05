@@ -1,23 +1,23 @@
 from typing import List
 
 from config.configuration import Configuration
-from models.preprocessing.custom import Custom
-from models.preprocessing.denoise import Denoise
-from models.preprocessing.detrend import Detrend
-from models.preprocessing.downsample import Downsample
-from models.preprocessing.filter.band_filter import BandFilter
-from models.preprocessing.filter.cutoff_filter import CutOffFilter
-from models.preprocessing.filter.filter import Filter
-from models.preprocessing.node import PreProcessingNode
-from models.preprocessing.signal_check import SignalCheck
-from models.preprocessing.smooth import Smooth
-from models.preprocessing.type import PreProcessingType
+from models.data.processing.preprocessing.custom import Custom
+from models.data.processing.preprocessing.denoise import Denoise
+from models.data.processing.preprocessing.detrend import Detrend
+from models.data.processing.preprocessing.downsample import Downsample
+from models.data.processing.preprocessing.filter.band_filter import BandFilter
+from models.data.processing.preprocessing.filter.cutoff_filter import CutOffFilter
+from models.data.processing.preprocessing.filter.filter import Filter
+from models.data.processing.processing_node import ProcessingNode
+from models.data.processing.preprocessing.signal_check import SignalCheck
+from models.data.processing.preprocessing.smooth import Smooth
+from models.data.processing.preprocessing.type import PreProcessingType
 
 
 class PreProcessing:
-    pipeline: List[PreProcessingNode] = None
+    pipeline: List[ProcessingNode] = None
 
-    def __init__(self, pipeline: List[PreProcessingNode] = None) -> None:
+    def __init__(self, pipeline: List[ProcessingNode] = None) -> None:
         super().__init__()
         self.pipeline = pipeline
 
@@ -29,7 +29,7 @@ class PreProcessing:
         return cls(pipeline=pipeline)
 
     @staticmethod
-    def _select_processor(node_settings: dict) -> PreProcessingNode:
+    def _select_processor(node_settings: dict) -> ProcessingNode:
         preprocess_type = PreProcessingType[node_settings['type']]
         parameters = node_settings['parameters']
 

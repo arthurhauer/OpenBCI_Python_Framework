@@ -1,9 +1,9 @@
 from brainflow import DataFilter, AggOperations
 
-from models.preprocessing.node import PreProcessingNode
+from models.data.processing.processing_node import ProcessingNode
 
 
-class Downsample(PreProcessingNode):
+class Downsample(ProcessingNode):
 
     def __init__(self, type: str, period: int) -> None:
         if type is None:
