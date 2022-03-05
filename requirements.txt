@@ -3,3 +3,4 @@ numpy~=1.21.2
 pyqt5~=5.15.6
 nptyping~=1.4.4
 brainflow~=4.6.1
+mne~=0.24.1

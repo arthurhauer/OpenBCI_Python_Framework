@@ -18,5 +18,5 @@ class TrainableProcessingNode(ProcessingNode):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def train(self, data):
+    def train(self, data, label):
         raise NotImplementedError()

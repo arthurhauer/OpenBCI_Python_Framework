@@ -75,6 +75,14 @@ class PreProcessing:
         else:
             raise ValueError("Invalid filter type " + filter_type)
 
+    @staticmethod
+    def _select_feature_extractor(parameters: dict) -> Filter:
+        extractor_type = parameters['type']
+        if extractor_type == 'CSP':
+            return BandFilter.from_config_json(parameters)
+        else:
+            raise ValueError("Invalid feature extractor type " + filter_type)
+
     def process(self, data):
         for node in self.pipeline:
             node.process(data)

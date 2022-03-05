@@ -10,3 +10,4 @@ class PreProcessingType(enum.IntEnum):
     TRANSFORM = 5
     SMOOTH = 6
     SIGNAL_CHECK = 7
+    FEATURE_EXTRACT = 8
