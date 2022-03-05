@@ -105,7 +105,7 @@
     ]
   },
   "trial": {
-    "repetitions": 5,
+    "repetitions": 1,
     "sequence": [
       {
         "name": "Close left fist",

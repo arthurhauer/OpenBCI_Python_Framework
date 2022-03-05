@@ -1,12 +1,15 @@
+import multiprocessing
 from threading import Thread
 from typing import List
 
+import numpy
 import time
 from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
 from nptyping import Float
 from numpy.typing import NDArray
 
 from config.configuration import Configuration
+from models.trial.trial import Trial
 from preprocessing.preprocessing import PreProcessing
 
 
@@ -15,8 +18,9 @@ class OpenBCIBoard:
     def __init__(self,
                  communication: dict,
                  preprocessing: PreProcessing = None,
+                 trial: Trial = None,
                  log_level: str = "OFF",
-                 board: str = "SYNTHETIC_BOARD",
+                 board: str = "SYNTHETIC_BOARD"
                  ) -> None:
         super().__init__()
         self._board = None
@@ -32,16 +36,18 @@ class OpenBCIBoard:
         self.get_eeg_channels()
         self.get_accelerometer_channels()
         self._run_stream_loop: bool = False
-        self._data_loop_thread: Thread = Thread(target=self._stream_data_loop, daemon=True)
+        self._data_loop_thread = Thread(target=self._stream_data_loop, daemon=True)
         self._data_callback = None
         self.preprocessing = preprocessing
+        self.trial = trial
 
     @classmethod
     def from_config_json(cls):
         board = cls(
             log_level=Configuration.get_open_bci_log_level(),
             board=Configuration.get_open_bci_board(),
-            communication=Configuration.get_open_bci_communication()
+            communication=Configuration.get_open_bci_communication(),
+            trial=Trial.from_config_json(Configuration.get_trial_settings())
         )
         board.preprocessing = PreProcessing.from_config_json()
         return board
@@ -124,9 +130,13 @@ class OpenBCIBoard:
     def get_data(self) -> NDArray[Float]:
         data = self._get_board().get_board_data()[self.get_eeg_channels()]
         self.preprocessing.process(data)
+        marker = numpy.ones((len(data[0]))) * self.trial.get_current_sequence()
+        data = numpy.vstack([data, marker])
         return data
 
     def _stream_data_loop(self):
+        self.trial.on_stop = self.close_session
+        self.trial.start()
         while self._run_stream_loop:
             time.sleep(Configuration.get_open_bci_data_callback_frequency_ms() / 1000)
             self._data_callback(self.get_data())

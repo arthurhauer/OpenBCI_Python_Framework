@@ -1,3 +1,5 @@
+import multiprocessing
+from threading import Thread
 from typing import List
 
 from models.trial.sequence import Sequence
@@ -24,6 +26,7 @@ class Trial:
         self._sequence_to_call = 0
         self._sequence_limit = len(self.sequence) - 1
         self._current_repetition = 1
+        self._thread = Thread(target=self._execute_sequence)
 
     @classmethod
     def from_config_json(cls, parameters: dict):
@@ -39,8 +42,11 @@ class Trial:
             repetitions=parameters['repetitions']
         )
 
+    def get_current_sequence(self):
+        return self._sequence_to_call
+
     def start(self):
-        self._execute_sequence()
+        self._thread.start()
 
     def on_stop(self):
         pass
@@ -55,6 +61,7 @@ class Trial:
             self._sequence_to_call = 0
             if self._current_repetition > self.repetitions:
                 self.on_stop()
+                self._thread.join()
                 return
         self.on_change_sequence(self._sequence_to_call)
         self._execute_sequence()
