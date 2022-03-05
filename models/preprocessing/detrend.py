@@ -23,4 +23,5 @@ class Detrend(PreProcessingNode):
         )
 
     def process(self, data):
-        DataFilter.detrend(data, self._detrend_type)
+        for channel in data:
+            DataFilter.detrend(data, self._detrend_type)

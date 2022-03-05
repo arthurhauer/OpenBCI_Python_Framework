@@ -32,4 +32,5 @@ class Downsample(PreProcessingNode):
         )
 
     def process(self, data):
-        data = DataFilter.perform_downsampling(data, self._period, self._operation)
+        for channel in data:
+            data = DataFilter.perform_downsampling(data, self._period, self._operation)

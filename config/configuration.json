@@ -3,26 +3,26 @@
     "simulated": false,
     "maximum-parallel-jobs": -1,
     "graph": {
-      "window-size": 4
+      "window-size": 2000
     }
   },
   "open_bci": {
     "log-level": "TRACE",
     "board": "SYNTHETIC_BOARD",
-    "data-callback-frequency-ms": 50,
+    "data-callback-frequency-ms": 200,
     "communication": {
       "serial-port": "/dev/ttyUSB0"
     },
-    "channel-mapping": {
+    "channel-mapping": [
 
-    }
+    ]
   },
   "preprocessing": [
     {
       "type":"SMOOTH",
       "parameters":{
         "type": "MEAN",
-        "period": 100
+        "period": 200
       }
     }
   ]

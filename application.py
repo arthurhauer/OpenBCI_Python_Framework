@@ -1,8 +1,16 @@
+from threading import Thread
+
+import numpy
+from nptyping import Float
+from numpy.typing import NDArray
+
+from config.configuration import Configuration
 from models.data.board_data import BoardData
 from board_communication.open_bci_board import OpenBCIBoard
 from graph.graph import Graph
 from pyqtgraph.Qt import QtGui
 
+from models.data.channel import Channel
 from models.preprocessing.custom import Custom
 from models.preprocessing.denoise import Denoise
 from models.preprocessing.detrend import Detrend
@@ -18,10 +26,17 @@ class Application:
 
     def __init__(self, board: OpenBCIBoard = OpenBCIBoard.from_config_json()) -> None:
         super().__init__()
-        # self.gui_thread = Thread(target=self._exec_app)
         self.board = board
-        self.data = BoardData(self.board.get_eeg_channel_names())
-        self.graph = Graph(self.board.get_sampling_rate(), self.board.get_eeg_channel_names())
+        # self.data = BoardData(self.board.get_eeg_channel_names())
+        self.data = None
+        channels = []
+        for channel in Configuration.get_channel_mapping():
+            channels.append(Channel.from_config_json(channel))
+        if len(channels) == 0:
+            for channel in board.get_eeg_channel_names():
+                channels.append(Channel(channel))
+        self.graph = Graph(self.board.get_sampling_rate(), channels)
+        # self.gui_thread =
         self.start()
         import time
         time.sleep(60)
@@ -127,13 +142,14 @@ class Application:
 
     def start(self):
         self.board.start_stream_callback(self._on_data)
-        # self.gui_thread.start()
         QtGui.QApplication.instance().exec_()
 
     def stop(self):
         self.board.close_session()
-        # self.gui_thread.join(150)
 
-    def _on_data(self, new_data: BoardData):
-        self.data.append_new_data(new_data)
+    def _on_data(self, new_data: NDArray[Float]):
+        if self.data is None:
+            self.data = new_data
+        else:
+            self.data = numpy.append(self.data, new_data, axis=1)
         self.graph.plot_data(self.data)

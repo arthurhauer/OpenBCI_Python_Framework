@@ -75,4 +75,5 @@ class BandFilter(Filter):
                                     self._ripple)
 
     def process(self, data):
-        self.filter_process(data)
+        for channel in data:
+            self.filter_process(data)

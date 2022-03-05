@@ -74,6 +74,7 @@ class SignalCheck(PreProcessingNode):
         )
 
     def process(self, data):
-        for name, condition in self._conditions.items():
-            if condition(data):
-                self._action(self._action_parameters, name, data)
+        for channel in data:
+            for name, condition in self._conditions.items():
+                if condition(data):
+                    self._action(self._action_parameters, name, data)

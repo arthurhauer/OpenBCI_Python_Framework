@@ -3,6 +3,8 @@ from typing import List
 
 import time
 from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
+from nptyping import Float
+from numpy.typing import NDArray
 
 from models.data.board_data import BoardData
 from config.configuration import Configuration
@@ -120,13 +122,10 @@ class OpenBCIBoard:
         self._get_board().start_stream()
         time.sleep(2)
 
-    def get_data(self) -> BoardData:
-        data = self._get_board().get_board_data()
-        for count, channel in enumerate(self.get_eeg_channels()):
-            self.preprocessing.process(data[channel])
-        wrapped = BoardData(self.get_eeg_channel_names(), data[self.get_timestamp_channel()],
-                            data[self.get_eeg_channels()], data[self.get_accelerometer_channels()])
-        return wrapped
+    def get_data(self) -> NDArray[Float]:
+        data = self._get_board().get_board_data()[self.get_eeg_channels()]
+        self.preprocessing.process(data)
+        return data
 
     def _stream_data_loop(self):
         while self._run_stream_loop:

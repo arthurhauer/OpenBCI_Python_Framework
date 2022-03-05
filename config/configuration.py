@@ -1,4 +1,7 @@
 import json
+from typing import List
+
+from models.data.channel import Channel
 
 
 class Configuration:
@@ -57,6 +60,10 @@ class Configuration:
     @staticmethod
     def get_open_bci_board() -> str:
         return Configuration.get_open_bci_settings()['board']
+
+    @staticmethod
+    def get_channel_mapping() -> List[dict]:
+        return Configuration.get_open_bci_settings()['channel-mapping']
 
     @staticmethod
     def get_open_bci_communication() -> dict:

@@ -107,4 +107,5 @@ class Denoise(PreProcessingNode):
         DataFilter.perform_wavelet_denoising(data, self._wavelet_type, self._decomposition_level)
 
     def process(self, data):
-        self._denoise_process(data)
+        for channel in data:
+            self._denoise_process(data)
