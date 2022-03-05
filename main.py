@@ -1,18 +1,8 @@
 import numpy
-
+import scipy.stats as stats
 from application import Application
+from config.configuration import Configuration
+from models.trial.trial import Trial
 
 if __name__ == "__main__":
     Application()
-    # og = [
-    #     [1, 1, 1, 1],
-    #     [-1, -1, -1, -1]
-    # ]
-    # new = [
-    #     [2, 2, 2, 2, 3],
-    #     [0, 0, 0, 0, 1]
-    # ]
-    #
-    # ap = numpy.append(og, new, axis=1)
-    #
-    # print(ap)

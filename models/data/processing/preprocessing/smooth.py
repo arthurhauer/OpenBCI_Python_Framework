@@ -33,4 +33,4 @@ class Smooth(ProcessingNode):
 
     def process(self, data):
         for channel in data:
-            channel = DataFilter.perform_rolling_filter(channel, self._period, self._operation)
+            DataFilter.perform_rolling_filter(channel, self._period, self._operation)

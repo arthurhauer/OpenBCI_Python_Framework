@@ -40,8 +40,12 @@ class Configuration:
         return Configuration.get_general_settings()['graph']
 
     @staticmethod
-    def get_graphing_window_size() -> int:
+    def get_graphing_window_size() -> dict:
         return Configuration.get_graphing_settings()['window-size']
+
+    @staticmethod
+    def get_graphing_plot_samples() -> int:
+        return Configuration.get_graphing_settings()['plot-samples']
 
     # end_region General Settings
 
@@ -79,6 +83,14 @@ class Configuration:
         # end_region Open-BCI Settings
 
     # ----------------------------------------------------------------------------------------------------------------------#
+    # region Trial Settings
+
+    @staticmethod
+    def get_trial_settings() -> dict:
+        return Configuration._config()['trial']
+
+    # end_region Trial Settings
+    # ----------------------------------------------------------------------------------------------------------------------#
 
     # region Pre-Processing Settings
 
@@ -90,5 +102,5 @@ class Configuration:
     def get_proprocessing_setting_at_index(index: int) -> dict:
         return Configuration.get_preprocessing_settings()[index]
 
-        # end_region Pre-Processing Settings
+    # end_region Pre-Processing Settings
     # ----------------------------------------------------------------------------------------------------------------------#

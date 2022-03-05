@@ -15,16 +15,20 @@ class Graph:
         self.channels = channels
         self.window_size = Configuration.get_graphing_window_size()
         self.sampling_rate = sampling_rate
-        self.num_points = self.window_size * self.sampling_rate
+        self.samples = Configuration.get_graphing_plot_samples()
         self.app = QtGui.QApplication([])
-        self.win = pg.GraphicsWindow(title='BrainFlow Plot', size=(800, 600))
+        self.win = pg.GraphicsWindow(title='BrainFlow Plot',
+                                     size=(self.window_size["width"], self.window_size["height"]))
         self._init_timeseries()
 
     def _init_timeseries(self):
         self.plots = list()
         self.curves = list()
+        self.channel_curve_map = {}
+        curve_index = 0
         for i, channel in enumerate(self.channels):
             if channel.show:
+                self.channel_curve_map[i] = curve_index
                 p = self.win.addPlot(row=i, col=0)
                 p.showAxis('left', False)
                 p.setMenuEnabled('left', False)
@@ -34,13 +38,16 @@ class Graph:
                 self.plots.append(p)
                 curve = p.plot()
                 self.curves.append(curve)
+                curve_index += 1
 
     def plot_data(self, data: NDArray[Float]):
+        data_len = len(data)
         for i in range(len(self.channels)):
-            data_len = len(data[i])
-            if data_len <= self.window_size:
-                windowed_data = data[i]
-            else:
-                windowed_data = data[i][data_len - self.window_size - 1:data_len - 1]
-            self.curves[i].setData(windowed_data)
+            if i in self.channel_curve_map.keys() and i < data_len:
+                signal_len = len(data[i])
+                if signal_len <= self.samples:
+                    windowed_data = data[i]
+                else:
+                    windowed_data = data[i][signal_len - self.samples - 1:signal_len - 1]
+                self.curves[self.channel_curve_map[i]].setData(windowed_data)
         self.app.processEvents()

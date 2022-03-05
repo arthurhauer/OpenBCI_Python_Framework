@@ -4,6 +4,7 @@ import numpy as np
 
 from globals.globals import SIGNAL_CHECK_ACTION_DIR
 from models.data.processing.processing_node import ProcessingNode
+from models.utils.utils import script_execute
 
 
 class SignalCheck(ProcessingNode):
@@ -44,18 +45,9 @@ class SignalCheck(ProcessingNode):
             raise ValueError('preprocessing.signal.check.invalid.parameters.must.have.min-rms')
 
         action_path = os.path.join(SIGNAL_CHECK_ACTION_DIR, parameters['action']['file'])
-        if not os.path.isfile(action_path):
-            raise ValueError(
-                'preprocessing.signal.check.invalid.parameters.action.file.doesnt.exist.' + parameters['action'])
 
-        # Open and read the given custom python script
-        file = open(action_path, 'r')
-        script = file.read()
-        # Compile the script
-        compiled_script = compile(script, '', 'exec')
-        _locals = locals()
-        # Execute the script, setting custom_action on _locals dict
-        exec(compiled_script, _locals)
+        _locals = script_execute(action_path)
+
         if 'custom_action' not in _locals:
             raise ValueError(
                 'preprocessing.signal.check.invalid.parameters.custom_action.not.defined.in.script.%s' % action_path)

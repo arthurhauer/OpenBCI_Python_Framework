@@ -2,6 +2,7 @@ import os.path
 
 from globals.globals import CUSTOMS_DIR
 from models.data.processing.processing_node import ProcessingNode
+from models.utils.utils import script_execute
 
 
 class Custom(ProcessingNode):
@@ -21,16 +22,7 @@ class Custom(ProcessingNode):
         if 'file' not in parameters:
             raise ValueError('preprocessing.custom.invalid.parameters.must.have.file')
         custom_script_path = os.path.join(CUSTOMS_DIR, parameters['file'])
-        if not os.path.isfile(custom_script_path):
-            raise ValueError('preprocessing.custom.invalid.parameters.file.doesnt.exist.' + parameters['file'])
-        # Open and read the given custom python script
-        file = open(custom_script_path, 'r')
-        script = file.read()
-        # Compile the script
-        compiled_script = compile(script, '', 'exec')
-        _locals = locals()
-        # Execute the script, setting custom_process on _locals dict
-        exec(compiled_script, _locals)
+        _locals = script_execute(custom_script_path)
 
         if 'custom_process' not in _locals:
             raise ValueError(
