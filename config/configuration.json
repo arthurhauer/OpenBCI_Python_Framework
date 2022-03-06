@@ -105,10 +105,28 @@
     ]
   },
   "trial": {
-    "repetitions": 1,
-    "sequence": [
+    "repetitions": 5,
+    "randomize": true,
+    "sequences": [
+      {
+        "name": "Rest",
+        "code": 0,
+        "duration": {
+          "mean": 4,
+          "standard-deviation": 1,
+          "maximum": 6,
+          "minimum": 2
+        },
+        "cue": {
+          "file": "console_print.py",
+          "parameters": {
+            "message": "REST"
+          }
+        }
+      },
       {
         "name": "Close left fist",
+        "code": 1,
         "duration": {
           "mean": 2,
           "standard-deviation": 0.5,
@@ -124,6 +142,7 @@
       },
       {
         "name": "Rest",
+        "code": 0,
         "duration": {
           "mean": 4,
           "standard-deviation": 1,
@@ -139,6 +158,7 @@
       },
       {
         "name": "Close right fist",
+        "code": 2,
         "duration": {
           "mean": 2,
           "standard-deviation": 0.5,

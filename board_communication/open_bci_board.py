@@ -130,7 +130,7 @@ class OpenBCIBoard:
     def get_data(self) -> NDArray[Float]:
         data = self._get_board().get_board_data()[self.get_eeg_channels()]
         self.preprocessing.process(data)
-        marker = numpy.ones((len(data[0]))) * self.trial.get_current_sequence()
+        marker = numpy.ones((len(data[0]))) * self.trial.get_current_sequence_code()
         data = numpy.vstack([data, marker])
         return data
 
