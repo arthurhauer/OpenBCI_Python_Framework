@@ -1,4 +1,6 @@
 import mne as mne
+import numpy
+import numpy as np
 
 from models.data.processing.feature_extraction.feature_extractor import FeatureExtractor
 
@@ -15,17 +17,16 @@ class CSP(FeatureExtractor):
 
     @classmethod
     def from_config_json(cls, parameters: dict):
-        super().from_config_json(parameters)
-        if 'n-components' not in parameters['parameters']:
+        if 'n-components' not in parameters:
             raise ValueError('processing.trainable.feature.extractor.csp.parameters.must.have.n-components')
         return cls(
-            n_components=parameters['parameters']['n-components']
+            n_components=parameters['n-components']
         )
 
     def process(self, data):
-        extracted = self.csp.transform(data)
-        for component in range(self.n_components):
-            data[len(data) + component] = extracted[component]
+        # super()._append_extracted(data, self.csp.transform(data))
+        super()._append_extracted(data, numpy.zeros((self.n_components,len(data[0]))))
 
     def train(self, data, label):
-        self.csp = self.csp.fit(data, label)
+        # self.csp = self.csp.fit(data, label)
+        super()._append_extracted(data, numpy.zeros((self.n_components,len(data[0]))))

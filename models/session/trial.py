@@ -1,22 +1,22 @@
 import threading
 
-from models.trial.cue import Cue
-from models.trial.duration import Duration
+from models.session.cue import Cue
+from models.session.duration import Duration
 
 
-class Sequence:
+class Trial:
     def __init__(self, name: str, code: int, duration: Duration, cue: Cue) -> None:
         super().__init__()
         if name is None:
-            raise ValueError('trial.sequence.must.have.name')
+            raise ValueError('session.trial.must.have.name')
         if code is None:
-            raise ValueError('trial.sequence.must.have.code')
+            raise ValueError('session.trial.must.have.code')
         if len(name) == 0:
-            raise ValueError('trial.sequence.name.must.not.be.empty')
+            raise ValueError('session.trial.name.must.not.be.empty')
         if duration is None:
-            raise ValueError('trial.sequence.must.have.duration')
+            raise ValueError('session.trial.must.have.duration')
         if cue is None:
-            raise ValueError('trial.sequence.must.have.cue')
+            raise ValueError('session.trial.must.have.cue')
         self.name = name
         self.code = code
         self.duration = duration
@@ -25,13 +25,13 @@ class Sequence:
     @classmethod
     def from_config_json(cls, parameters: dict):
         if 'name' not in parameters:
-            raise ValueError('trial.sequence.must.have.name')
+            raise ValueError('session.trial.must.have.name')
         if 'code' not in parameters:
-            raise ValueError('trial.sequence.must.have.code')
+            raise ValueError('session.trial.must.have.code')
         if 'duration' not in parameters:
-            raise ValueError('trial.sequence.must.have.duration')
+            raise ValueError('session.trial.must.have.duration')
         if 'cue' not in parameters:
-            raise ValueError('trial.sequence.must.have.cue')
+            raise ValueError('session.trial.must.have.cue')
         return cls(
             name=parameters['name'],
             code=parameters['code'],

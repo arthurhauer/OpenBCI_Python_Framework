@@ -105,9 +105,13 @@
     ]
   },
   "trial": {
-    "repetitions": 5,
+    "repetitions": {
+      "feature-extractor-training": 1,
+      "classifier-training": 0,
+      "test": 3
+    },
     "randomize": true,
-    "sequences": [
+    "trials": [
       {
         "name": "Rest",
         "code": 0,
@@ -185,5 +189,11 @@
         }
       }
     }
-  ]
+  ],
+  "feature-extraction": {
+    "type": "CSP",
+    "parameters": {
+      "n-components": 4
+    }
+  }
 }

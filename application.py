@@ -16,7 +16,7 @@ from models.data.processing.preprocessing.filter.band_filter import BandFilter
 from models.data.processing.preprocessing.filter.cutoff_filter import CutOffFilter
 from models.data.processing.preprocessing.signal_check import SignalCheck
 from models.data.processing.preprocessing.smooth import Smooth
-from preprocessing.preprocessing import PreProcessing
+from models.data.processing.preprocessing.preprocessing import PreProcessing
 
 
 class Application:
@@ -33,11 +33,7 @@ class Application:
             for channel in board.get_eeg_channel_names():
                 channels.append(Channel(channel))
         self.graph = Graph(self.board.get_sampling_rate(), channels)
-        # self.gui_thread =
         self.start()
-        import time
-        time.sleep(60)
-        self.stop()
 
     @classmethod
     def as_sdk(cls):

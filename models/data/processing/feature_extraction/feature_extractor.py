@@ -1,5 +1,7 @@
 import abc
 
+import numpy
+
 from models.data.processing.trainable_processing_node import TrainableProcessingNode
 
 
@@ -15,8 +17,11 @@ class FeatureExtractor(TrainableProcessingNode):
     @classmethod
     @abc.abstractmethod
     def from_config_json(cls, parameters: dict):
-        if 'parameters' not in parameters:
-            raise ValueError('processing.trainable.feature.extractor.parameters.must.have.parameters')
+        raise NotImplementedError()
+
+    def _append_extracted(self, data, extracted):
+        for component in extracted:
+            data = numpy.vstack([data, component])
 
     @abc.abstractmethod
     def process(self, data):

@@ -1,4 +1,3 @@
-import multiprocessing
 from threading import Thread
 from typing import List
 
@@ -8,9 +7,12 @@ from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
 from nptyping import Float
 from numpy.typing import NDArray
 
+import models.data.processing.feature_extraction.dummy
 from config.configuration import Configuration
-from models.trial.trial import Trial
-from preprocessing.preprocessing import PreProcessing
+from models.data.processing.feature_extraction.feature_extraction import FeatureExtraction
+from models.data.processing.feature_extraction.feature_extractor import FeatureExtractor
+from models.data.processing.preprocessing.preprocessing import PreProcessing
+from models.session.session import Session
 
 
 class OpenBCIBoard:
@@ -18,7 +20,8 @@ class OpenBCIBoard:
     def __init__(self,
                  communication: dict,
                  preprocessing: PreProcessing = None,
-                 trial: Trial = None,
+                 feature_extractor: FeatureExtractor = models.data.processing.feature_extraction.dummy.Dummy(),
+                 session: Session = None,
                  log_level: str = "OFF",
                  board: str = "SYNTHETIC_BOARD"
                  ) -> None:
@@ -39,7 +42,10 @@ class OpenBCIBoard:
         self._data_loop_thread = Thread(target=self._stream_data_loop, daemon=True)
         self._data_callback = None
         self.preprocessing = preprocessing
-        self.trial = trial
+        self.session = session
+        self.feature_extractor = feature_extractor
+        self._feature_extractor_train = True
+        self._classifier_train = True
 
     @classmethod
     def from_config_json(cls):
@@ -47,9 +53,10 @@ class OpenBCIBoard:
             log_level=Configuration.get_open_bci_log_level(),
             board=Configuration.get_open_bci_board(),
             communication=Configuration.get_open_bci_communication(),
-            trial=Trial.from_config_json(Configuration.get_trial_settings())
+            session=Session.from_config_json(Configuration.get_trial_settings())
         )
-        board.preprocessing = PreProcessing.from_config_json()
+        board.preprocessing = PreProcessing.from_config_json(Configuration.get_preprocessing_settings())
+        board.feature_extractor = FeatureExtraction.from_config_json(Configuration.get_feature_extraction_settings())
         return board
 
     @staticmethod
@@ -130,13 +137,30 @@ class OpenBCIBoard:
     def get_data(self) -> NDArray[Float]:
         data = self._get_board().get_board_data()[self.get_eeg_channels()]
         self.preprocessing.process(data)
-        marker = numpy.ones((len(data[0]))) * self.trial.get_current_sequence_code()
+
+        marker = numpy.ones((len(data[0]))) * self.session.get_current_trial_code()
+
+        if self._feature_extractor_train:
+            self.feature_extractor.train(data, marker)
+        else:
+            self.feature_extractor.process(data)
         data = numpy.vstack([data, marker])
         return data
 
+    def _stop_training_feature_extractor(self):
+        print("Stopped feature extractor training")
+        self._feature_extractor_train = False
+        self._classifier_train = True
+
+    def _stop_training_classifier(self):
+        print("Stopped classifier training")
+        self._classifier_train = False
+
     def _stream_data_loop(self):
-        self.trial.on_stop = self.close_session
-        self.trial.start()
+        self.session.on_stop = self.close_session
+        self.session.on_feature_extractor_training_end = self._stop_training_feature_extractor
+        self.session.on_classifier_training_end = self._stop_training_classifier
+        self.session.start()
         while self._run_stream_loop:
             time.sleep(Configuration.get_open_bci_data_callback_frequency_ms() / 1000)
             self._data_callback(self.get_data())

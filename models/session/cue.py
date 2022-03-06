@@ -9,7 +9,7 @@ class Cue:
     def __init__(self, function: Any, parameters: dict) -> None:
         super().__init__()
         if function is None:
-            raise ValueError('trial.sequence.cue.must.have.function')
+            raise ValueError('session.trial.cue.must.have.function')
         if parameters is None:
             parameters = {}
         self._function = function
@@ -18,7 +18,7 @@ class Cue:
     @classmethod
     def from_config_json(cls, parameters: dict):
         if 'file' not in parameters:
-            raise ValueError('trial.sequence.cue.must.have.file')
+            raise ValueError('session.trial.cue.must.have.file')
         if 'parameters' not in parameters:
             cue_parameters = {}
         else:
@@ -27,7 +27,7 @@ class Cue:
         _locals = script_execute(cue_function_path)
         if 'custom_cue' not in _locals:
             raise ValueError(
-                'trial.sequence.cue.custom_cue.not.defined.in.script.%s' % cue_function_path)
+                'session.trial.cue.custom_cue.not.defined.in.script.%s' % cue_function_path)
         return cls(
             function=_locals['custom_cue'],
             parameters=cue_parameters

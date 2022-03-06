@@ -35,6 +35,7 @@ class Configuration:
     def get_sampling_frequency() -> int:
         return Configuration.get_general_settings()['sampling-frequency']
 
+    # region Graphing Settings
     @staticmethod
     def get_graphing_settings() -> dict:
         return Configuration.get_general_settings()['graph']
@@ -46,6 +47,8 @@ class Configuration:
     @staticmethod
     def get_graphing_plot_samples() -> int:
         return Configuration.get_graphing_settings()['plot-samples']
+
+    # end_region Graphing Settings
 
     # end_region General Settings
 
@@ -80,9 +83,11 @@ class Configuration:
     @staticmethod
     def get_open_bci_data_callback_frequency_ms() -> int:
         return Configuration.get_open_bci_settings()['data-callback-frequency-ms']
-        # end_region Open-BCI Settings
+
+    # end_region Open-BCI Settings
 
     # ----------------------------------------------------------------------------------------------------------------------#
+
     # region Trial Settings
 
     @staticmethod
@@ -90,6 +95,7 @@ class Configuration:
         return Configuration._config()['trial']
 
     # end_region Trial Settings
+
     # ----------------------------------------------------------------------------------------------------------------------#
 
     # region Pre-Processing Settings
@@ -99,8 +105,19 @@ class Configuration:
         return Configuration._config()['preprocessing']
 
     @staticmethod
-    def get_proprocessing_setting_at_index(index: int) -> dict:
+    def get_preprocessing_setting_at_index(index: int) -> dict:
         return Configuration.get_preprocessing_settings()[index]
 
     # end_region Pre-Processing Settings
+
+    # ----------------------------------------------------------------------------------------------------------------------#
+
+    # region Feature Extraction Settings
+
+    @staticmethod
+    def get_feature_extraction_settings() -> dict:
+        return Configuration._config()['feature-extraction']
+
+    # end_region
+
     # ----------------------------------------------------------------------------------------------------------------------#
