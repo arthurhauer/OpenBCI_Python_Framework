@@ -7,6 +7,7 @@ class TrainableProcessingNode(ProcessingNode):
 
     def __init__(self, parameters: dict = {}) -> None:
         super().__init__(parameters=parameters)
+        self._trained = False
 
     @classmethod
     @abc.abstractmethod
@@ -19,4 +20,4 @@ class TrainableProcessingNode(ProcessingNode):
 
     @abc.abstractmethod
     def train(self, data, label):
-        raise NotImplementedError()
+        self._trained = True

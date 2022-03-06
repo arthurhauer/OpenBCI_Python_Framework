@@ -15,20 +15,20 @@
     "board": "SYNTHETIC_BOARD",
     "data-callback-frequency-ms": 200,
     "communication": {
-      "serial-port": "/dev/ttyUSB0"
+      "serial-port": "COM4"
     },
     "channel-mapping": [
       {
         "name": "Canal 1",
-        "show": true
+        "show": false
       },
       {
         "name": "Canal 2",
-        "show": true
+        "show": false
       },
       {
         "name": "Canal 3",
-        "show": true
+        "show": false
       },
       {
         "name": "Canal 4",
@@ -64,7 +64,7 @@
       },
       {
         "name": "Canal 12",
-        "show": true
+        "show": false
       },
       {
         "name": "Canal 13",
@@ -80,46 +80,46 @@
       },
       {
         "name": "Canal 16",
-        "show": true
+        "show": false
       },
       {
         "name": "Marcador",
         "show": true
       },
       {
-        "name": "CSP 1",
+        "name": "Timestamp",
         "show": true
       },
       {
-        "name": "CSP 2",
+        "name": "Accel X",
         "show": true
       },
       {
-        "name": "CSP 3",
+        "name": "Accel Y",
         "show": true
       },
       {
-        "name": "CSP 4",
+        "name": "Accel Z",
         "show": true
       }
     ]
   },
   "trial": {
     "repetitions": {
-      "feature-extractor-training": 1,
+      "feature-extractor-training": 0,
       "classifier-training": 0,
-      "test": 3
+      "test": 999
     },
-    "randomize": true,
+    "randomize": false,
     "trials": [
       {
         "name": "Rest",
-        "code": 0,
+        "code": 1,
         "duration": {
-          "mean": 4,
+          "mean": 1.5,
           "standard-deviation": 1,
-          "maximum": 6,
-          "minimum": 2
+          "maximum": 2,
+          "minimum": 1
         },
         "cue": {
           "file": "console_print.py",
@@ -130,11 +130,11 @@
       },
       {
         "name": "Close left fist",
-        "code": 1,
+        "code": 2,
         "duration": {
-          "mean": 2,
-          "standard-deviation": 0.5,
-          "maximum": 3,
+          "mean": 1.5,
+          "standard-deviation": 1,
+          "maximum": 2,
           "minimum": 1
         },
         "cue": {
@@ -146,12 +146,12 @@
       },
       {
         "name": "Rest",
-        "code": 0,
+        "code": 1,
         "duration": {
-          "mean": 4,
+          "mean": 1.5,
           "standard-deviation": 1,
-          "maximum": 6,
-          "minimum": 2
+          "maximum": 2,
+          "minimum": 1
         },
         "cue": {
           "file": "console_print.py",
@@ -162,11 +162,11 @@
       },
       {
         "name": "Close right fist",
-        "code": 2,
+        "code": 3,
         "duration": {
-          "mean": 2,
-          "standard-deviation": 0.5,
-          "maximum": 3,
+          "mean": 1.5,
+          "standard-deviation": 1,
+          "maximum": 2,
           "minimum": 1
         },
         "cue": {
@@ -179,21 +179,25 @@
     ]
   },
   "preprocessing": [
-    {
-      "type": "CUSTOM",
-      "parameters": {
-        "file": "example.py",
-        "process-parameters": {
-          "parameter-1": 100,
-          "parameter-2": 1
-        }
-      }
-    }
+
   ],
+  "epoching": {
+    "type": "TRIAL",
+    "parameters": {
+      "samples-before": 50,
+      "samples-after": 50
+    }
+  },
   "feature-extraction": {
     "type": "CSP",
     "parameters": {
       "n-components": 4
+    }
+  },
+  "classification": {
+    "type": "LDA",
+    "parameters": {
+
     }
   }
 }

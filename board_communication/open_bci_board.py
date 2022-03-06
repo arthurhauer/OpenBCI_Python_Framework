@@ -1,6 +1,7 @@
 from threading import Thread
 from typing import List
 
+import math
 import numpy
 import time
 from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
@@ -9,6 +10,8 @@ from numpy.typing import NDArray
 
 import models.data.processing.feature_extraction.dummy
 from config.configuration import Configuration
+from models.data.processing.classification.classification import Classification
+from models.data.processing.classification.classifier import Classifier
 from models.data.processing.feature_extraction.feature_extraction import FeatureExtraction
 from models.data.processing.feature_extraction.feature_extractor import FeatureExtractor
 from models.data.processing.preprocessing.preprocessing import PreProcessing
@@ -21,6 +24,7 @@ class OpenBCIBoard:
                  communication: dict,
                  preprocessing: PreProcessing = None,
                  feature_extractor: FeatureExtractor = models.data.processing.feature_extraction.dummy.Dummy(),
+                 classifier: Classifier = models.data.processing.classification.dummy.Dummy(),
                  session: Session = None,
                  log_level: str = "OFF",
                  board: str = "SYNTHETIC_BOARD"
@@ -31,6 +35,7 @@ class OpenBCIBoard:
         self._eeg_channels = None
         self._eeg_channel_names = None
         self._accelerometer_channels = None
+        self._marker_channel = None
         self._set_log_level(log_level=log_level)
         self._set_brain_flow_input_parameters(communication)
         self._get_board(board=board)
@@ -38,6 +43,8 @@ class OpenBCIBoard:
         self.get_sampling_rate()
         self.get_eeg_channels()
         self.get_accelerometer_channels()
+        self.get_timestamp_channel()
+        self.get_marker_channel()
         self._run_stream_loop: bool = False
         self._data_loop_thread = Thread(target=self._stream_data_loop, daemon=True)
         self._data_callback = None
@@ -45,7 +52,11 @@ class OpenBCIBoard:
         self.session = session
         self.feature_extractor = feature_extractor
         self._feature_extractor_train = True
+        self.classifier = classifier
         self._classifier_train = True
+        self._data = None
+        self._inserting_marker = False
+        self._markers_to_insert = []
 
     @classmethod
     def from_config_json(cls):
@@ -57,6 +68,11 @@ class OpenBCIBoard:
         )
         board.preprocessing = PreProcessing.from_config_json(Configuration.get_preprocessing_settings())
         board.feature_extractor = FeatureExtraction.from_config_json(Configuration.get_feature_extraction_settings())
+        board.feature_extractor = Classification.from_config_json(Configuration.get_feature_extraction_settings())
+        board.session.on_stop = board.close_session
+        board.session.on_feature_extractor_training_end = board._stop_training_feature_extractor
+        board.session.on_classifier_training_end = board._stop_training_classifier
+        board.session.on_change_trial = board.insert_marker
         return board
 
     @staticmethod
@@ -120,6 +136,11 @@ class OpenBCIBoard:
             self._eeg_channels = BoardShim.get_eeg_channels(self._get_board().board_id)
         return self._eeg_channels
 
+    def get_marker_channel(self) -> int:
+        if self._marker_channel is None:
+            self._marker_channel = BoardShim.get_marker_channel(self._get_board().board_id)
+        return self._marker_channel
+
     def get_accelerometer_channels(self) -> List[int]:
         if self._accelerometer_channels is None:
             self._accelerometer_channels = BoardShim.get_accel_channels(self._get_board().board_id)
@@ -134,18 +155,61 @@ class OpenBCIBoard:
         self._get_board().start_stream()
         time.sleep(2)
 
+    def _get_marker_data(self):
+        markers_to_remove = []
+        marker_channel_index = len(self.get_eeg_channels())
+        timestamp_channel_index = marker_channel_index + 2
+        sampling_rate_s = 1 / self.get_sampling_rate()
+        current_data_len = len(self._data[timestamp_channel_index])
+        for index, (timestamp, code) in enumerate(self._markers_to_insert):
+            filtered = list(
+                filter(lambda element: timestamp - sampling_rate_s >= element <= timestamp + sampling_rate_s,
+                       self._data[timestamp_channel_index][current_data_len - 100:current_data_len - 1]))
+            len_filtered = len(filtered)
+            if len_filtered > 0:
+                closest_point = min(range(len(filtered)), key=lambda i: abs(filtered[i] - timestamp))
+                marker_index = numpy.where(self._data[timestamp_channel_index] == filtered[closest_point])[0][0]
+                self._data[marker_channel_index][marker_index] = code
+                markers_to_remove.append((timestamp, code))
+        for (timestamp, code) in markers_to_remove:
+            self._markers_to_insert.remove((timestamp, code))
+
     def get_data(self) -> NDArray[Float]:
-        data = self._get_board().get_board_data()[self.get_eeg_channels()]
-        self.preprocessing.process(data)
+        data = self._get_board().get_board_data()
+        eeg_data = data[self.get_eeg_channels()]
+        timestamp_data = data[self.get_timestamp_channel()]
+        marker_data = numpy.zeros(len(timestamp_data))
 
-        marker = numpy.ones((len(data[0]))) * self.session.get_current_trial_code()
+        accelerometer_data = data[self.get_accelerometer_channels()]
 
+        self.preprocessing.process(eeg_data)
+
+        self._feature_extractor_process(data, marker_data)
+
+        self._classifier_process(data, marker_data)
+
+        data = numpy.vstack([eeg_data, marker_data, timestamp_data, accelerometer_data])
+
+        if self._data is None:
+            self._data = data
+        else:
+            self._data = numpy.append(self._data, data, axis=1)
+
+        self._get_marker_data()
+
+        return self._data
+
+    def _feature_extractor_process(self, data, marker):
         if self._feature_extractor_train:
             self.feature_extractor.train(data, marker)
         else:
             self.feature_extractor.process(data)
-        data = numpy.vstack([data, marker])
-        return data
+
+    def _classifier_process(self, data, marker):
+        if self._classifier_train:
+            self.classifier.train(data, marker)
+        else:
+            self.classifier.process(data)
 
     def _stop_training_feature_extractor(self):
         print("Stopped feature extractor training")
@@ -156,14 +220,19 @@ class OpenBCIBoard:
         print("Stopped classifier training")
         self._classifier_train = False
 
+    def insert_marker(self, code: int):
+        self._inserting_marker = True
+        self._markers_to_insert.append((time.time(), code))
+        self._inserting_marker = False
+
     def _stream_data_loop(self):
-        self.session.on_stop = self.close_session
-        self.session.on_feature_extractor_training_end = self._stop_training_feature_extractor
-        self.session.on_classifier_training_end = self._stop_training_classifier
         self.session.start()
         while self._run_stream_loop:
-            time.sleep(Configuration.get_open_bci_data_callback_frequency_ms() / 1000)
-            self._data_callback(self.get_data())
+            if self._inserting_marker:
+                time.sleep(0.05)
+            else:
+                time.sleep(Configuration.get_open_bci_data_callback_frequency_ms() / 1000)
+                self._data_callback(self.get_data())
 
     def start_data_loop(self):
         self._run_stream_loop = True

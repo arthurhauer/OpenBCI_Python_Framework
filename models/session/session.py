@@ -46,8 +46,7 @@ class Session:
         self.on_stop = on_stop
         self.on_change_sequence = on_change_sequence
         self.randomize = randomize
-        if self.randomize:
-            self._shuffle_trials()
+        self._shuffle_trials()
         self._trial_limit = len(self.trials) - 1
         self._trial_to_call = 0
         self._current_sequence = self.trials[self._trial_to_call]
@@ -83,7 +82,8 @@ class Session:
         )
 
     def _shuffle_trials(self):
-        random.shuffle(self.trials)
+        if self.randomize:
+            random.shuffle(self.trials)
 
     def get_current_trial_code(self) -> int:
         return self.trials[self._trial_to_call].code
@@ -99,7 +99,7 @@ class Session:
     def on_stop(self):
         pass
 
-    def on_change_trial(self, sequence_index):
+    def on_change_trial(self, trial_code: int):
         pass
 
     def on_feature_extractor_training_end(self):
@@ -123,10 +123,10 @@ class Session:
                 self.on_stop()
                 self._thread.join()
                 return
-        self.on_change_sequence(self._trial_to_call)
         self._execute_trial()
 
     def _execute_trial(self):
         trial = self.trials[self._trial_to_call]
         trial.on_stop = self._next_trial
+        self.on_change_trial(trial.code)
         trial.start()

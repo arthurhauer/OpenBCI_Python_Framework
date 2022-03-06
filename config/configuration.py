@@ -112,11 +112,31 @@ class Configuration:
 
     # ----------------------------------------------------------------------------------------------------------------------#
 
+    # region Epoching Settings
+
+    @staticmethod
+    def get_feature_epoching_settings() -> dict:
+        return Configuration._config()['epoching']
+
+    # end_region
+
+    # ----------------------------------------------------------------------------------------------------------------------#
+
     # region Feature Extraction Settings
 
     @staticmethod
     def get_feature_extraction_settings() -> dict:
         return Configuration._config()['feature-extraction']
+
+    # end_region
+
+    # ----------------------------------------------------------------------------------------------------------------------#
+
+    # region Classification Settings
+
+    @staticmethod
+    def get_classification_settings() -> dict:
+        return Configuration._config()['classification']
 
     # end_region
 

@@ -24,9 +24,13 @@ class CSP(FeatureExtractor):
         )
 
     def process(self, data):
-        # super()._append_extracted(data, self.csp.transform(data))
-        super()._append_extracted(data, numpy.zeros((self.n_components,len(data[0]))))
+        if super()._trained:
+            super()._append_extracted(data, self.csp.transform(data))
+        else:
+            super()._append_extracted(data, numpy.zeros((self.n_components, len(data[0]))))
 
     def train(self, data, label):
-        # self.csp = self.csp.fit(data, label)
-        super()._append_extracted(data, numpy.zeros((self.n_components,len(data[0]))))
+        super()._trained = False
+        self.csp = self.csp.fit(data, label)
+        super()._append_extracted(data, numpy.zeros((self.n_components, len(data[0]))))
+        super().train(data, label)

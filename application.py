@@ -24,8 +24,6 @@ class Application:
     def __init__(self, board: OpenBCIBoard = OpenBCIBoard.from_config_json()) -> None:
         super().__init__()
         self.board = board
-        # self.data = BoardData(self.board.get_eeg_channel_names())
-        self.data = None
         channels = []
         for channel in Configuration.get_channel_mapping():
             channels.append(Channel.from_config_json(channel))
@@ -141,8 +139,4 @@ class Application:
         self.board.close_session()
 
     def _on_data(self, new_data: NDArray[Float]):
-        if self.data is None:
-            self.data = new_data
-        else:
-            self.data = numpy.append(self.data, new_data, axis=1)
-        self.graph.plot_data(self.data)
+        self.graph.plot_data(new_data)

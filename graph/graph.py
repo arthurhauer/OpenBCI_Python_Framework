@@ -44,10 +44,11 @@ class Graph:
         data_len = len(data)
         for i in range(len(self.channels)):
             if i in self.channel_curve_map.keys() and i < data_len:
-                signal_len = len(data[i])
-                if signal_len <= self.samples:
-                    windowed_data = data[i]
-                else:
-                    windowed_data = data[i][signal_len - self.samples - 1:signal_len - 1]
-                self.curves[self.channel_curve_map[i]].setData(windowed_data)
+            #     signal_len = len(data[i])
+            #     if signal_len <= self.samples:
+            #         windowed_data = data[i]
+            #     else:
+            #         windowed_data = data[i][signal_len - self.samples - 1:signal_len - 1]
+            #     self.curves[self.channel_curve_map[i]].setData(windowed_data)
+                self.curves[self.channel_curve_map[i]].setData(data[i])
         self.app.processEvents()
