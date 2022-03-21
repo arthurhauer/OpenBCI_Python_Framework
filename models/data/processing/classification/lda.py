@@ -16,13 +16,15 @@ class LDA(Classifier):
         return cls()
 
     def process(self, data):
-        if super()._trained:
-            super()._append_classified(data, self.lda.transform(data))
+        if self._trained:
+            # super()._append_classified(data, self.lda.transform(data))
+            super()._append_classified(data, numpy.zeros((1, len(data[0]))))
         else:
             super()._append_classified(data, numpy.zeros((1, len(data[0]))))
 
     def train(self, data, label):
-        super()._trained = False
-        self.lda = self.lda.fit(data, label)
+        self._trained = False
+        # self.lda = self.lda.fit(data, label)
         super()._append_classified(data, numpy.zeros((1, len(data[0]))))
-        super().train(data, label)
+        # super().train(data, label)
+        self._trained = True

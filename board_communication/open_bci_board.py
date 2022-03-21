@@ -1,7 +1,6 @@
 from threading import Thread
 from typing import List
 
-import math
 import numpy
 import time
 from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
@@ -68,7 +67,7 @@ class OpenBCIBoard:
         )
         board.preprocessing = PreProcessing.from_config_json(Configuration.get_preprocessing_settings())
         board.feature_extractor = FeatureExtraction.from_config_json(Configuration.get_feature_extraction_settings())
-        board.feature_extractor = Classification.from_config_json(Configuration.get_feature_extraction_settings())
+        board.feature_extractor = Classification.from_config_json(Configuration.get_classification_settings())
         board.session.on_stop = board.close_session
         board.session.on_feature_extractor_training_end = board._stop_training_feature_extractor
         board.session.on_classifier_training_end = board._stop_training_classifier
@@ -184,10 +183,6 @@ class OpenBCIBoard:
 
         self.preprocessing.process(eeg_data)
 
-        self._feature_extractor_process(data, marker_data)
-
-        self._classifier_process(data, marker_data)
-
         data = numpy.vstack([eeg_data, marker_data, timestamp_data, accelerometer_data])
 
         if self._data is None:
@@ -197,28 +192,36 @@ class OpenBCIBoard:
 
         self._get_marker_data()
 
+        self._feature_extractor_process(data)
+
+        self._classifier_process(data)
+
         return self._data
 
-    def _feature_extractor_process(self, data, marker):
+    def _feature_extractor_process(self, data):
         if self._feature_extractor_train:
-            self.feature_extractor.train(data, marker)
+            pass
         else:
             self.feature_extractor.process(data)
 
-    def _classifier_process(self, data, marker):
+    def _classifier_process(self, data):
         if self._classifier_train:
-            self.classifier.train(data, marker)
+            pass
         else:
             self.classifier.process(data)
 
     def _stop_training_feature_extractor(self):
-        print("Stopped feature extractor training")
+        print("Starting feature extractor training")
+        self.feature_extractor.train(self._data, len(self.get_eeg_channels()))
         self._feature_extractor_train = False
         self._classifier_train = True
+        print("Finished feature extractor training")
 
     def _stop_training_classifier(self):
-        print("Stopped classifier training")
+        print("Starting classifier training")
+        self.classifier.train(self._data, len(self.get_eeg_channels()))
         self._classifier_train = False
+        print("Finished feature extractor training")
 
     def insert_marker(self, code: int):
         self._inserting_marker = True

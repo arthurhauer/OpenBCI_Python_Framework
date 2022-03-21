@@ -1,6 +1,6 @@
 import enum
 
 
-class FeatureExtractorType(enum.IntEnum):
+class ClassifierType(enum.IntEnum):
     PRELOADED = 0
     LDA = 1

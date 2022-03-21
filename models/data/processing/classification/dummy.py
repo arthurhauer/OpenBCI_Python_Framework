@@ -1,8 +1,4 @@
-import mne as mne
-import numpy
-
 from models.data.processing.classification.classifier import Classifier
-from models.data.processing.feature_extraction.feature_extractor import FeatureExtractor
 
 
 class Dummy(Classifier):

@@ -1,12 +1,8 @@
-from typing import List
-
 from config.configuration import Configuration
 from models.data.processing.classification.classifier import Classifier
+from models.data.processing.classification.dummy import Dummy
 from models.data.processing.classification.lda import LDA
-from models.data.processing.feature_extraction.csp import CSP
-from models.data.processing.feature_extraction.dummy import Dummy
-from models.data.processing.feature_extraction.feature_extractor import FeatureExtractor
-from models.data.processing.feature_extraction.type import FeatureExtractorType
+from models.data.processing.classification.type import ClassifierType
 
 
 class Classification:
@@ -23,16 +19,16 @@ class Classification:
 
     @staticmethod
     def _select_processor(node_settings: dict) -> Classifier:
-        classifier_type = FeatureExtractorType[node_settings['type']]
+        classifier_type = ClassifierType[node_settings['type']]
         parameters = node_settings['parameters']
 
         parameters['sampling-frequency'] = Configuration.get_sampling_frequency()
 
         classifier = None
-        if classifier_type == FeatureExtractorType.PRELOADED:
+        if classifier_type == ClassifierType.PRELOADED:
             raise NotImplementedError("PRELOADED is not implemented yet")
 
-        if classifier_type == FeatureExtractorType.LDA:
+        if classifier_type == ClassifierType.LDA:
             classifier = LDA.from_config_json(parameters)
 
         else:
