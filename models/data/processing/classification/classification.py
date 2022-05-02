@@ -3,6 +3,7 @@ from models.data.processing.classification.classifier import Classifier
 from models.data.processing.classification.dummy import Dummy
 from models.data.processing.classification.lda import LDA
 from models.data.processing.classification.type import ClassifierType
+from models.data.processing.epoching.epoching import Epoching
 
 
 class Classification:
@@ -23,15 +24,12 @@ class Classification:
         parameters = node_settings['parameters']
 
         parameters['sampling-frequency'] = Configuration.get_sampling_frequency()
-
-        classifier = None
+        parameters['epocher']=Epoching.from_config_json(Configuration.get_epoching_settings())
         if classifier_type == ClassifierType.PRELOADED:
             raise NotImplementedError("PRELOADED is not implemented yet")
 
-        if classifier_type == ClassifierType.LDA:
-            classifier = LDA.from_config_json(parameters)
+        elif classifier_type == ClassifierType.LDA:
+            return LDA.from_config_json(parameters)
 
         else:
             raise ValueError("Invalid classifier type " + node_settings['type'])
-
-        return classifier

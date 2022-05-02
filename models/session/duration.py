@@ -51,3 +51,4 @@ class Duration:
 
     def get_duration(self) -> float:
         return self._distribution.rvs(1)[0]
+        # return 1.5

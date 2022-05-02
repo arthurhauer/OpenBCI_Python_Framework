@@ -2,13 +2,14 @@ import mne as mne
 import numpy
 import numpy as np
 
+from models.data.processing.epoching.epocher import Epocher
 from models.data.processing.feature_extraction.feature_extractor import FeatureExtractor
 
 
 class CSP(FeatureExtractor):
 
-    def __init__(self, n_components: int) -> None:
-        super().__init__({'type': 'CSP'})
+    def __init__(self, n_components: int, epocher: Epocher) -> None:
+        super().__init__('CSP', epocher)
         if n_components <= 0:
             raise ValueError(
                 'processing.trainable.feature.extractor.csp.parameters.n_components.must.be.greater.than.zero')
@@ -19,20 +20,16 @@ class CSP(FeatureExtractor):
     def from_config_json(cls, parameters: dict):
         if 'n-components' not in parameters:
             raise ValueError('processing.trainable.feature.extractor.csp.parameters.must.have.n-components')
+        if 'epocher' not in parameters:
+            raise ValueError('processing.trainable.feature.extractor.csp.parameters.must.have.epocher')
         return cls(
-            n_components=parameters['n-components']
+            n_components=parameters['n-components'],
+            epocher=parameters['epocher']
         )
 
-    def process(self, data):
-        if self._trained:
-            super()._append_extracted(data, self.csp.transform(data))
-            super()._append_extracted(data, numpy.zeros((self.n_components, len(data[0]))))
-        else:
-            super()._append_extracted(data, numpy.zeros((self.n_components, len(data[0]))))
+    def _inner_process(self, epoched_data):
+        transformed= self.csp.transform(epoched_data)
+        return transformed
 
-    def train(self, data, label):
-        # super()._trained = False
-        self.csp = self.csp.fit(data, label)
-        super()._append_extracted(data, numpy.zeros((self.n_components, len(data[0]))))
-        self._trained = True
-        # super().train(data, label)
+    def _inner_train(self, epoched_data, labels):
+        self.csp = self.csp.fit(epoched_data, labels)

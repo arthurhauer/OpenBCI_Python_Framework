@@ -1,6 +1,7 @@
 from typing import List
 
 from config.configuration import Configuration
+from models.data.processing.epoching.epoching import Epoching
 from models.data.processing.feature_extraction.csp import CSP
 from models.data.processing.feature_extraction.dummy import Dummy
 from models.data.processing.feature_extraction.feature_extractor import FeatureExtractor
@@ -25,15 +26,12 @@ class FeatureExtraction:
         parameters = node_settings['parameters']
 
         parameters['sampling-frequency'] = Configuration.get_sampling_frequency()
-
-        extractor = None
+        parameters['epocher'] = Epoching.from_config_json(Configuration.get_epoching_settings())
         if extractor_type == FeatureExtractorType.PRELOADED:
             raise NotImplementedError("PRELOADED is not implemented yet")
 
         if extractor_type == FeatureExtractorType.CSP:
-            extractor = CSP.from_config_json(parameters)
+            return CSP.from_config_json(parameters)
 
         else:
             raise ValueError("Invalid feature extractor type " + node_settings['type'])
-
-        return extractor

@@ -115,7 +115,7 @@ class Configuration:
     # region Epoching Settings
 
     @staticmethod
-    def get_feature_epoching_settings() -> dict:
+    def get_epoching_settings() -> dict:
         return Configuration._config()['epoching']
 
     # end_region

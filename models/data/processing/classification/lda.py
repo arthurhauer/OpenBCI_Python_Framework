@@ -1,30 +1,25 @@
-import mne as mne
-import numpy
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 from models.data.processing.classification.classifier import Classifier
+from models.data.processing.epoching.epocher import Epocher
 
 
 class LDA(Classifier):
 
-    def __init__(self) -> None:
-        super().__init__({'type': 'LDA'})
+    def __init__(self, epocher: Epocher) -> None:
+        super().__init__('LDA', epocher)
         self.lda = LinearDiscriminantAnalysis()
 
     @classmethod
     def from_config_json(cls, parameters: dict):
-        return cls()
+        if 'epocher' not in parameters:
+            raise ValueError('processing.trainable.classifier.lda.parameters.must.have.epocher')
+        return cls(parameters['epocher'])
 
-    def process(self, data):
-        if self._trained:
-            # super()._append_classified(data, self.lda.transform(data))
-            super()._append_classified(data, numpy.zeros((1, len(data[0]))))
-        else:
-            super()._append_classified(data, numpy.zeros((1, len(data[0]))))
+    def _inner_process(self, epoched_data):
+        pass
+        # return self.lda.transform(epoched_data)
 
-    def train(self, data, label):
-        self._trained = False
-        # self.lda = self.lda.fit(data, label)
-        super()._append_classified(data, numpy.zeros((1, len(data[0]))))
-        # super().train(data, label)
-        self._trained = True
+    def _inner_train(self, epoched_data,label):
+        pass
+        # self.lda = self.lda.fit(epoched_data, label)

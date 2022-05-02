@@ -1,10 +1,7 @@
-from typing import List
-
 from config.configuration import Configuration
-from models.data.processing.feature_extraction.csp import CSP
-from models.data.processing.feature_extraction.dummy import Dummy
-from models.data.processing.feature_extraction.feature_extractor import FeatureExtractor
-from models.data.processing.feature_extraction.type import FeatureExtractorType
+from models.data.processing.epoching.epocher import Epocher
+from models.data.processing.epoching.trial_wise_epocher import TrialWiseEpocher
+from models.data.processing.epoching.type import EpocherType
 
 
 class Epoching:
@@ -20,20 +17,20 @@ class Epoching:
         return epocher
 
     @staticmethod
-    def _select_processor(node_settings: dict) -> FeatureExtractor:
-        extractor_type = FeatureExtractorType[node_settings['type']]
+    def _select_processor(node_settings: dict) -> Epocher:
+        epocher_type = EpocherType[node_settings['type']]
         parameters = node_settings['parameters']
 
         parameters['sampling-frequency'] = Configuration.get_sampling_frequency()
 
-        extractor = None
-        if extractor_type == FeatureExtractorType.PRELOADED:
-            raise NotImplementedError("PRELOADED is not implemented yet")
+        epocher = None
+        if epocher_type == EpocherType.TRIAL:
+            epocher = TrialWiseEpocher.from_config_json(parameters)
 
-        if extractor_type == FeatureExtractorType.CSP:
-            extractor = CSP.from_config_json(parameters)
+        elif epocher_type == EpocherType.CROPPED:
+            raise NotImplementedError("CROPPED is not implemented yet")
 
         else:
-            raise ValueError("Invalid feature extractor type " + node_settings['type'])
+            raise ValueError("Invalid epocher type " + node_settings['type'])
 
-        return extractor
+        return epocher

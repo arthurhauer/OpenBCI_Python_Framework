@@ -2,17 +2,14 @@ import abc
 
 import numpy
 
+from models.data.processing.epoching.epocher import Epocher
 from models.data.processing.trainable_processing_node import TrainableProcessingNode
 
 
 class Classifier(TrainableProcessingNode):
 
-    def __init__(self, parameters=None) -> None:
-        if parameters is None:
-            parameters = {}
-        if 'type' not in parameters:
-            raise ValueError('processing.trainable.classifier.parameters.must.have.type')
-        super().__init__(parameters=parameters)
+    def __init__(self, type: str, epocher: Epocher) -> None:
+        super().__init__(type=type, epocher=epocher)
 
     @classmethod
     @abc.abstractmethod
@@ -23,9 +20,9 @@ class Classifier(TrainableProcessingNode):
         data = numpy.vstack([data, classified])
 
     @abc.abstractmethod
-    def process(self, data):
+    def _inner_process(self, epoched_data):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def train(self, data, label):
+    def _inner_train(self, epoched_data, labels):
         raise NotImplementedError()

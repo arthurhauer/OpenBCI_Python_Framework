@@ -106,7 +106,7 @@
   },
   "trial": {
     "repetitions": {
-      "feature-extractor-training": 0,
+      "feature-extractor-training": 1,
       "classifier-training": 0,
       "test": 999
     },

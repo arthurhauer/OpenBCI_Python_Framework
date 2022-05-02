@@ -67,7 +67,7 @@ class OpenBCIBoard:
         )
         board.preprocessing = PreProcessing.from_config_json(Configuration.get_preprocessing_settings())
         board.feature_extractor = FeatureExtraction.from_config_json(Configuration.get_feature_extraction_settings())
-        board.feature_extractor = Classification.from_config_json(Configuration.get_classification_settings())
+        board.classifier = Classification.from_config_json(Configuration.get_classification_settings())
         board.session.on_stop = board.close_session
         board.session.on_feature_extractor_training_end = board._stop_training_feature_extractor
         board.session.on_classifier_training_end = board._stop_training_classifier
@@ -202,13 +202,13 @@ class OpenBCIBoard:
         if self._feature_extractor_train:
             pass
         else:
-            self.feature_extractor.process(data)
+            self.feature_extractor.process(data,len(self.get_eeg_channels()))
 
     def _classifier_process(self, data):
         if self._classifier_train:
             pass
         else:
-            self.classifier.process(data)
+            self.classifier.process(data,len(self.get_eeg_channels()))
 
     def _stop_training_feature_extractor(self):
         print("Starting feature extractor training")
