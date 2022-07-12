@@ -4,8 +4,10 @@ import abc
 class ProcessingNode:
     _type: str
 
-    def __init__(self, parameters: dict = {}) -> None:
+    def __init__(self, parameters=None) -> None:
         super().__init__()
+        if parameters is None:
+            parameters = {}
         if 'type' in parameters:
             self._type = parameters['type']
 

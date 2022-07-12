@@ -202,13 +202,13 @@ class OpenBCIBoard:
         if self._feature_extractor_train:
             pass
         else:
-            self.feature_extractor.process(data,len(self.get_eeg_channels()))
+            self.feature_extractor.process(self._data[:, -100::], len(self.get_eeg_channels()))
 
     def _classifier_process(self, data):
         if self._classifier_train:
             pass
         else:
-            self.classifier.process(data,len(self.get_eeg_channels()))
+            self.classifier.process(self.feature_extractor.process(self._data[:, -100::],len(self.get_eeg_channels())), len(self.get_eeg_channels()))
 
     def _stop_training_feature_extractor(self):
         print("Starting feature extractor training")
@@ -219,9 +219,9 @@ class OpenBCIBoard:
 
     def _stop_training_classifier(self):
         print("Starting classifier training")
-        self.classifier.train(self._data, len(self.get_eeg_channels()))
+        self.classifier.train(self.feature_extractor.process(self._data,len(self.get_eeg_channels())), len(self.get_eeg_channels()))
         self._classifier_train = False
-        print("Finished feature extractor training")
+        print("Finished classifier training")
 
     def insert_marker(self, code: int):
         self._inserting_marker = True

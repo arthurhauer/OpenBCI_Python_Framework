@@ -88,7 +88,7 @@
       },
       {
         "name": "Timestamp",
-        "show": true
+        "show": false
       },
       {
         "name": "Accel X",
@@ -107,43 +107,11 @@
   "trial": {
     "repetitions": {
       "feature-extractor-training": 1,
-      "classifier-training": 0,
+      "classifier-training": 1,
       "test": 999
     },
     "randomize": false,
     "trials": [
-      {
-        "name": "Rest",
-        "code": 1,
-        "duration": {
-          "mean": 1.5,
-          "standard-deviation": 1,
-          "maximum": 2,
-          "minimum": 1
-        },
-        "cue": {
-          "file": "console_print.py",
-          "parameters": {
-            "message": "REST"
-          }
-        }
-      },
-      {
-        "name": "Close left fist",
-        "code": 2,
-        "duration": {
-          "mean": 1.5,
-          "standard-deviation": 1,
-          "maximum": 2,
-          "minimum": 1
-        },
-        "cue": {
-          "file": "console_print.py",
-          "parameters": {
-            "message": "CLOSE LEFT FIST"
-          }
-        }
-      },
       {
         "name": "Rest",
         "code": 1,
@@ -175,6 +143,38 @@
             "message": "CLOSE RIGHT FIST"
           }
         }
+      },
+      {
+        "name": "Rest",
+        "code": 1,
+        "duration": {
+          "mean": 1.5,
+          "standard-deviation": 1,
+          "maximum": 2,
+          "minimum": 1
+        },
+        "cue": {
+          "file": "console_print.py",
+          "parameters": {
+            "message": "REST"
+          }
+        }
+      },
+      {
+        "name": "Close left fist",
+        "code": 2,
+        "duration": {
+          "mean": 1.5,
+          "standard-deviation": 1,
+          "maximum": 2,
+          "minimum": 1
+        },
+        "cue": {
+          "file": "console_print.py",
+          "parameters": {
+            "message": "CLOSE LEFT FIST"
+          }
+        }
       }
     ]
   },
@@ -184,8 +184,9 @@
   "epoching": {
     "type": "TRIAL",
     "parameters": {
-      "samples-before": 50,
-      "samples-after": 50
+      "samples-before": 10,
+      "samples-after": 10,
+      "trial-length": 100
     }
   },
   "feature-extraction": {

@@ -28,7 +28,7 @@ class CSP(FeatureExtractor):
         )
 
     def _inner_process(self, epoched_data):
-        transformed= self.csp.transform(epoched_data)
+        transformed = self.csp.transform(epoched_data)
         return transformed
 
     def _inner_train(self, epoched_data, labels):

@@ -30,7 +30,12 @@ class TrainableProcessingNode(ProcessingNode):
         if marker_index < 0:
             raise ValueError('data.processing.trainable.processing.node.process.marker_index.must.be.greater.than.zero')
         epoched_data, _ = self.epocher.process(data, marker_index)
-        self._inner_process(epoched_data)
+        if len(epoched_data[0][0]) != 100:
+            print(len(epoched_data[0][0]))
+            return
+        predicted = self._inner_process(epoched_data)
+        return predicted
+        # print(predicted)
 
 
     @abc.abstractmethod

@@ -1,3 +1,5 @@
+from nptyping import ndarray
+from numpy import array
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 from models.data.processing.classification.classifier import Classifier
@@ -17,9 +19,15 @@ class LDA(Classifier):
         return cls(parameters['epocher'])
 
     def _inner_process(self, epoched_data):
-        pass
-        # return self.lda.transform(epoched_data)
+        print("Process "+str(epoched_data.shape))
+        # pass
+        train_data = epoched_data.reshape(epoched_data.shape[0], epoched_data.shape[1]*epoched_data.shape[2])
+        predicted = self.lda.predict(train_data)
+        print(predicted)
+        return predicted
 
-    def _inner_train(self, epoched_data,label):
-        pass
-        # self.lda = self.lda.fit(epoched_data, label)
+    def _inner_train(self, epoched_data, label):
+        # pass
+        print("Train "+str(epoched_data.shape))
+        train_data = epoched_data.reshape(epoched_data.shape[0], epoched_data.shape[1]*epoched_data.shape[2])
+        self.lda = self.lda.fit(train_data, label)
