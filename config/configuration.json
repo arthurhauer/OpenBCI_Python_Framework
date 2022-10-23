@@ -1,17 +1,68 @@
 {
   "nodes": {
-    "open_bci": {
-      "module": "models.node.generator",
-      "type": "OpenBCIBoard",
-      "log_level": "TRACE",
-      "board": "SYNTHETIC_BOARD",
-      "communication": {
-        "serial_port": "COM4"
+    "root": {
+      "open_bci": {
+        "module": "models.node.generator",
+        "type": "OpenBCIBoard",
+        "log_level": "TRACE",
+        "board": "SYNTHETIC_BOARD",
+        "communication": {
+          "serial_port": "COM4"
+        },
+        "buffer_options": {
+          "clear_output_buffer_on_generate": false
+        },
+        "children": [
+          "signal_check1"
+        ]
+      }
+    },
+    "common": {
+      "signal_check1": {
+        "module": "models.node.processing",
+        "type": "SignalCheck",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": false,
+          "clear_output_buffer_after_process": false
+        },
+        "children": [
+          "signal_check2"
+        ]
       },
-      "buffer_options": {
-        "clear_output_buffer_on_generate": false
+      "signal_check2": {
+        "module": "models.node.processing",
+        "type": "SignalCheck",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": false,
+          "clear_output_buffer_after_process": false
+        },
+        "children": [
+          "signal_check3",
+          "signal_check4"
+        ]
       },
-      "children": {}
+      "signal_check3": {
+        "module": "models.node.processing",
+        "type": "SignalCheck",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": false,
+          "clear_output_buffer_after_process": false
+        },
+        "children": []
+      },
+      "signal_check4": {
+        "module": "models.node.processing",
+        "type": "SignalCheck",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": false,
+          "clear_output_buffer_after_process": false
+        },
+        "children": []
+      }
     }
   }
 }

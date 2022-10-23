@@ -9,6 +9,11 @@ class ProcessingNode(Node):
         super().__init__(parameters=parameters)
 
     def _initialize_buffer_options(self, buffer_options: dict) -> None:
+        """Processing node implementation of buffer behaviour options initialization
+
+        :param buffer_options: Buffer behaviour options. Should contain bool attributes 'clear_output_buffer_on_data_input', 'clear_input_buffer_after_process' and 'clear_output_buffer_after_process'
+        :type buffer_options: dict
+        """
         if 'clear_output_buffer_on_data_input' not in buffer_options:
             raise ValueError('error'
                              '.missing'

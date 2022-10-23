@@ -17,5 +17,9 @@ class Configuration:
         return Configuration.__config
 
     @staticmethod
-    def get_nodes() -> dict:
-        return Configuration._config()['nodes']
+    def get_root_nodes() -> dict:
+        return Configuration._config()['nodes']['root']
+
+    @staticmethod
+    def get_common_nodes() -> dict:
+        return Configuration._config()['nodes']['common']
