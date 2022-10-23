@@ -1,29 +1,17 @@
 {
-  "general": {
-    "simulated": false,
-    "maximum-parallel-jobs": -1,
-    "graph": {
-      "window-size": 2000
+  "nodes": {
+    "open_bci": {
+      "module": "models.node.generator",
+      "type": "OpenBCIBoard",
+      "log_level": "TRACE",
+      "board": "SYNTHETIC_BOARD",
+      "communication": {
+        "serial_port": "COM4"
+      },
+      "buffer_options": {
+        "clear_output_buffer_on_generate": false
+      },
+      "children": {}
     }
-  },
-  "open_bci": {
-    "log-level": "TRACE",
-    "board": "SYNTHETIC_BOARD",
-    "data-callback-frequency-ms": 200,
-    "communication": {
-      "serial-port": "/dev/ttyUSB0"
-    },
-    "channel-mapping": [
-
-    ]
-  },
-  "preprocessing": [
-    {
-      "type":"SMOOTH",
-      "parameters":{
-        "type": "MEAN",
-        "period": 200
-      }
-    }
-  ]
+  }
 }
