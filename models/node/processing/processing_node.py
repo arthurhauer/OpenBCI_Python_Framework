@@ -1,4 +1,5 @@
 import abc
+from typing import List, Dict
 
 from models.node.node import Node
 
@@ -39,8 +40,8 @@ class ProcessingNode(Node):
         self._clear_input_buffer_after_process = buffer_options['clear_input_buffer_after_process']
         self._clear_output_buffer_after_process = buffer_options['clear_output_buffer_after_process']
 
-    def _run(self, data: list) -> None:
-        self._input_buffer.extend(data)
+    def _run(self, data: list, input_name: str) -> None:
+        self._insert_new_input_data(data, input_name)
         if self._clear_output_buffer_on_data_input:
             self._clear_output_buffer()
         self._process_input_buffer()
@@ -53,7 +54,8 @@ class ProcessingNode(Node):
             self._clear_input_buffer()
         if self._clear_output_buffer_after_process:
             self._clear_output_buffer()
-        self._output_buffer.extend(processed_data)
+        for output_name in self._get_outputs():
+            self._output_buffer[output_name].extend(processed_data[output_name])
 
     @classmethod
     @abc.abstractmethod
@@ -69,8 +71,23 @@ class ProcessingNode(Node):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def _process(self, data: list) -> list:
+    def _process(self, data: Dict[str, list]) -> Dict[str, list]:
+        """Node self implementation of data processing, relating input and outputs.
+
+        :param data: data to be processed.
+        :type data: Dict[str, list]
+        """
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def _get_inputs(self) -> List[str]:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def _get_outputs(self) -> List[str]:
         raise NotImplementedError()
 
     def dispose(self) -> None:
+        self._clear_input_buffer()
+        self._clear_output_buffer()
         return

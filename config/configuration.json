@@ -12,13 +12,20 @@
         "buffer_options": {
           "clear_output_buffer_on_generate": false
         },
-        "children": [
-          "signal_check1"
-        ]
+        "outputs": {
+          "eeg": [
+            {
+              "node": "signal_check",
+              "input": "main"
+            }
+          ],
+          "accelerometer": [],
+          "timestamp": []
+        }
       }
     },
     "common": {
-      "signal_check1": {
+      "signal_check": {
         "module": "models.node.processing",
         "type": "SignalCheck",
         "buffer_options": {
@@ -26,42 +33,9 @@
           "clear_input_buffer_after_process": false,
           "clear_output_buffer_after_process": false
         },
-        "children": [
-          "signal_check2"
-        ]
-      },
-      "signal_check2": {
-        "module": "models.node.processing",
-        "type": "SignalCheck",
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": false,
-          "clear_output_buffer_after_process": false
-        },
-        "children": [
-          "signal_check3",
-          "signal_check4"
-        ]
-      },
-      "signal_check3": {
-        "module": "models.node.processing",
-        "type": "SignalCheck",
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": false,
-          "clear_output_buffer_after_process": false
-        },
-        "children": []
-      },
-      "signal_check4": {
-        "module": "models.node.processing",
-        "type": "SignalCheck",
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": false,
-          "clear_output_buffer_after_process": false
-        },
-        "children": []
+        "outputs": {
+          "main": []
+        }
       }
     }
   }

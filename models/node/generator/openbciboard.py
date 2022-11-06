@@ -1,9 +1,14 @@
+from typing import Dict, List, Final
+
 from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
 from models.node.generator.generator_node import GeneratorNode
 import time
 
 
 class OpenBCIBoard(GeneratorNode):
+    OUTPUT_EEG: Final[str] = 'eeg'
+    OUTPUT_ACCELEROMETER: Final[str] = 'accelerometer'
+    OUTPUT_TIMESTAMP: Final[str] = 'timestamp'
 
     def __init__(self,
                  parameters: dict,
@@ -35,6 +40,9 @@ class OpenBCIBoard(GeneratorNode):
         self._set_brain_flow_input_parameters(parameters['communication'])
         self._get_board(board=parameters['board'])
         self._is_board_streaming = False
+        self._eeg_channels = None
+        self._accelerometer_channels = None
+        self._timestamp_channel = None
 
     @classmethod
     def from_config_json(cls, parameters: dict):
@@ -49,11 +57,37 @@ class OpenBCIBoard(GeneratorNode):
     def _is_generate_data_condition_satisfied(self) -> bool:
         return True
 
-    def _generate_data(self) -> list:
+    def _get_timestamp_channel(self) -> int:
+        if self._timestamp_channel is None:
+            self._timestamp_channel = BoardShim.get_timestamp_channel(self._get_board().board_id)
+        return self._timestamp_channel
+
+    def _get_eeg_channels(self) -> List[int]:
+        if self._eeg_channels is None:
+            self._eeg_channels = BoardShim.get_eeg_channels(self._get_board().board_id)
+        return self._eeg_channels
+
+    def _get_accelerometer_channels(self) -> List[int]:
+        if self._accelerometer_channels is None:
+            self._accelerometer_channels = BoardShim.get_accel_channels(self._get_board().board_id)
+        return self._accelerometer_channels
+
+    def _generate_data(self) -> Dict[str, list]:
         if not self._is_board_streaming:
             self._start_stream()
         data = self._get_board().get_board_data()
-        return list(map(list, zip(*data)))
+        return {
+            self.OUTPUT_EEG: data[self._get_eeg_channels()],
+            self.OUTPUT_ACCELEROMETER: data[self._get_accelerometer_channels()],
+            self.OUTPUT_TIMESTAMP: data[self._get_timestamp_channel()]
+        }
+
+    def _get_outputs(self) -> List[str]:
+        return [
+            self.OUTPUT_EEG,
+            self.OUTPUT_ACCELEROMETER,
+            self.OUTPUT_TIMESTAMP
+        ]
 
     def dispose(self) -> None:
         self._get_board().stop_stream()
