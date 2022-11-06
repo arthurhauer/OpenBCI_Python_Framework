@@ -1,11 +1,15 @@
 from typing import Dict, List, Final
 
 from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
+
+from models.exception.missing_parameter import MissingParameterError
 from models.node.generator.generator_node import GeneratorNode
 import time
 
 
 class OpenBCIBoard(GeneratorNode):
+    _MODULE_NAME: Final[str] = 'node.generator.open_bci_board'
+
     OUTPUT_EEG: Final[str] = 'eeg'
     OUTPUT_ACCELEROMETER: Final[str] = 'accelerometer'
     OUTPUT_TIMESTAMP: Final[str] = 'timestamp'
@@ -15,26 +19,14 @@ class OpenBCIBoard(GeneratorNode):
                  ) -> None:
         super().__init__(parameters)
         if 'communication' not in parameters:
-            raise ValueError('error'
-                             '.missing'
-                             '.node'
-                             '.generator'
-                             '.open_bci_board'
-                             '.communication')
+            raise MissingParameterError(module=self._MODULE_NAME,
+                                        parameter='communication')
         if 'log_level' not in parameters:
-            raise ValueError('error'
-                             '.missing'
-                             '.node'
-                             '.generator'
-                             '.open_bci_board'
-                             '.log_level')
+            raise MissingParameterError(module=self._MODULE_NAME,
+                                        parameter='log_level')
         if 'board' not in parameters:
-            raise ValueError('error'
-                             '.missing'
-                             '.node'
-                             '.generator'
-                             '.open_bci_board'
-                             '.board')
+            raise MissingParameterError(module=self._MODULE_NAME,
+                                        parameter='board')
         self._board = None
         self._set_log_level(log_level=parameters['log_level'])
         self._set_brain_flow_input_parameters(parameters['communication'])

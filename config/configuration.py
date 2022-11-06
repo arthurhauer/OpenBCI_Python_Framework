@@ -1,7 +1,4 @@
 import json
-from typing import List
-
-from models.data.channel import Channel
 
 
 class Configuration:

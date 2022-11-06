@@ -1,10 +1,10 @@
 {
   "nodes": {
     "root": {
-      "open_bci": {
+      "simulated_open_bci_board_1": {
         "module": "models.node.generator",
         "type": "OpenBCIBoard",
-        "log_level": "TRACE",
+        "log_level": "INFO",
         "board": "SYNTHETIC_BOARD",
         "communication": {
           "serial_port": "COM4"
@@ -25,7 +25,7 @@
       }
     },
     "common": {
-      "signal_check": {
+      "example_signal_check_node": {
         "module": "models.node.processing",
         "type": "SignalCheck",
         "buffer_options": {

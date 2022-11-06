@@ -1,15 +1,10 @@
-from threading import Thread
 from typing import Dict
 
-import numpy
 import time
-from nptyping import Float
-from numpy.typing import NDArray
 import importlib
 
 from config.configuration import Configuration
 from models.node.generator.generator_node import GeneratorNode
-from models.node.generator.openbciboard import OpenBCIBoard
 from models.node.node import Node
 
 

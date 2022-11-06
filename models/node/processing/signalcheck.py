@@ -1,9 +1,11 @@
-from typing import List, Final
+from typing import List, Final, Dict
 
 from models.node.processing.processing_node import ProcessingNode
 
 
 class SignalCheck(ProcessingNode):
+    _MODULE_NAME: Final[str] = 'node.processing.signalcheck'
+
     INPUT_MAIN: Final[str] = 'main'
     OUTPUT_MAIN: Final[str] = 'main'
 
@@ -21,15 +23,14 @@ class SignalCheck(ProcessingNode):
         # TODO change
         return True
 
-    def _process(self, data: list) -> list:
+    def _process(self, data: Dict[str, list]) -> Dict[str, list]:
         # TODO change
         print('SignalCheck!')
         return data
 
     def _get_inputs(self) -> List[str]:
         return [
-            self.INPUT_MAIN,
-            self.INPUT_MAIN2
+            self.INPUT_MAIN
         ]
 
     def _get_outputs(self) -> List[str]:
