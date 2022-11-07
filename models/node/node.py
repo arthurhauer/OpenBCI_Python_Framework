@@ -68,6 +68,9 @@ class Node:
         :param input_name: Node input name.
         :type input_name: str
         """
+        if data is None or len(data) == 0:
+            return
+
         if hasattr(data[0], '__len__') and (not isinstance(data[0], str)):
             for channel_index, channel_data in enumerate(data):
                 try:
@@ -86,6 +89,9 @@ class Node:
         :param output_name: Node output name.
         :type output_name: str
         """
+        if data is None or len(data) == 0:
+            return
+
         if hasattr(data[0], '__len__') and (not isinstance(data[0], str)):
             for channel_index, channel_data in enumerate(data):
                 try:

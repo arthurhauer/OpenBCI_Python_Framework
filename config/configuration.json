@@ -10,17 +10,100 @@
           "serial_port": "COM4"
         },
         "buffer_options": {
-          "clear_output_buffer_on_generate": false
+          "clear_output_buffer_on_generate": true
         },
         "outputs": {
-          "eeg": [
+          "eeg": [],
+          "accelerometer": [],
+          "timestamp": []
+        }
+      },
+      "motor_imagery_session": {
+        "module": "models.node.generator",
+        "type": "MotorImagery",
+        "buffer_options": {
+          "clear_output_buffer_on_generate": true
+        },
+        "shuffle_when_sequence_is_finished": true,
+        "trials":[
+          {
+            "name": "Rest",
+            "code": 1,
+            "duration": {
+              "mean": 1.5,
+              "standard_deviation": 1,
+              "maximum": 2,
+              "minimum": 1
+            },
+            "cue": {
+              "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "parameters": {
+                "message": "REST"
+              }
+            }
+          },
+          {
+            "name": "Close right fist",
+            "code": 3,
+            "duration": {
+              "mean": 1.5,
+              "standard_deviation": 1,
+              "maximum": 2,
+              "minimum": 1
+            },
+            "cue": {
+              "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "parameters": {
+                "message": "CLOSE RIGHT FIST"
+              }
+            }
+          },
+          {
+            "name": "Rest",
+            "code": 1,
+            "duration": {
+              "mean": 1.5,
+              "standard_deviation": 1,
+              "maximum": 2,
+              "minimum": 1
+            },
+            "cue": {
+              "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "parameters": {
+                "message": "REST"
+              }
+            }
+          },
+          {
+            "name": "Close left fist",
+            "code": 2,
+            "duration": {
+              "mean": 1.5,
+              "standard_deviation": 1,
+              "maximum": 2,
+              "minimum": 1
+            },
+            "cue": {
+              "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "parameters": {
+                "message": "CLOSE LEFT FIST"
+              }
+            }
+          }
+        ],
+        "outputs": {
+          "marker": [
             {
-              "node": "signal_check",
+              "node": "example_signal_check_node",
               "input": "main"
             }
           ],
-          "accelerometer": [],
-          "timestamp": []
+          "timestamp": [
+            {
+              "node": "example_signal_check_node_2",
+              "input": "main"
+            }
+          ]
         }
       }
     },
@@ -35,6 +118,36 @@
         },
         "outputs": {
           "main": []
+        }
+      },
+
+      "example_signal_check_node_2": {
+        "module": "models.node.processing",
+        "type": "SignalCheck",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": false,
+          "clear_output_buffer_after_process": false
+        },
+        "outputs": {
+          "main": []
+        }
+      },
+      "example_merge_node": {
+        "module": "models.node.processing",
+        "type": "Merge",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": false,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs": {
+          "merged": [
+            {
+              "node": "example_signal_check_node",
+              "input": "main"
+            }
+          ]
         }
       }
     }

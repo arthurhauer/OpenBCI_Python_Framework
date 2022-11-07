@@ -45,7 +45,7 @@ class GeneratorNode(Node):
         raise NotImplementedError()
 
     def _get_inputs(self) -> List[str]:
-        """Returns the output names in list form.
+        """Returns the input names in list form.
         """
         return []
 

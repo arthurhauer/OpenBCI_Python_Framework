@@ -1,6 +1,8 @@
 import random
-from multiprocessing import Process
+import time
+from threading import Thread
 from typing import List, Dict, Final
+
 
 from models.exception.missing_parameter import MissingParameterError
 from models.node.generator.generator_node import GeneratorNode
@@ -26,7 +28,9 @@ class MotorImagery(GeneratorNode):
         self._trial_limit = len(self.trials) - 1
         self._trial_to_call = 0
         self.shuffle_when_sequence_is_finished = parameters['shuffle_when_sequence_is_finished']
-        self._process = Process(target=self._execute_trial)
+        self._thread = Thread(target=self._execute_trial)
+        self._stop_execution = False
+        self._thread_started = False
 
     @classmethod
     def from_config_json(cls, parameters: dict):
@@ -46,7 +50,14 @@ class MotorImagery(GeneratorNode):
         return True
 
     def _generate_data(self) -> Dict[str, list]:
-        pass
+        if not self._thread_started:
+            self.start()
+        return_value = self._input_buffer.copy()
+        self._clear_input_buffer()
+        return return_value
+
+    def _get_inputs(self) -> List[str]:
+        return self._get_outputs()
 
     def _get_outputs(self) -> List[str]:
         return [
@@ -60,10 +71,14 @@ class MotorImagery(GeneratorNode):
         self.stop()
 
     def start(self):
-        self._process.start()
+        self._thread_started = True
+        self._stop_execution = False
+        self._thread.start()
 
     def stop(self):
-        self._process.terminate()
+        self._thread_started = False
+        self._stop_execution = True
+        self._thread.join(2000)
 
     def _on_change_sequence(self):
         if self.shuffle_when_sequence_is_finished:
@@ -78,6 +93,9 @@ class MotorImagery(GeneratorNode):
 
     def _execute_trial(self):
         trial = self.trials[self._trial_to_call]
+        if self._stop_execution:
+            return
         trial.on_stop = self._next_trial
-        self.on_change_trial(trial.code)
+        self._insert_new_input_data([trial.code], self.OUTPUT_MARKER)
+        self._insert_new_input_data([time.time()], self.OUTPUT_TIMESTAMP)
         trial.start()
