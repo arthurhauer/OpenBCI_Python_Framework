@@ -1,9 +1,12 @@
 from __future__ import annotations
 import abc
-from typing import List
+from typing import List, Dict, Final
+
+from models.framework_data import FrameworkData
 
 
 class Node:
+    _MODULE_NAME: Final[str] = 'node'
     """Abstract base class for processing pipeline execution on this framework.
     """
 
@@ -47,67 +50,43 @@ class Node:
         self._initialize_children()
 
     def _clear_input_buffer(self):
-        """Sets input buffer to new list for each input name
+        """Sets input buffer to new empty object for each input name
         """
-        self._input_buffer = {}
-        for input_name in self._get_inputs():
-            self._input_buffer[input_name] = []
+        self._input_buffer = dict.fromkeys(self._get_inputs(), FrameworkData())
 
     def _clear_output_buffer(self):
-        """Sets output buffer to new list for each output name
+        """Sets output buffer to new empty object for each output name
         """
-        self._output_buffer = {}
-        for output_name in self._get_outputs():
-            self._output_buffer[output_name] = []
+        self._output_buffer = dict.fromkeys(self._get_outputs(), FrameworkData())
 
-    def _insert_new_input_data(self, data: list, input_name: str):
+    @staticmethod
+    def _insert_data_in_buffer(data: FrameworkData, buffer_data_name: str, buffer: Dict[str, FrameworkData]):
+        buffer[buffer_data_name].extend(data)
+
+    def _insert_new_input_data(self, data: FrameworkData, input_name: str):
         """Appends new data to the end of already existing input buffer
 
         :param data: Data to be added. Should be in channel X sample format
-        :type data: list
+        :type data: FrameworkData
         :param input_name: Node input name.
         :type input_name: str
         """
-        if data is None or len(data) == 0:
-            return
+        self._insert_data_in_buffer(data, input_name, self._input_buffer)
 
-        if hasattr(data[0], '__len__') and (not isinstance(data[0], str)):
-            for channel_index, channel_data in enumerate(data):
-                try:
-                    self._input_buffer[input_name][channel_index]
-                except IndexError:
-                    self._input_buffer[input_name].append([])
-                self._input_buffer[input_name][channel_index].extend(channel_data)
-        else:
-            self._input_buffer[input_name].extend(data)
-
-    def _insert_new_output_data(self, data: list, output_name: str):
+    def _insert_new_output_data(self, data: FrameworkData, output_name: str):
         """Appends new data to the end of already existing output buffer
 
         :param data: Data to be added. Should be in channel X sample format
-        :type data: list
+        :type data: FrameworkData
         :param output_name: Node output name.
         :type output_name: str
         """
-        if data is None or len(data) == 0:
-            return
-
-        if hasattr(data[0], '__len__') and (not isinstance(data[0], str)):
-            for channel_index, channel_data in enumerate(data):
-                try:
-                    self._output_buffer[output_name][channel_index]
-                except IndexError:
-                    self._output_buffer[output_name].append([])
-                self._output_buffer[output_name][channel_index].extend(channel_data)
-        else:
-            self._output_buffer[output_name].extend(data)
+        self._insert_data_in_buffer(data, output_name, self._output_buffer)
 
     def _initialize_children(self):
         """Sets child nodes dictionary to a new, empty dict
         """
-        self._children = {}
-        for output_name in self._get_outputs():
-            self._children[output_name] = []
+        self._children = dict.fromkeys(self._get_outputs(), [])
 
     def add_child(self, output_name: str, node: Node, input_name: str):
         """Adds a new child node to child nodes dictionary
@@ -130,11 +109,11 @@ class Node:
             for child in output_children:
                 child(output)
 
-    def run(self, data: list = None, input_name: str = None) -> None:
+    def run(self, data: FrameworkData = None, input_name: str = None) -> None:
         """Run node main function
 
         :param data: Node input data (channel X sample). Can be None if node takes no input data.
-        :type data: list
+        :type data: FrameworkData
         :param input_name: Node input name. Can be None if node takes no input data.
         :type input_name: str
         """
@@ -170,11 +149,11 @@ class Node:
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def _run(self, data: list, input_name: str) -> None:
+    def _run(self, data: FrameworkData, input_name: str) -> None:
         """Node self implementation of processing on input data
 
         :param data: Node input data.
-        :type data: list
+        :type data: FrameworkData
         :param input_name: Node input name.
         :type input_name: str
         """

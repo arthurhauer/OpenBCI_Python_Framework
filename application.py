@@ -1,3 +1,4 @@
+import signal
 from typing import Dict
 
 import time
@@ -12,6 +13,9 @@ class Application:
 
     def __init__(self) -> None:
         super().__init__()
+        self._stop_execution = False
+        signal.signal(signal.SIGINT, lambda x, y: self.dispose())
+        signal.signal(signal.SIGTERM, lambda x, y: self.dispose())
         self._initialize_nodes()
         for key in Configuration.get_root_nodes():
             node_config = Configuration.get_root_nodes()[key]
@@ -29,7 +33,7 @@ class Application:
             self._add_root_node(
                 key,
                 root_node)
-        while True:
+        while not self._stop_execution:
             self.run()
             time.sleep(1)
 
@@ -71,3 +75,8 @@ class Application:
     def run(self):
         for key in self._root_nodes:
             self._root_nodes[key].run()
+
+    def dispose(self):
+        self._stop_execution = True
+        for key in self._root_nodes:
+            self._root_nodes[key].dispose()

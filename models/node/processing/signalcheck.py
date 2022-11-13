@@ -1,5 +1,6 @@
 from typing import List, Final, Dict
 
+from models.framework_data import FrameworkData
 from models.node.processing.processing_node import ProcessingNode
 
 
@@ -23,7 +24,7 @@ class SignalCheck(ProcessingNode):
         # TODO change
         return True
 
-    def _process(self, data: Dict[str, list]) -> Dict[str, list]:
+    def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
         # TODO change
         print('SignalCheck!')
         return data

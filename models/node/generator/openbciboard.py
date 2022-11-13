@@ -1,8 +1,10 @@
+from threading import Thread
 from typing import Dict, List, Final
 
 from brainflow import BrainFlowInputParams, BoardShim, BoardIds, LogLevels
 
 from models.exception.missing_parameter import MissingParameterError
+from models.framework_data import FrameworkData
 from models.node.generator.generator_node import GeneratorNode
 import time
 
@@ -33,8 +35,15 @@ class OpenBCIBoard(GeneratorNode):
         self._get_board(board=parameters['board'])
         self._is_board_streaming = False
         self._eeg_channels = None
+        self._eeg_channel_names = None
         self._accelerometer_channels = None
+        self._accelerometer_channel_names = None
         self._timestamp_channel = None
+        self._timestamp_channel_name = None
+        self._data = []
+        self._thread = Thread(target=self._get_data)
+        self._stop_execution = False
+        self._thread_started = False
 
     @classmethod
     def from_config_json(cls, parameters: dict):
@@ -44,7 +53,7 @@ class OpenBCIBoard(GeneratorNode):
         return board
 
     def _is_next_node_call_enabled(self) -> bool:
-        return True
+        return self._output_buffer[self.OUTPUT_TIMESTAMP].has_data()
 
     def _is_generate_data_condition_satisfied(self) -> bool:
         return True
@@ -54,25 +63,40 @@ class OpenBCIBoard(GeneratorNode):
             self._timestamp_channel = BoardShim.get_timestamp_channel(self._get_board().board_id)
         return self._timestamp_channel
 
+    def _get_timestamp_channel_name(self) -> str:
+        if self._timestamp_channel_name is None:
+            self._timestamp_channel_name = 'timestamp'
+        return self._timestamp_channel_name
+
     def _get_eeg_channels(self) -> List[int]:
         if self._eeg_channels is None:
             self._eeg_channels = BoardShim.get_eeg_channels(self._get_board().board_id)
         return self._eeg_channels
+
+    def _get_eeg_channel_names(self) -> List[str]:
+        if self._eeg_channel_names is None:
+            self._eeg_channel_names = BoardShim.get_eeg_names(self._get_board().board_id)
+        return self._eeg_channel_names
 
     def _get_accelerometer_channels(self) -> List[int]:
         if self._accelerometer_channels is None:
             self._accelerometer_channels = BoardShim.get_accel_channels(self._get_board().board_id)
         return self._accelerometer_channels
 
-    def _generate_data(self) -> Dict[str, list]:
-        if not self._is_board_streaming:
-            self._start_stream()
-        data = self._get_board().get_board_data()
-        return {
-            self.OUTPUT_EEG: data[self._get_eeg_channels()],
-            self.OUTPUT_ACCELEROMETER: data[self._get_accelerometer_channels()],
-            self.OUTPUT_TIMESTAMP: data[self._get_timestamp_channel()]
-        }
+    def _get_accelerometer_channel_names(self) -> List[str]:
+        if self._accelerometer_channel_names is None:
+            self._accelerometer_channel_names = ['x', 'y', 'z']
+        return self._accelerometer_channel_names
+
+    def _generate_data(self) -> Dict[str, FrameworkData]:
+        if not self._thread_started:
+            self.start()
+        return_value = self._input_buffer.copy()
+        self._clear_input_buffer()
+        return return_value
+
+    def _get_inputs(self) -> List[str]:
+        return self._get_outputs()
 
     def _get_outputs(self) -> List[str]:
         return [
@@ -81,10 +105,24 @@ class OpenBCIBoard(GeneratorNode):
             self.OUTPUT_TIMESTAMP
         ]
 
+    def start(self):
+        self._thread_started = True
+        self._stop_execution = False
+        self._thread.start()
+
+    def stop(self):
+        if self._thread_started:
+            self._thread_started = False
+            self._stop_execution = True
+            self._thread.join(1000)
+
     def dispose(self) -> None:
         self._get_board().stop_stream()
         self._get_board().release_session()
         self._is_board_streaming = False
+        self._clear_output_buffer()
+        self._clear_input_buffer()
+        self.stop()
 
     @staticmethod
     def _set_log_level(log_level: str = "OFF"):
@@ -129,3 +167,33 @@ class OpenBCIBoard(GeneratorNode):
         self._get_board().start_stream()
         time.sleep(2)
         self._is_board_streaming = True
+
+    def _get_data(self):
+        while True:
+            if self._stop_execution:
+                return
+
+            if not self._is_board_streaming:
+                self._start_stream()
+
+            data = self._get_board().get_board_data()
+
+            eeg_data = FrameworkData.from_multi_channel(
+                self._get_eeg_channel_names(),
+                data[self._get_eeg_channels()]
+            )
+
+            accelerometer_data = FrameworkData.from_multi_channel(
+                self._get_accelerometer_channel_names(),
+                data[self._get_accelerometer_channels()]
+            )
+
+            timestamp_data = FrameworkData.from_single_channel(
+                data[self._get_timestamp_channel()]
+            )
+
+            self._insert_new_input_data(eeg_data, self.OUTPUT_EEG)
+            self._insert_new_input_data(accelerometer_data, self.OUTPUT_ACCELEROMETER)
+            self._insert_new_input_data(timestamp_data, self.OUTPUT_TIMESTAMP)
+
+            time.sleep(1)

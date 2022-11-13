@@ -1,6 +1,7 @@
 import abc
 from typing import List, Dict
 
+from models.framework_data import FrameworkData
 from models.node.node import Node
 
 
@@ -40,7 +41,7 @@ class ProcessingNode(Node):
         self._clear_input_buffer_after_process = buffer_options['clear_input_buffer_after_process']
         self._clear_output_buffer_after_process = buffer_options['clear_output_buffer_after_process']
 
-    def _run(self, data: list, input_name: str) -> None:
+    def _run(self, data: FrameworkData, input_name: str) -> None:
         self._insert_new_input_data(data, input_name)
         if self._clear_output_buffer_on_data_input:
             self._clear_output_buffer()
@@ -71,11 +72,11 @@ class ProcessingNode(Node):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def _process(self, data: Dict[str, list]) -> Dict[str, list]:
+    def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
         """Node self implementation of data processing, relating input and outputs.
 
         :param data: data to be processed.
-        :type data: Dict[str, list]
+        :type data: Dict[str,FrameworkData]
         """
         raise NotImplementedError()
 

@@ -3,8 +3,8 @@ import time
 from threading import Thread
 from typing import List, Dict, Final
 
-
 from models.exception.missing_parameter import MissingParameterError
+from models.framework_data import FrameworkData
 from models.node.generator.generator_node import GeneratorNode
 from models.utils.trial import Trial
 
@@ -44,12 +44,12 @@ class MotorImagery(GeneratorNode):
         return cls(parameters=parameters)
 
     def _is_next_node_call_enabled(self) -> bool:
-        return True
+        return self._output_buffer[self.OUTPUT_TIMESTAMP].has_data()
 
     def _is_generate_data_condition_satisfied(self) -> bool:
         return True
 
-    def _generate_data(self) -> Dict[str, list]:
+    def _generate_data(self) -> Dict[str, FrameworkData]:
         if not self._thread_started:
             self.start()
         return_value = self._input_buffer.copy()
@@ -76,9 +76,10 @@ class MotorImagery(GeneratorNode):
         self._thread.start()
 
     def stop(self):
-        self._thread_started = False
-        self._stop_execution = True
-        self._thread.join(2000)
+        if self._thread_started:
+            self._thread_started = False
+            self._stop_execution = True
+            self._thread.join(1000)
 
     def _on_change_sequence(self):
         if self.shuffle_when_sequence_is_finished:
@@ -96,6 +97,12 @@ class MotorImagery(GeneratorNode):
         if self._stop_execution:
             return
         trial.on_stop = self._next_trial
-        self._insert_new_input_data([trial.code], self.OUTPUT_MARKER)
-        self._insert_new_input_data([time.time()], self.OUTPUT_TIMESTAMP)
+
+        marker_data = FrameworkData.from_single_channel([trial.code])
+
+        timestamp_data = FrameworkData.from_single_channel([time.time()])
+
+        self._insert_new_input_data(marker_data, self.OUTPUT_MARKER)
+        self._insert_new_input_data(timestamp_data, self.OUTPUT_TIMESTAMP)
+
         trial.start()

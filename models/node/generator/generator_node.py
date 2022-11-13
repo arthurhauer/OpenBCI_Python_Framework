@@ -1,6 +1,7 @@
 import abc
 from typing import List, Dict
 
+from models.framework_data import FrameworkData
 from models.node.node import Node
 
 
@@ -19,7 +20,7 @@ class GeneratorNode(Node):
                            '.clear_output_buffer_on_generate')
         self._clear_output_buffer_on_generate = buffer_options['clear_output_buffer_on_generate']
 
-    def _run(self, data: list, input_name: str) -> None:
+    def _run(self, data: FrameworkData, input_name: str) -> None:
         if self._clear_output_buffer_on_generate:
             super()._clear_output_buffer()
 
@@ -41,7 +42,7 @@ class GeneratorNode(Node):
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def _generate_data(self) -> Dict[str, list]:
+    def _generate_data(self) -> Dict[str, FrameworkData]:
         raise NotImplementedError()
 
     def _get_inputs(self) -> List[str]:
