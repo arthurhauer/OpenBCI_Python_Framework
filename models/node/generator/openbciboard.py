@@ -40,6 +40,7 @@ class OpenBCIBoard(GeneratorNode):
         self._accelerometer_channel_names = None
         self._timestamp_channel = None
         self._timestamp_channel_name = None
+        self._sampling_rate = None
         self._data = []
         self._thread = Thread(target=self._get_data)
         self._stop_execution = False
@@ -57,6 +58,11 @@ class OpenBCIBoard(GeneratorNode):
 
     def _is_generate_data_condition_satisfied(self) -> bool:
         return True
+
+    def _get_sampling_rate(self) -> int:
+        if self._sampling_rate is None:
+            self._sampling_rate = BoardShim.get_sampling_rate(self._get_board().board_id)
+        return self._sampling_rate
 
     def _get_timestamp_channel(self) -> int:
         if self._timestamp_channel is None:
@@ -179,16 +185,19 @@ class OpenBCIBoard(GeneratorNode):
             data = self._get_board().get_board_data()
 
             eeg_data = FrameworkData.from_multi_channel(
+                self._get_sampling_rate(),
                 self._get_eeg_channel_names(),
                 data[self._get_eeg_channels()]
             )
 
             accelerometer_data = FrameworkData.from_multi_channel(
+                self._get_sampling_rate(),
                 self._get_accelerometer_channel_names(),
                 data[self._get_accelerometer_channels()]
             )
 
             timestamp_data = FrameworkData.from_single_channel(
+                self._get_sampling_rate(),
                 data[self._get_timestamp_channel()]
             )
 

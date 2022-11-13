@@ -1,12 +1,14 @@
 from __future__ import annotations
 import abc
-from typing import List, Dict, Final
+from typing import List, Dict, Final, Any
 
+from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.framework_data import FrameworkData
 
 
+# TODO Isolamento de nodes em threads separadas. Cada nó deve ser executado em uma thread
 class Node:
-    _MODULE_NAME: Final[str] = 'node'
+    _MODULE_NAME: Final[str] = 'models.node'
     """Abstract base class for processing pipeline execution on this framework.
     """
 
@@ -41,23 +43,35 @@ class Node:
                              '.node'
                              '.outputs')
 
-        self._initialize_buffer_options(parameters['buffer_options'])
-        self._type = parameters['type']
+        if 'name' not in parameters:
+            raise ValueError('error'
+                             '.missing'
+                             '.node'
+                             '.name')
 
+        self._initialize_buffer_options(parameters['buffer_options'])
+        self._type: Final[str] = parameters['type']
+        self.name: Final[str] = parameters['name']
         self._clear_input_buffer()
         self._clear_output_buffer()
 
         self._initialize_children()
 
+        self._child_input_relation: Dict[Node, List[str]] = {}
+
     def _clear_input_buffer(self):
         """Sets input buffer to new empty object for each input name
         """
-        self._input_buffer = dict.fromkeys(self._get_inputs(), FrameworkData())
+        self._input_buffer = {}
+        for input_name in self._get_inputs():
+            self._input_buffer[input_name] = FrameworkData()
 
     def _clear_output_buffer(self):
         """Sets output buffer to new empty object for each output name
         """
-        self._output_buffer = dict.fromkeys(self._get_outputs(), FrameworkData())
+        self._output_buffer = {}
+        for output_name in self._get_outputs():
+            self._output_buffer[output_name] = FrameworkData()
 
     @staticmethod
     def _insert_data_in_buffer(data: FrameworkData, buffer_data_name: str, buffer: Dict[str, FrameworkData]):
@@ -71,7 +85,7 @@ class Node:
         :param input_name: Node input name.
         :type input_name: str
         """
-        self._insert_data_in_buffer(data, input_name, self._input_buffer)
+        self._input_buffer[input_name].extend(data)
 
     def _insert_new_output_data(self, data: FrameworkData, output_name: str):
         """Appends new data to the end of already existing output buffer
@@ -81,12 +95,14 @@ class Node:
         :param output_name: Node output name.
         :type output_name: str
         """
-        self._insert_data_in_buffer(data, output_name, self._output_buffer)
+        self._output_buffer[output_name].extend(data)
 
     def _initialize_children(self):
         """Sets child nodes dictionary to a new, empty dict
         """
-        self._children = dict.fromkeys(self._get_outputs(), [])
+        self._children: Dict[str, List[Dict[str, Any]]] = {}
+        for output_name in self._get_outputs():
+            self._children[output_name] = []
 
     def add_child(self, output_name: str, node: Node, input_name: str):
         """Adds a new child node to child nodes dictionary
@@ -98,7 +114,24 @@ class Node:
         :param input_name: Child node input name.
         :type input_name: str
         """
-        self._children[output_name].append(lambda data: node.run(data, input_name))
+        # TODO Melhorar o objeto guardado em self._children
+        if node not in self._child_input_relation:
+            self._child_input_relation[node] = []
+        if input_name in self._child_input_relation[node]:
+            raise InvalidParameterValue(module='node', parameter=f'outputs.{output_name}', cause='already_added')
+        self._children[output_name].append(
+            {
+                'node': node,
+                'run': lambda data: node.run(data, input_name),
+                'dispose': lambda x: node.dispose()
+            }
+        )
+
+    def _dispose_all_children(self):
+        for output_name in self._get_outputs():
+            output_children = self._children[output_name]
+            for child in output_children:
+                child['dispose']()
 
     def _call_children(self):
         """Calls child nodes to execute their processing given current node output buffer content.
@@ -107,7 +140,7 @@ class Node:
             output = self._output_buffer[output_name]
             output_children = self._children[output_name]
             for child in output_children:
-                child(output)
+                child['run'](output)
 
     def run(self, data: FrameworkData = None, input_name: str = None) -> None:
         """Run node main function
@@ -185,6 +218,12 @@ class Node:
         """Returns the output names in list form.
         """
         raise NotImplementedError()
+
+    def dispose_all(self)->None:
+        """Disposes itself and all its children nodes
+        """
+        self._dispose_all_children()
+        self.dispose()
 
     @abc.abstractmethod
     def dispose(self) -> None:

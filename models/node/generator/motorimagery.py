@@ -98,9 +98,10 @@ class MotorImagery(GeneratorNode):
             return
         trial.on_stop = self._next_trial
 
-        marker_data = FrameworkData.from_single_channel([trial.code])
-
-        timestamp_data = FrameworkData.from_single_channel([time.time()])
+        # Set sampling frequency to 1 as this generator node doesn't have a fixed generation rate,
+        # being completely dependent on user configuration for each trial
+        marker_data = FrameworkData.from_single_channel(1, [trial.code])
+        timestamp_data = FrameworkData.from_single_channel(1, [time.time()])
 
         self._insert_new_input_data(marker_data, self.OUTPUT_MARKER)
         self._insert_new_input_data(timestamp_data, self.OUTPUT_TIMESTAMP)

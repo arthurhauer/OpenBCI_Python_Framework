@@ -2,6 +2,7 @@ from typing import List, Final, Dict
 
 from models.framework_data import FrameworkData
 from models.node.processing.processing_node import ProcessingNode
+from typing import List
 
 
 class SignalCheck(ProcessingNode):

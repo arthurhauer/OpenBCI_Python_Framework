@@ -14,19 +14,74 @@
         },
         "outputs": {
           "eeg": [
-            {
-              "node": "example_signal_check_node_2",
-              "input": "main"
-            }
           ],
           "accelerometer": [
             {
-              "node": "example_signal_check_node",
-              "input": "main"
+              "node": "example_merge_node",
+              "input": "master_main"
             }
           ],
           "timestamp": [
-
+            {
+              "node": "example_merge_node",
+              "input": "master_timestamp"
+            }
+          ]
+        }
+      },
+      "motor_imagery_session": {
+        "module": "models.node.generator",
+        "type": "MotorImagery",
+        "buffer_options": {
+          "clear_output_buffer_on_generate": true
+        },
+        "shuffle_when_sequence_is_finished": true,
+        "trials": [
+          {
+            "name": "Rest",
+            "code": 1,
+            "duration": {
+              "mean": 1.5,
+              "standard_deviation": 1,
+              "maximum": 2,
+              "minimum": 1
+            },
+            "cue": {
+              "file": "D:\\Projetos\\Desenvolvimento\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "parameters": {
+                "message": "REST"
+              }
+            }
+          },
+          {
+            "name": "Close right fist",
+            "code": 3,
+            "duration": {
+              "mean": 1.5,
+              "standard_deviation": 1,
+              "maximum": 2,
+              "minimum": 1
+            },
+            "cue": {
+              "file": "D:\\Projetos\\Desenvolvimento\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "parameters": {
+                "message": "CLOSE RIGHT FIST"
+              }
+            }
+          }
+        ],
+        "outputs": {
+          "marker": [
+            {
+              "node": "example_merge_node",
+              "input": "slave_main"
+            }
+          ],
+          "timestamp": [
+            {
+              "node": "example_merge_node",
+              "input": "slave_timestamp"
+            }
           ]
         }
       }
@@ -37,19 +92,7 @@
         "type": "SignalCheck",
         "buffer_options": {
           "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": false,
-          "clear_output_buffer_after_process": false
-        },
-        "outputs": {
-          "main": []
-        }
-      },
-      "example_signal_check_node_2": {
-        "module": "models.node.processing",
-        "type": "SignalCheck",
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": false,
+          "clear_input_buffer_after_process": true,
           "clear_output_buffer_after_process": false
         },
         "outputs": {
@@ -67,7 +110,10 @@
         },
         "outputs": {
           "merged_main": [
-
+            {
+              "node": "example_signal_check_node",
+              "input": "main"
+            }
           ]
         }
       }

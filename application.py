@@ -23,6 +23,7 @@ class Application:
                 node_config['module'],
                 node_config['type']
             )
+            node_config['name'] = key
             root_node: GeneratorNode = node.from_config_json(node_config)
             for output_name in node_config['outputs']:
                 root_node.check_output(output_name)
@@ -56,6 +57,7 @@ class Application:
                 node_config['module'],
                 node_config['type']
             )
+            node_config['name'] = node_name
             node: Node = node_type.from_config_json(node_config)
             for output_name in node_config['outputs']:
                 for output_config in node_config['outputs'][output_name]:
@@ -79,4 +81,4 @@ class Application:
     def dispose(self):
         self._stop_execution = True
         for key in self._root_nodes:
-            self._root_nodes[key].dispose()
+            self._root_nodes[key].dispose_all()

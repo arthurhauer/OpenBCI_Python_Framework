@@ -1,13 +1,15 @@
 import statistics
+import string
+from random import random
 from typing import List, Dict, Final
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
+from models.exception.non_compatible_data import NonCompatibleData
 from models.framework_data import FrameworkData
 from models.node.processing.processing_node import ProcessingNode
 
 
-# TODO implementar
 class Merge(ProcessingNode):
     _MODULE_NAME: Final[str] = 'node.processing.merge'
 
@@ -44,25 +46,30 @@ class Merge(ProcessingNode):
         return True
 
     def _is_processing_condition_satisfied(self) -> bool:
-        return len(self._input_buffer[self.INPUT_SLAVE_TIMESTAMP]) > 0 \
-               and len(self._input_buffer[self.INPUT_MASTER_TIMESTAMP]) > 0 \
+        return self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_count() > 0 \
+               and self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_count() > 0 \
                and (
-                       self._input_buffer[self.INPUT_MASTER_TIMESTAMP][-1]
-                       >= self._input_buffer[self.INPUT_SLAVE_TIMESTAMP][-1]
+                       self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()[-1]
+                       >= self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_single_channel()[-1]
                )
 
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
         lookup_start_index = 0
 
         master_main = data[self.INPUT_MASTER_MAIN]
-        master_timestamp = data[self.INPUT_MASTER_TIMESTAMP]
+        master_timestamp_data = data[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()
         slave_main = data[self.INPUT_SLAVE_MAIN]
         slave_timestamp = data[self.INPUT_SLAVE_TIMESTAMP]
-        new_slave_data = []
+        # Check if input data from master and slave have channels with the same name
+        if not slave_main.get_channels_as_set().isdisjoint(master_main.channels):
+            raise NonCompatibleData(self._MODULE_NAME, 'channels_with_same_name')
 
-        for slave_timestamp_index, slave_timestamp_value in enumerate(slave_timestamp):
+        new_slave_data = FrameworkData(sampling_frequency_hz=master_main.sampling_frequency,
+                                       channels=slave_main.channels)
+
+        for slave_timestamp_index, slave_timestamp_value in enumerate(slave_timestamp.get_data_single_channel()):
             closest_point = self._get_closest_timestamp_index_in_master(
-                master_timestamp,
+                master_timestamp_data,
                 slave_timestamp_value,
                 lookup_start_index
             )
@@ -70,15 +77,23 @@ class Merge(ProcessingNode):
                 self._fill(
                     lookup_start_index,
                     closest_point,
-                    slave_main[slave_timestamp_index]
+                    slave_main,
+                    slave_timestamp_index,
+                    master_main.sampling_frequency
                 )
             )
-            self._statistics(abs(master_timestamp[closest_point] - slave_timestamp_value) * 1000000)
+            self._statistics(abs(master_timestamp_data[closest_point] - slave_timestamp_value) * 1000000)
 
             lookup_start_index = closest_point
 
-        merged_data = master_main
-        merged_data.extend(new_slave_data)
+        merged_data = FrameworkData()
+        merged_data.extend(master_main)
+        for channel in new_slave_data.channels:
+            new_channel_name = channel
+            if channel in merged_data.channels:
+                rand_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+                new_channel_name = f'{channel}{rand_id}'
+            merged_data.input_data_on_channel(new_channel_name, new_slave_data.get_data(channel))
         return {
             self.OUTPUT_MERGED_MAIN: merged_data,
             self.OUTPUT_MERGED_TIMESTAMP: data[self.INPUT_MASTER_TIMESTAMP]
@@ -114,17 +129,26 @@ class Merge(ProcessingNode):
         closest_point: int = min(range(len(filtered)), key=lambda i: abs(filtered[i] - slave_timestamp))
         return closest_point
 
-    def _fill(self, start_index: int, end_index: int, slave_main_value: FrameworkData) -> FrameworkData:
-        # TODO Tratar caso slave multi-canal
-        fill_data = None
-
+    def _fill(self,
+              start_index: int,
+              end_index: int,
+              slave_main: FrameworkData,
+              slave_main_value_index: int,
+              master_sampling_frequency: float) -> FrameworkData:
+        fill_data = FrameworkData(master_sampling_frequency, slave_main.channels)
+        fill_size = (end_index - start_index)
         if self._zero_fill:
-            fill_data = 0
+            channel_data = [0] * fill_size
+            input_data = [channel_data] * len(slave_main.channels)
+            fill_data.input_2d_data(input_data)
         elif self._sample_and_hold:
-            fill_data = slave_main_value
+            input_data = slave_main.get_data_at_index(slave_main_value_index)
+            for channel in input_data:
+                channel_data = [input_data[channel]] * fill_size
+                fill_data.input_data_on_channel(channel, channel_data)
         else:
             raise InvalidParameterValue(module=self._MODULE_NAME,
                                         parameter='slave_filling',
                                         cause='not_set')
 
-        return [fill_data] * (end_index - start_index)
+        return fill_data
