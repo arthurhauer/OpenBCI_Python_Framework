@@ -21,6 +21,9 @@ class GeneratorNode(Node):
         self._clear_output_buffer_on_generate = buffer_options['clear_output_buffer_on_generate']
 
     def _run(self, data: FrameworkData, input_name: str) -> None:
+        if not self._is_generate_data_condition_satisfied():
+            return
+
         if self._clear_output_buffer_on_generate:
             super()._clear_output_buffer()
 

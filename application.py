@@ -76,7 +76,11 @@ class Application:
 
     def run(self):
         for key in self._root_nodes:
-            self._root_nodes[key].run()
+            try:
+                self._root_nodes[key].run()
+            except Exception as e:
+                self.dispose()
+                raise
 
     def dispose(self):
         self._stop_execution = True

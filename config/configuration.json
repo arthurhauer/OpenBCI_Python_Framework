@@ -1,120 +1,110 @@
 {
   "nodes": {
     "root": {
-      "simulated_open_bci_board_1": {
-        "module": "models.node.generator",
-        "type": "OpenBCIBoard",
-        "log_level": "INFO",
-        "board": "SYNTHETIC_BOARD",
-        "communication": {
-          "serial_port": "COM4"
-        },
+      "gal_trial_eeg": {
+        "module": "models.node.generator.file",
+        "type": "CSVFile",
         "buffer_options": {
           "clear_output_buffer_on_generate": true
         },
-        "outputs": {
-          "eeg": [
-          ],
-          "accelerometer": [
-            {
-              "node": "example_merge_node",
-              "input": "master_main"
-            }
-          ],
-          "timestamp": [
-            {
-              "node": "example_merge_node",
-              "input": "master_timestamp"
-            }
-          ]
-        }
-      },
-      "motor_imagery_session": {
-        "module": "models.node.generator",
-        "type": "MotorImagery",
-        "buffer_options": {
-          "clear_output_buffer_on_generate": true
-        },
-        "shuffle_when_sequence_is_finished": true,
-        "trials": [
-          {
-            "name": "Rest",
-            "code": 1,
-            "duration": {
-              "mean": 1.5,
-              "standard_deviation": 1,
-              "maximum": 2,
-              "minimum": 1
-            },
-            "cue": {
-              "file": "D:\\Projetos\\Desenvolvimento\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
-              "parameters": {
-                "message": "REST"
-              }
-            }
-          },
-          {
-            "name": "Close right fist",
-            "code": 3,
-            "duration": {
-              "mean": 1.5,
-              "standard_deviation": 1,
-              "maximum": 2,
-              "minimum": 1
-            },
-            "cue": {
-              "file": "D:\\Projetos\\Desenvolvimento\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
-              "parameters": {
-                "message": "CLOSE RIGHT FIST"
-              }
-            }
-          }
+        "file_path": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\Processamento Sinais Biomedicos\\Trabalho Final\\Dados\\train\\subj1_series1_data.csv",
+        "data_type": "float",
+        "sampling_frequency": 500,
+        "channel_column_names": [
+          "Fp1",
+          "Fp2",
+          "F7",
+          "F3",
+          "Fz",
+          "F4",
+          "F8",
+          "FC5",
+          "FC1",
+          "FC2",
+          "FC6",
+          "T7",
+          "C3",
+          "Cz",
+          "C4",
+          "T8",
+          "TP9",
+          "CP5",
+          "CP1",
+          "CP2",
+          "CP6",
+          "TP10",
+          "P7",
+          "P3",
+          "Pz",
+          "P4",
+          "P8",
+          "PO9",
+          "O1",
+          "Oz",
+          "O2",
+          "PO10"
         ],
         "outputs": {
-          "marker": [
+          "main": [
             {
-              "node": "example_merge_node",
-              "input": "slave_main"
+              "node": "bandpass",
+              "input": "main"
             }
           ],
-          "timestamp": [
-            {
-              "node": "example_merge_node",
-              "input": "slave_timestamp"
-            }
-          ]
+          "timestamp": []
         }
       }
     },
     "common": {
-      "example_signal_check_node": {
-        "module": "models.node.processing",
-        "type": "SignalCheck",
+      "bandpass": {
+        "module": "models.node.processing.filter",
+        "type": "BandPass",
         "buffer_options": {
           "clear_output_buffer_on_data_input": false,
           "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": false
+          "clear_output_buffer_after_process": true
         },
+        "low_cut_frequency_hz": 8.0,
+        "high_cut_frequency_hz": 30.0,
+        "order": 6,
         "outputs": {
-          "main": []
+          "main": [
+            {
+              "node": "segmentation",
+              "input": "main"
+            }
+          ]
         }
       },
-      "example_merge_node": {
+      "segmentation": {
+        "module": "models.node.processing.segmentation",
+        "type": "FixedWindowSegmentation",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "window_size": 200,
+        "filling_value": "zero",
+        "outputs": {
+          "main": [
+            {
+              "node": "test",
+              "input": "main"
+            }
+          ]
+        }
+      },
+      "test": {
         "module": "models.node.processing",
-        "type": "Merge",
-        "slave_filling": "sample_and_hold",
+        "type": "SignalCheck",
         "buffer_options": {
           "clear_output_buffer_on_data_input": false,
           "clear_input_buffer_after_process": true,
           "clear_output_buffer_after_process": true
         },
         "outputs": {
-          "merged_main": [
-            {
-              "node": "example_signal_check_node",
-              "input": "main"
-            }
-          ]
+          "main": []
         }
       }
     }

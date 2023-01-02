@@ -14,6 +14,20 @@ class Node:
 
     def __init__(self, parameters=None) -> None:
         super().__init__()
+        self._validate_parameters(parameters)
+        self.parameters = parameters
+        self._initialize_buffer_options(parameters['buffer_options'])
+        self._type: Final[str] = parameters['type']
+        self.name: Final[str] = parameters['name']
+        self._clear_input_buffer()
+        self._clear_output_buffer()
+
+        self._initialize_children()
+
+        self._child_input_relation: Dict[Node, List[str]] = {}
+
+    @abc.abstractmethod
+    def _validate_parameters(self, parameters: dict):
         if 'module' not in parameters:
             raise ValueError("error"
                              ".missing"
@@ -48,16 +62,6 @@ class Node:
                              '.missing'
                              '.node'
                              '.name')
-
-        self._initialize_buffer_options(parameters['buffer_options'])
-        self._type: Final[str] = parameters['type']
-        self.name: Final[str] = parameters['name']
-        self._clear_input_buffer()
-        self._clear_output_buffer()
-
-        self._initialize_children()
-
-        self._child_input_relation: Dict[Node, List[str]] = {}
 
     def _clear_input_buffer(self):
         """Sets input buffer to new empty object for each input name
@@ -131,7 +135,7 @@ class Node:
         for output_name in self._get_outputs():
             output_children = self._children[output_name]
             for child in output_children:
-                child['dispose']()
+                child['dispose'](child)
 
     def _call_children(self):
         """Calls child nodes to execute their processing given current node output buffer content.
@@ -219,7 +223,7 @@ class Node:
         """
         raise NotImplementedError()
 
-    def dispose_all(self)->None:
+    def dispose_all(self) -> None:
         """Disposes itself and all its children nodes
         """
         self._dispose_all_children()

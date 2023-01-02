@@ -70,6 +70,9 @@ class FrameworkData:
             except KeyError:
                 raise NonCompatibleData(module=self._MODULE_NAME)
 
+    # def input_dict_data(self,data:dict):
+    #
+
     def input_2d_data(self, data: List[list]):
         self_data_len = len(self._data)
         input_data_len = len(data)
@@ -81,7 +84,11 @@ class FrameworkData:
         for index, channel in enumerate(self._data):
             self.input_data_on_channel(channel, data[index])
 
-    def input_data_on_channel(self, channel: str, data: list):
+    def input_data_on_channel(self, channel: str = None, data: list = []):
+        if channel is None:
+            if len(self.channels) < 1:
+                self.channels.append(self._DEFAULT_CHANNEL_NAME)
+            channel = self.channels[0]
         if channel not in self._data:
             self._data[channel] = []
             self.channels.append(channel)

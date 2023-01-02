@@ -27,16 +27,35 @@ class Merge(ProcessingNode):
         super().__init__(parameters)
 
         self._sync_errors: List[float] = []
-
         if 'slave_filling' not in parameters:
             raise MissingParameterError(module=self._MODULE_NAME, parameter='slave_filling')
 
         if parameters['slave_filling'] not in [self.FILL_TYPE_ZEROFILL, self.FILL_TYPE_SAMPLE_AND_HOLD]:
             raise InvalidParameterValue(module=self._MODULE_NAME, parameter='slave_filling',
                                         cause=f'not_in_[{self.FILL_TYPE_ZEROFILL},{self.FILL_TYPE_SAMPLE_AND_HOLD}]')
+        if 'statistics_enabled' not in parameters:
+            parameters['statistics_enabled'] = False
+        elif type(parameters['statistics_enabled']) is not bool:
+            raise InvalidParameterValue(module=self._MODULE_NAME, parameter='statistics_enabled',
+                                        cause='must_be_bool')
 
+        self._statistics_enabled = parameters['statistics_enabled']
         self._zero_fill = parameters['slave_filling'] == self.FILL_TYPE_ZEROFILL
         self._sample_and_hold = parameters['slave_filling'] == self.FILL_TYPE_SAMPLE_AND_HOLD
+
+    def _validate_parameters(self, parameters: dict):
+        if 'slave_filling' not in parameters:
+            raise MissingParameterError(module=self._MODULE_NAME,
+                                        parameter='slave_filling')
+
+        if parameters['slave_filling'] not in [self.FILL_TYPE_ZEROFILL, self.FILL_TYPE_SAMPLE_AND_HOLD]:
+            raise InvalidParameterValue(module=self._MODULE_NAME,
+                                        parameter='slave_filling',
+                                        cause=f'not_in_[{self.FILL_TYPE_ZEROFILL},{self.FILL_TYPE_SAMPLE_AND_HOLD}]')
+        if 'statistics_enabled' in parameters and type(parameters['statistics_enabled']) is not bool:
+            raise InvalidParameterValue(module=self._MODULE_NAME,
+                                        parameter='statistics_enabled',
+                                        cause='must_be_bool')
 
     @classmethod
     def from_config_json(cls, parameters: dict):
@@ -55,7 +74,7 @@ class Merge(ProcessingNode):
 
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
         lookup_start_index = 0
-
+        print('Starting merge')
         master_main = data[self.INPUT_MASTER_MAIN]
         master_timestamp_data = data[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()
         slave_main = data[self.INPUT_SLAVE_MAIN]
@@ -100,11 +119,12 @@ class Merge(ProcessingNode):
         }
 
     def _statistics(self, sync_error_microseconds: float):
-        self._sync_errors.append(sync_error_microseconds)
-        print(f'---------------------------------------------------------------'
-              f'\nError is:\t\t\t\t{sync_error_microseconds} uS'
-              f'\nMean Error is:\t\t\t{statistics.mean(self._sync_errors)} uS'
-              f'\n---------------------------------------------------------------')
+        if self._statistics_enabled:
+            self._sync_errors.append(sync_error_microseconds)
+            print(f'---------------------------------------------------------------'
+                  f'\nError is:\t\t\t\t{sync_error_microseconds} uS'
+                  f'\nMean Error is:\t\t\t{statistics.mean(self._sync_errors)} uS'
+                  f'\n---------------------------------------------------------------')
 
     def _get_inputs(self) -> List[str]:
         return [
