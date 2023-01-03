@@ -7,7 +7,6 @@ from models.node.processing.trainable.trainable_processing_node import Trainable
 class TrainableFeatureExtractor(TrainableProcessingNode):
     _MODULE_NAME: Final[str] = 'node.processing.trainable.feature_extractor.feature_extractor'
 
-    INPUT_MAIN: Final[str] = 'main'
     OUTPUT_MAIN: Final[str] = 'main'
 
     def __init__(self, parameters: dict):
@@ -26,7 +25,15 @@ class TrainableFeatureExtractor(TrainableProcessingNode):
         return True
 
     def _is_processing_condition_satisfied(self) -> bool:
-        return self._input_buffer[self.INPUT_MAIN].get_data_count() > 0
+        return self._input_buffer[self.INPUT_DATA].get_data_count() > 0
+
+    @abc.abstractmethod
+    def _is_training_condition_satisfied(self) -> bool:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def _should_retrain(self) -> bool:
+        raise NotImplementedError()
 
     @abc.abstractmethod
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
@@ -37,18 +44,13 @@ class TrainableFeatureExtractor(TrainableProcessingNode):
             self._extract_data(raw_data)
         return extracted_data
 
-    def _train(self, data: list):
+    @abc.abstractmethod
+    def _train(self, data: FrameworkData, label: FrameworkData):
         raise NotImplementedError()
 
     @abc.abstractmethod
     def _extract_data(self, data: FrameworkData) -> FrameworkData:
         raise NotImplementedError()
-
-    @abc.abstractmethod
-    def _get_inputs(self) -> List[str]:
-        return [
-            self.INPUT_MAIN
-        ]
 
     @abc.abstractmethod
     def _get_outputs(self) -> List[str]:

@@ -55,7 +55,7 @@ class FixedWindowSegmentation(Segmentation):
             total_count = len(raw_signal)
             window_count = math.floor(total_count / self.window_size)
             remaining_samples = total_count % self.window_size
-            for i in range(1, window_count):
+            for i in range(1, window_count+1):
                 window_start = (i - 1) * self.window_size
                 window_end = i * self.window_size
                 current_window = raw_signal[window_start:window_end]
@@ -67,5 +67,5 @@ class FixedWindowSegmentation(Segmentation):
                 fill_count = window_count - remaining_samples
                 current_window = raw_signal[window_start:window_end] + [fill_value] * fill_count
                 segmented_channel.append(current_window)
-            segmented_data.input_data_on_channel(channel, segmented_channel)
+            segmented_data.input_data_on_channel(segmented_channel, channel)
         return segmented_data

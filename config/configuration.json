@@ -7,7 +7,7 @@
         "buffer_options": {
           "clear_output_buffer_on_generate": true
         },
-        "file_path": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\Processamento Sinais Biomedicos\\Trabalho Final\\Dados\\train\\subj1_series1_data.csv",
+        "file_path": "D:\\Desktop\\A\\subj1_series1_data.csv",
         "data_type": "float",
         "sampling_frequency": 500,
         "channel_column_names": [
@@ -53,9 +53,53 @@
           ],
           "timestamp": []
         }
+      },
+      "labels": {
+        "module": "models.node.generator.file",
+        "type": "CSVFile",
+        "buffer_options": {
+          "clear_output_buffer_on_generate": true
+        },
+        "file_path": "D:\\Desktop\\A\\subj1_series1_events.csv",
+        "data_type": "float",
+        "sampling_frequency": 500,
+        "channel_column_names": [
+          "HandStart",
+          "FirstDigitTouch",
+          "BothStartLoadPhase",
+          "LiftOff",
+          "Replace",
+          "BothReleased"
+        ],
+        "outputs": {
+          "main": [
+            {
+              "node": "label_encoder",
+              "input": "main"
+            }
+          ],
+          "timestamp": []
+        }
       }
     },
     "common": {
+      "label_encoder": {
+        "module": "models.node.processing.encode",
+        "type": "OneHotToSingle",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs": {
+          "main": [
+            {
+              "node": "segmentation_labels",
+              "input": "main"
+            }
+          ]
+        }
+      },
       "bandpass": {
         "module": "models.node.processing.filter",
         "type": "BandPass",
@@ -86,6 +130,45 @@
         },
         "window_size": 200,
         "filling_value": "zero",
+        "outputs": {
+          "main": [
+            {
+              "node": "csp",
+              "input": "data"
+            }
+          ]
+        }
+      },
+      "segmentation_labels": {
+        "module": "models.node.processing.segmentation",
+        "type": "FixedWindowSegmentation",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "window_size": 200,
+        "filling_value": "zero",
+        "outputs": {
+          "main": [
+            {
+              "node": "csp",
+              "input": "label"
+            }
+          ]
+        }
+      },
+      "csp": {
+        "module": "models.node.processing.trainable.feature_extractor",
+        "type": "CSP",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true,
+          "clear_input_buffer_after_training": false,
+          "process_input_buffer_after_training": true
+        },
+        "number_of_components": 4,
         "outputs": {
           "main": [
             {

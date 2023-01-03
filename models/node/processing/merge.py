@@ -112,7 +112,7 @@ class Merge(ProcessingNode):
             if channel in merged_data.channels:
                 rand_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
                 new_channel_name = f'{channel}{rand_id}'
-            merged_data.input_data_on_channel(new_channel_name, new_slave_data.get_data(channel))
+            merged_data.input_data_on_channel(new_slave_data.get_data(channel), new_channel_name)
         return {
             self.OUTPUT_MERGED_MAIN: merged_data,
             self.OUTPUT_MERGED_TIMESTAMP: data[self.INPUT_MASTER_TIMESTAMP]
@@ -165,7 +165,7 @@ class Merge(ProcessingNode):
             input_data = slave_main.get_data_at_index(slave_main_value_index)
             for channel in input_data:
                 channel_data = [input_data[channel]] * fill_size
-                fill_data.input_data_on_channel(channel, channel_data)
+                fill_data.input_data_on_channel(channel_data, channel)
         else:
             raise InvalidParameterValue(module=self._MODULE_NAME,
                                         parameter='slave_filling',

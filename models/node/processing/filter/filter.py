@@ -44,7 +44,7 @@ class Filter(ProcessingNode):
             for channel in data[key].channels:
                 raw_signal = data[key].get_data(channel)
                 filtered_signal = lfilter(b, a, raw_signal)
-                filtered_data[key].input_data_on_channel(channel, filtered_signal)
+                filtered_data[key].input_data_on_channel(filtered_signal, channel)
 
         return filtered_data
 

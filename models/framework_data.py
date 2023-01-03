@@ -26,7 +26,7 @@ class FrameworkData:
             sampling_frequency_hz,
             [cls._DEFAULT_CHANNEL_NAME]
         )
-        class_data.input_data_on_channel(cls._DEFAULT_CHANNEL_NAME, data)
+        class_data.input_data_on_channel(data, cls._DEFAULT_CHANNEL_NAME)
         return class_data
 
     @classmethod
@@ -82,17 +82,20 @@ class FrameworkData:
             raise NonCompatibleData(module=self._MODULE_NAME)
 
         for index, channel in enumerate(self._data):
-            self.input_data_on_channel(channel, data[index])
+            self.input_data_on_channel(data[index], channel)
 
-    def input_data_on_channel(self, channel: str = None, data: list = []):
+    def input_data_on_channel(self, data: list = [], channel: str = None):
         if channel is None:
             if len(self.channels) < 1:
                 self.channels.append(self._DEFAULT_CHANNEL_NAME)
             channel = self.channels[0]
         if channel not in self._data:
             self._data[channel] = []
+
+        if channel not in self.channels:
             self.channels.append(channel)
             self._channels_set = None
+
         self._data[channel].extend(data)
 
     def get_data_single_channel(self) -> list:
