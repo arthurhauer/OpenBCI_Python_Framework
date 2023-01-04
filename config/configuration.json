@@ -7,7 +7,7 @@
         "buffer_options": {
           "clear_output_buffer_on_generate": true
         },
-        "file_path": "D:\\Desktop\\A\\subj1_series1_data.csv",
+        "file_path": "C:\\Users\\Arthur Hauer\\Desktop\\A\\subj1_series1_data.csv",
         "data_type": "float",
         "sampling_frequency": 500,
         "channel_column_names": [
@@ -60,7 +60,7 @@
         "buffer_options": {
           "clear_output_buffer_on_generate": true
         },
-        "file_path": "D:\\Desktop\\A\\subj1_series1_events.csv",
+        "file_path": "C:\\Users\\Arthur Hauer\\Desktop\\A\\subj1_series1_events.csv",
         "data_type": "float",
         "sampling_frequency": 500,
         "channel_column_names": [
@@ -84,7 +84,7 @@
     },
     "common": {
       "label_encoder": {
-        "module": "models.node.processing.encode",
+        "module": "models.node.processing.encoder",
         "type": "OneHotToSingle",
         "buffer_options": {
           "clear_output_buffer_on_data_input": false,
@@ -121,8 +121,8 @@
         }
       },
       "segmentation": {
-        "module": "models.node.processing.segmentation",
-        "type": "FixedWindowSegmentation",
+        "module": "models.node.processing.segmenter",
+        "type": "FixedWindowSegmenter",
         "buffer_options": {
           "clear_output_buffer_on_data_input": false,
           "clear_input_buffer_after_process": true,
@@ -140,8 +140,8 @@
         }
       },
       "segmentation_labels": {
-        "module": "models.node.processing.segmentation",
-        "type": "FixedWindowSegmentation",
+        "module": "models.node.processing.segmenter",
+        "type": "FixedWindowSegmenter",
         "buffer_options": {
           "clear_output_buffer_on_data_input": false,
           "clear_input_buffer_after_process": true,
@@ -153,6 +153,10 @@
           "main": [
             {
               "node": "csp",
+              "input": "label"
+            },
+            {
+              "node": "lda",
               "input": "label"
             }
           ]
@@ -168,7 +172,28 @@
           "clear_input_buffer_after_training": false,
           "process_input_buffer_after_training": true
         },
+        "training_set_size": 1,
         "number_of_components": 4,
+        "outputs": {
+          "main": [
+            {
+              "node": "lda",
+              "input": "data"
+            }
+          ]
+        }
+      },
+      "lda": {
+        "module": "models.node.processing.trainable.classifier",
+        "type": "LDA",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": false,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true,
+          "clear_input_buffer_after_training": false,
+          "process_input_buffer_after_training": true
+        },
+        "training_set_size": 1,
         "outputs": {
           "main": [
             {

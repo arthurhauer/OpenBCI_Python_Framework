@@ -1,5 +1,5 @@
 import abc
-from typing import Final, List
+from typing import Final, List, final
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
@@ -20,14 +20,26 @@ class TrainableProcessingNode(ProcessingNode):
         self._process_input_buffer_after_training: bool = False \
             if parameters['buffer_options']['clear_input_buffer_after_training'] \
             else parameters['buffer_options']['process_input_buffer_after_training']
+        self.training_set_size: int = parameters['training_set_size']
         self._is_trained: bool = False
 
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
+        if 'training_set_size' not in parameters:
+            raise MissingParameterError(module=self._MODULE_NAME,
+                                        parameter='training_set_size')
         if 'clear_input_buffer_after_training' not in parameters['buffer_options']:
             raise MissingParameterError(module=self._MODULE_NAME,
                                         parameter='buffer_options.clear_input_buffer_after_training')
+        if type(parameters['training_set_size']) is not int:
+            raise InvalidParameterValue(module=self._MODULE_NAME,
+                                        parameter='training_set_size',
+                                        cause='must_be_int')
+        if parameters['training_set_size'] < 1:
+            raise InvalidParameterValue(module=self._MODULE_NAME,
+                                        parameter='training_set_size',
+                                        cause='must_be_greater_than_0')
         if type(parameters['buffer_options']['clear_input_buffer_after_training']) is not bool:
             raise InvalidParameterValue(module=self._MODULE_NAME,
                                         parameter='buffer_options.clear_input_buffer_after_training',
@@ -70,9 +82,12 @@ class TrainableProcessingNode(ProcessingNode):
     def _train(self, data: FrameworkData, label: FrameworkData):
         raise NotImplementedError()
 
-    @abc.abstractmethod
     def _is_training_condition_satisfied(self) -> bool:
-        raise NotImplementedError()
+        return self._input_buffer[self.INPUT_DATA].get_data_count() >= self.training_set_size \
+               and self._input_buffer[self.INPUT_LABEL].get_data_count() >= self.training_set_size
+
+    def _is_processing_condition_satisfied(self) -> bool:
+        return self._input_buffer[self.INPUT_DATA].get_data_count() > 0
 
     @abc.abstractmethod
     def _should_retrain(self) -> bool:

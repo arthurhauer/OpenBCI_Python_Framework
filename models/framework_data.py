@@ -106,6 +106,9 @@ class FrameworkData:
     def get_data(self, channel: str) -> list:
         return self._data[channel]
 
+    def __getitem__(self, item: str) -> List:
+        return self.get_data(item)
+
     def get_data_as_2d_array(self) -> List[list]:
         return_value = []
         for channel in self.channels:
