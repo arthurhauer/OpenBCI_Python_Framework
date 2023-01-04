@@ -172,7 +172,7 @@
           "clear_input_buffer_after_training": false,
           "process_input_buffer_after_training": true
         },
-        "training_set_size": 1,
+        "training_set_size": 25,
         "number_of_components": 4,
         "outputs": {
           "main": [
@@ -193,7 +193,7 @@
           "clear_input_buffer_after_training": false,
           "process_input_buffer_after_training": true
         },
-        "training_set_size": 1,
+        "training_set_size": 25,
         "outputs": {
           "main": [
             {

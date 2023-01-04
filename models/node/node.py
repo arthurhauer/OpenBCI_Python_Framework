@@ -182,7 +182,6 @@ class Node:
                              '.output')
 
     @classmethod
-    @abc.abstractmethod
     def from_config_json(cls, parameters: dict):
         """Returns node instance from given parameters in dict form
 

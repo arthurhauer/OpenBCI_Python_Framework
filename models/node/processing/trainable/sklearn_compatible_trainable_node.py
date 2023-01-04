@@ -26,7 +26,6 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
     def _initialize_trainable_processor(self) -> (TransformerMixin, BaseEstimator):
         raise NotImplementedError()
 
-
     @classmethod
     def from_config_json(cls, parameters: dict):
         return cls(parameters)
@@ -42,13 +41,11 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
             self.OUTPUT_MAIN: self._format_processed_data(processed_data, data[self.INPUT_DATA].sampling_frequency)
         }
 
-    @abc.abstractmethod
     def _format_raw_data(self, raw_data: FrameworkData) -> Any:
         formatted_data = np.asarray(raw_data.get_data_as_2d_array())
         formatted_data = np.moveaxis(formatted_data, 1, 0)
         return formatted_data
 
-    @abc.abstractmethod
     def _format_raw_label(self, raw_label: FrameworkData) -> Any:
         formatted_label = []
         for epoch in raw_label.get_data_single_channel():
@@ -70,7 +67,7 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
     def _train(self, data: FrameworkData, label: FrameworkData):
         formatted_data = self._format_raw_data(data)
         formatted_label = self._format_raw_label(label)
-        self._inner_train_processor(formatted_data, formatted_label)
+        self._inner_train_processor(formatted_data[0:self.training_set_size], formatted_label[0:self.training_set_size])
 
     @abc.abstractmethod
     def _is_next_node_call_enabled(self) -> bool:

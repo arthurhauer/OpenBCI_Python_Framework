@@ -58,9 +58,9 @@ class FixedWindowSegmenter(Segmenter):
                 segmented_channel.append(current_window)
             if remaining_samples > 0:
                 window_start = window_count * self.window_size
-                window_end = total_count - window_start
+                window_end = total_count
                 fill_value = 0 if self.filling_value == 'zero' else raw_signal[total_count - 1]
-                fill_count = window_count - remaining_samples
+                fill_count = self.window_size - remaining_samples
                 current_window = raw_signal[window_start:window_end] + [fill_value] * fill_count
                 segmented_channel.append(current_window)
             segmented_data.input_data_on_channel(segmented_channel, channel)
