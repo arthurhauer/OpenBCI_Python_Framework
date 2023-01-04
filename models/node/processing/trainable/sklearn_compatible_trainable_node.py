@@ -13,23 +13,19 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
 
     OUTPUT_MAIN: Final[str] = 'main'
 
-    def __init__(self, parameters: dict):
-        super().__init__(parameters)
-        self._validate_parameters(parameters)
-        self._initialize_parameter_fields(parameters)
-        self.sklearn_processor: (TransformerMixin, BaseEstimator) = self._initialize_trainable_processor()
+    @abc.abstractmethod
+    def _validate_parameters(self, parameters: dict):
+        super()._validate_parameters(parameters)
 
     @abc.abstractmethod
     def _initialize_parameter_fields(self, parameters: dict):
-        raise NotImplementedError()
+        super()._initialize_parameter_fields(parameters)
+        self.sklearn_processor: (TransformerMixin, BaseEstimator) = self._initialize_trainable_processor()
 
     @abc.abstractmethod
     def _initialize_trainable_processor(self) -> (TransformerMixin, BaseEstimator):
         raise NotImplementedError()
 
-    @abc.abstractmethod
-    def _validate_parameters(self, parameters: dict):
-        super()._validate_parameters(parameters)
 
     @classmethod
     def from_config_json(cls, parameters: dict):

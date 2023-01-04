@@ -1,3 +1,4 @@
+import abc
 from typing import List, Dict, Final, Tuple
 from scipy.signal import butter, lfilter, freqz
 
@@ -9,9 +10,6 @@ from models.node.processing.filter.filter import Filter
 
 class BandPass(Filter):
     _MODULE_NAME: Final[str] = 'node.processing.filter.bandpass'
-
-    def __init__(self, parameters: dict):
-        super().__init__(parameters)
 
     def _validate_parameters(self, parameters: dict):
         if 'low_cut_frequency_hz' not in parameters:
@@ -40,6 +38,10 @@ class BandPass(Filter):
             raise InvalidParameterValue(module=self._MODULE_NAME,
                                         parameter='order',
                                         cause='must_be_int')
+
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
 
     def _get_filter_coefficients(self, parameters: dict, sampling_frequency_hz: float) -> Tuple[list, list]:
         return butter(

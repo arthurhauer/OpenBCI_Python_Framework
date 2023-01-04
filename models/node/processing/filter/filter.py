@@ -11,12 +11,13 @@ class Filter(ProcessingNode):
     INPUT_MAIN: Final[str] = 'main'
     OUTPUT_MAIN: Final[str] = 'main'
 
-    def __init__(self, parameters: dict):
-        super().__init__(parameters)
-
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
+
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
 
     def _set_filter(self, sampling_frequency_hz: float) -> None:
         self._filter_numerator, self._filter_denominator = self._get_filter_coefficients(self.parameters,
@@ -25,10 +26,6 @@ class Filter(ProcessingNode):
     @abc.abstractmethod
     def _get_filter_coefficients(self, parameters: dict, sampling_frequency_hz: float) -> Tuple[list, list]:
         raise NotImplementedError()
-
-    @classmethod
-    def from_config_json(cls, parameters: dict):
-        return cls(parameters)
 
     def _is_next_node_call_enabled(self) -> bool:
         return True

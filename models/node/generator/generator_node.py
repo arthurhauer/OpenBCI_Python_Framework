@@ -1,6 +1,7 @@
 import abc
 from typing import List, Dict
 
+from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 from models.node.node import Node
 
@@ -10,14 +11,16 @@ class GeneratorNode(Node):
     def __init__(self, parameters=None) -> None:
         super().__init__(parameters=parameters)
 
+    def _validate_parameters(self, parameters: dict):
+        super()._validate_parameters(parameters)
+        if 'clear_output_buffer_on_generate' not in parameters['buffer_options']:
+            raise MissingParameterError(module=self._MODULE_NAME,
+                                        parameter='buffer_options.clear_output_buffer_on_generate')
+
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
+
     def _initialize_buffer_options(self, buffer_options: dict) -> None:
-        if 'clear_output_buffer_on_generate' not in buffer_options:
-            raise KeyError('error'
-                           '.missing'
-                           '.node'
-                           '.buffer_options'
-                           '.generator'
-                           '.clear_output_buffer_on_generate')
         self._clear_output_buffer_on_generate = buffer_options['clear_output_buffer_on_generate']
 
     def _run(self, data: FrameworkData, input_name: str) -> None:
@@ -30,11 +33,6 @@ class GeneratorNode(Node):
         data = self._generate_data()
         for output_name in self._get_outputs():
             self._insert_new_output_data(data[output_name], output_name)
-
-    @classmethod
-    @abc.abstractmethod
-    def from_config_json(cls, parameters: dict):
-        raise NotImplementedError()
 
     @abc.abstractmethod
     def _is_next_node_call_enabled(self) -> bool:

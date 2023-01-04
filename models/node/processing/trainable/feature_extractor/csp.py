@@ -14,9 +14,6 @@ from models.node.processing.trainable.feature_extractor.sklearn_feature_extracto
 class CSP(SKLearnFeatureExtractor):
     _MODULE_NAME: Final[str] = 'node.processing.trainable.feature_extractor.csp'
 
-    def _initialize_parameter_fields(self, parameters: dict):
-        self.number_of_components = parameters['number_of_components']
-
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
@@ -27,6 +24,11 @@ class CSP(SKLearnFeatureExtractor):
             raise InvalidParameterValue(module=self._MODULE_NAME,
                                         parameter='number_of_components',
                                         cause='must_be_int')
+
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        self.number_of_components = parameters['number_of_components']
+        super()._initialize_parameter_fields(parameters)
 
     def _initialize_trainable_processor(self) -> (TransformerMixin, BaseEstimator):
         return mne.decoding.CSP(n_components=self.number_of_components)

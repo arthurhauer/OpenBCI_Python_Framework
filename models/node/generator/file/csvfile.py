@@ -1,3 +1,4 @@
+import abc
 import os
 import csv
 from typing import List, Dict, Final
@@ -13,19 +14,6 @@ class CSVFile(GeneratorNode):
 
     OUTPUT_MAIN: Final[str] = 'main'
     OUTPUT_TIMESTAMP: Final[str] = 'timestamp'
-
-    def __init__(self, parameters: dict) -> None:
-        super().__init__(parameters)
-        self._validate_parameters(parameters)
-        self.sampling_frequency = parameters['sampling_frequency']
-        self.file_path = parameters['file_path']
-        self.channel_column_names = parameters['channel_column_names'] \
-            if 'channel_column_names' in parameters \
-            else None
-        self.timestamp_column_name = parameters['timestamp_column_name'] \
-            if 'timestamp_column_name' in parameters \
-            else None
-        self._init_csv_reader()
 
     def _validate_parameters(self, parameters: dict):
         if 'sampling_frequency' not in parameters:
@@ -65,13 +53,20 @@ class CSVFile(GeneratorNode):
                                             parameter='channel_column_names',
                                             cause='must_contain_strings_only')
 
-    @classmethod
-    def from_config_json(cls, parameters: dict):
-        return cls(parameters=parameters)
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
+        self.sampling_frequency = parameters['sampling_frequency']
+        self.file_path = parameters['file_path']
+        self.channel_column_names = parameters['channel_column_names'] \
+            if 'channel_column_names' in parameters \
+            else None
+        self.timestamp_column_name = parameters['timestamp_column_name'] \
+            if 'timestamp_column_name' in parameters \
+            else None
+        self._init_csv_reader()
 
     def _init_csv_reader(self) -> None:
-        self._csv_file = open(self.file_path)
-        self._csv_file.close()
         self._csv_file = open(self.file_path)
         self._csv_reader = csv.DictReader(self._csv_file)
 

@@ -15,15 +15,17 @@ class MotorImagery(GeneratorNode):
     OUTPUT_MARKER: Final[str] = 'marker'
     OUTPUT_TIMESTAMP: Final[str] = 'timestamp'
 
-    def __init__(self, parameters: dict) -> None:
-        super().__init__(parameters)
-
+    def _validate_parameters(self, parameters: dict):
+        super()._validate_parameters(parameters)
         if 'trials' not in parameters:
             raise MissingParameterError(module=self._MODULE_NAME,
                                         parameter='trials')
         if 'shuffle_when_sequence_is_finished' not in parameters:
             raise MissingParameterError(module=self._MODULE_NAME,
                                         parameter='shuffle_when_sequence_is_finished')
+
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
         self.trials = parameters['trials']
         self._trial_limit = len(self.trials) - 1
         self._trial_to_call = 0

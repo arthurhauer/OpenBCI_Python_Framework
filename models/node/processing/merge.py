@@ -1,3 +1,4 @@
+import abc
 import statistics
 import string
 from random import random
@@ -23,26 +24,6 @@ class Merge(ProcessingNode):
     FILL_TYPE_ZEROFILL: Final[str] = 'zero_fill'
     FILL_TYPE_SAMPLE_AND_HOLD: Final[str] = 'sample_and_hold'
 
-    def __init__(self, parameters: dict):
-        super().__init__(parameters)
-
-        self._sync_errors: List[float] = []
-        if 'slave_filling' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME, parameter='slave_filling')
-
-        if parameters['slave_filling'] not in [self.FILL_TYPE_ZEROFILL, self.FILL_TYPE_SAMPLE_AND_HOLD]:
-            raise InvalidParameterValue(module=self._MODULE_NAME, parameter='slave_filling',
-                                        cause=f'not_in_[{self.FILL_TYPE_ZEROFILL},{self.FILL_TYPE_SAMPLE_AND_HOLD}]')
-        if 'statistics_enabled' not in parameters:
-            parameters['statistics_enabled'] = False
-        elif type(parameters['statistics_enabled']) is not bool:
-            raise InvalidParameterValue(module=self._MODULE_NAME, parameter='statistics_enabled',
-                                        cause='must_be_bool')
-
-        self._statistics_enabled = parameters['statistics_enabled']
-        self._zero_fill = parameters['slave_filling'] == self.FILL_TYPE_ZEROFILL
-        self._sample_and_hold = parameters['slave_filling'] == self.FILL_TYPE_SAMPLE_AND_HOLD
-
     def _validate_parameters(self, parameters: dict):
         if 'slave_filling' not in parameters:
             raise MissingParameterError(module=self._MODULE_NAME,
@@ -57,9 +38,13 @@ class Merge(ProcessingNode):
                                         parameter='statistics_enabled',
                                         cause='must_be_bool')
 
-    @classmethod
-    def from_config_json(cls, parameters: dict):
-        return cls(parameters)
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
+        self._statistics_enabled = parameters['statistics_enabled']
+        self._zero_fill = parameters['slave_filling'] == self.FILL_TYPE_ZEROFILL
+        self._sample_and_hold = parameters['slave_filling'] == self.FILL_TYPE_SAMPLE_AND_HOLD
+        self._sync_errors: List[float] = []
 
     def _is_next_node_call_enabled(self) -> bool:
         return True

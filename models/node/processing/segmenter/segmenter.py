@@ -10,17 +10,13 @@ class Segmenter(ProcessingNode):
     INPUT_MAIN: Final[str] = 'main'
     OUTPUT_MAIN: Final[str] = 'main'
 
-    def __init__(self, parameters: dict):
-        super().__init__(parameters)
-        self._validate_parameters(parameters)
-
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):
-        raise NotImplementedError()
+        super()._validate_parameters(parameters)
 
-    @classmethod
-    def from_config_json(cls, parameters: dict):
-        return cls(parameters)
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
 
     def _is_next_node_call_enabled(self) -> bool:
         return True

@@ -1,12 +1,12 @@
 import abc
 from typing import List, Dict, Final
 
+from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 from models.node.node import Node
 
 
 class ProcessingNode(Node):
-
     _MODULE_NAME: Final[str] = 'models.node.processing'
 
     def __init__(self, parameters=None) -> None:
@@ -16,26 +16,24 @@ class ProcessingNode(Node):
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
         if 'clear_output_buffer_on_data_input' not in parameters['buffer_options']:
-            raise ValueError('error'
-                             '.missing'
-                             '.node'
-                             '.buffer_options'
-                             '.processing'
-                             '.clear_output_buffer_on_data_input')
+            raise MissingParameterError(
+                module=self._MODULE_NAME,
+                parameter='buffer_options.clear_output_buffer_on_data_input'
+            )
         if 'clear_input_buffer_after_process' not in parameters['buffer_options']:
-            raise ValueError('error'
-                             '.missing'
-                             '.node'
-                             '.buffer_options'
-                             '.processing'
-                             '.clear_input_buffer_after_process')
+            raise MissingParameterError(
+                module=self._MODULE_NAME,
+                parameter='buffer_options.clear_input_buffer_after_process'
+            )
         if 'clear_output_buffer_after_process' not in parameters['buffer_options']:
-            raise ValueError('error'
-                             '.missing'
-                             '.node'
-                             '.buffer_options'
-                             '.processing'
-                             '.clear_output_buffer_after_process')
+            raise MissingParameterError(
+                module=self._MODULE_NAME,
+                parameter='buffer_options.clear_output_buffer_after_process'
+            )
+
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
 
     def _initialize_buffer_options(self, buffer_options: dict) -> None:
         """Processing node implementation of buffer behaviour options initialization
@@ -63,11 +61,6 @@ class ProcessingNode(Node):
             self._clear_output_buffer()
         for output_name in self._get_outputs():
             self._output_buffer[output_name].extend(processed_data[output_name])
-
-    @classmethod
-    @abc.abstractmethod
-    def from_config_json(cls, parameters: dict):
-        raise NotImplementedError()
 
     @abc.abstractmethod
     def _is_next_node_call_enabled(self) -> bool:

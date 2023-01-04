@@ -13,16 +13,6 @@ class TrainableProcessingNode(ProcessingNode):
     INPUT_DATA: Final[str] = 'data'
     INPUT_LABEL: Final[str] = 'label'
 
-    def __init__(self, parameters: dict) -> None:
-        super().__init__(parameters=parameters)
-        self._clear_input_buffer_after_training: bool = parameters['buffer_options'][
-            'clear_input_buffer_after_training']
-        self._process_input_buffer_after_training: bool = False \
-            if parameters['buffer_options']['clear_input_buffer_after_training'] \
-            else parameters['buffer_options']['process_input_buffer_after_training']
-        self.training_set_size: int = parameters['training_set_size']
-        self._is_trained: bool = False
-
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
@@ -53,6 +43,18 @@ class TrainableProcessingNode(ProcessingNode):
                                             parameter='buffer_options.process_input_buffer_after_training',
                                             cause='must_be_bool')
 
+
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
+        self._clear_input_buffer_after_training: bool = parameters['buffer_options'][
+            'clear_input_buffer_after_training']
+        self._process_input_buffer_after_training: bool = False \
+            if parameters['buffer_options']['clear_input_buffer_after_training'] \
+            else parameters['buffer_options']['process_input_buffer_after_training']
+        self.training_set_size: int = parameters['training_set_size']
+        self._is_trained: bool = False
+
     def _process_input_buffer(self):
         if self._is_trained:
             super()._process_input_buffer()
@@ -72,11 +74,6 @@ class TrainableProcessingNode(ProcessingNode):
         if self._process_input_buffer_after_training:
             super()._process_input_buffer()
             return
-
-    @classmethod
-    @abc.abstractmethod
-    def from_config_json(cls, parameters: dict):
-        raise NotImplementedError()
 
     @abc.abstractmethod
     def _train(self, data: FrameworkData, label: FrameworkData):

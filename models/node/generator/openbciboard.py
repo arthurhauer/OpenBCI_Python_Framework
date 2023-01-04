@@ -10,16 +10,16 @@ import time
 
 
 class OpenBCIBoard(GeneratorNode):
+
+
     _MODULE_NAME: Final[str] = 'node.generator.open_bci_board'
 
     OUTPUT_EEG: Final[str] = 'eeg'
     OUTPUT_ACCELEROMETER: Final[str] = 'accelerometer'
     OUTPUT_TIMESTAMP: Final[str] = 'timestamp'
 
-    def __init__(self,
-                 parameters: dict,
-                 ) -> None:
-        super().__init__(parameters)
+    def _validate_parameters(self, parameters: dict):
+        super()._validate_parameters(parameters)
         if 'communication' not in parameters:
             raise MissingParameterError(module=self._MODULE_NAME,
                                         parameter='communication')
@@ -29,6 +29,9 @@ class OpenBCIBoard(GeneratorNode):
         if 'board' not in parameters:
             raise MissingParameterError(module=self._MODULE_NAME,
                                         parameter='board')
+
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
         self._board = None
         self._set_log_level(log_level=parameters['log_level'])
         self._set_brain_flow_input_parameters(parameters['communication'])
@@ -45,13 +48,6 @@ class OpenBCIBoard(GeneratorNode):
         self._thread = Thread(target=self._get_data)
         self._stop_execution = False
         self._thread_started = False
-
-    @classmethod
-    def from_config_json(cls, parameters: dict):
-        board = cls(
-            parameters=parameters
-        )
-        return board
 
     def _is_next_node_call_enabled(self) -> bool:
         return self._output_buffer[self.OUTPUT_TIMESTAMP].has_data()

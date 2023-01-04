@@ -15,6 +15,10 @@ class FeatureExtractor(ProcessingNode):
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
 
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
+
     @classmethod
     def from_config_json(cls, parameters: dict):
         return cls(parameters)

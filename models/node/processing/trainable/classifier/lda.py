@@ -1,7 +1,6 @@
 import abc
 from typing import Final, Any
 
-import numpy as np
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
@@ -12,12 +11,12 @@ from models.node.processing.trainable.classifier.sklearn_classifier import SKLea
 class LDA(SKLearnClassifier):
     _MODULE_NAME: Final[str] = 'node.processing.trainable.classifier.lda'
 
-    def _initialize_parameter_fields(self, parameters: dict):
-        pass
-
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
+
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
 
     def _initialize_trainable_processor(self) -> (TransformerMixin, BaseEstimator):
         return LinearDiscriminantAnalysis()

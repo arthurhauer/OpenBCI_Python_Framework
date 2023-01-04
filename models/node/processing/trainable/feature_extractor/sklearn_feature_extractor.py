@@ -20,6 +20,10 @@ class SKLearnFeatureExtractor(SKLearnCompatibleTrainableNode):
         super()._validate_parameters(parameters)
 
     @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
+
+    @abc.abstractmethod
     def _initialize_trainable_processor(self) -> (TransformerMixin, BaseEstimator):
         raise NotImplementedError()
 

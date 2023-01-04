@@ -3,6 +3,7 @@ import abc
 from typing import List, Dict, Final, Any
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
+from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 
 
@@ -16,9 +17,13 @@ class Node:
         super().__init__()
         self._validate_parameters(parameters)
         self.parameters = parameters
+
         self._initialize_buffer_options(parameters['buffer_options'])
         self._type: Final[str] = parameters['type']
         self.name: Final[str] = parameters['name']
+
+        self._initialize_parameter_fields(parameters)
+
         self._clear_input_buffer()
         self._clear_output_buffer()
 
@@ -29,39 +34,40 @@ class Node:
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):
         if 'module' not in parameters:
-            raise ValueError("error"
-                             ".missing"
-                             ".node"
-                             ".module")
+            raise MissingParameterError(
+                module=self._MODULE_NAME,
+                parameter='module'
+            )
         if 'models.node.' not in parameters['module']:
-            ValueError('error'
-                       '.invalid'
-                       '.value'
-                       '.node'
-                       '.module')
+            raise InvalidParameterValue(
+                module=self._MODULE_NAME,
+                parameter='module',
+                cause='must_be_part_of_[models.node]_module'
+            )
         if 'type' not in parameters:
-            raise ValueError("error"
-                             ".missing"
-                             ".node"
-                             ".type")
-
+            raise MissingParameterError(
+                module=self._MODULE_NAME,
+                parameter='type'
+            )
         if 'buffer_options' not in parameters:
-            raise ValueError('error'
-                             '.missing'
-                             '.node'
-                             '.buffer_options')
-
+            raise MissingParameterError(
+                module=self._MODULE_NAME,
+                parameter='buffer_options'
+            )
         if 'outputs' not in parameters:
-            raise ValueError('error'
-                             '.missing'
-                             '.node'
-                             '.outputs')
-
+            raise MissingParameterError(
+                module=self._MODULE_NAME,
+                parameter='outputs'
+            )
         if 'name' not in parameters:
-            raise ValueError('error'
-                             '.missing'
-                             '.node'
-                             '.name')
+            raise MissingParameterError(
+                module=self._MODULE_NAME,
+                parameter='name'
+            )
+
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        return
 
     def _clear_input_buffer(self):
         """Sets input buffer to new empty object for each input name
@@ -183,7 +189,7 @@ class Node:
         :param parameters: Node parameters in dict form.
         :type parameters: dict
         """
-        raise NotImplementedError()
+        return cls(parameters)
 
     @abc.abstractmethod
     def _run(self, data: FrameworkData, input_name: str) -> None:

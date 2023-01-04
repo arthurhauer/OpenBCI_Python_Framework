@@ -13,7 +13,7 @@ class SKLearnClassifier(SKLearnCompatibleTrainableNode):
 
     @abc.abstractmethod
     def _initialize_parameter_fields(self, parameters: dict):
-        raise NotImplementedError()
+        super()._initialize_parameter_fields(parameters)
 
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):

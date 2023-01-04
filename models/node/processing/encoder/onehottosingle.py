@@ -1,3 +1,4 @@
+import abc
 from typing import Final, Dict
 
 from models.framework_data import FrameworkData
@@ -11,12 +12,9 @@ class OneHotToSingle(ProcessingNode):
     INPUT_MAIN: Final[str] = 'main'
     OUTPUT_MAIN: Final[str] = 'main'
 
-    def __init__(self, parameters: dict) -> None:
-        super().__init__(parameters)
-
-    @classmethod
-    def from_config_json(cls, parameters: dict):
-        return cls(parameters)
+    @abc.abstractmethod
+    def _initialize_parameter_fields(self, parameters: dict):
+        super()._initialize_parameter_fields(parameters)
 
     def _is_next_node_call_enabled(self) -> bool:
         return self._output_buffer[self.OUTPUT_MAIN].get_data_count() > 0
