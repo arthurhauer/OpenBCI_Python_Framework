@@ -35,7 +35,7 @@ class Merge(Synchronize):
             if channel in merged_data.channels:
                 rand_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
                 new_channel_name = f'{channel}{rand_id}'
-            merged_data.input_data_on_channel(new_slave_data.get_data(channel), new_channel_name)
+            merged_data.input_data_on_channel(new_slave_data.get_data_on_channel(channel), new_channel_name)
         return {
             self.OUTPUT_MERGED_MAIN: merged_data,
             self.OUTPUT_MERGED_TIMESTAMP: data[self.INPUT_MASTER_TIMESTAMP]

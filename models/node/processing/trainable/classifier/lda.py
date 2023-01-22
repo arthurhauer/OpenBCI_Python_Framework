@@ -27,7 +27,7 @@ class LDA(SKLearnClassifier):
 
     @abc.abstractmethod
     def _is_next_node_call_enabled(self) -> bool:
-        return True
+        return self._is_trained and self._output_buffer[self.OUTPUT_MAIN].has_data()
 
     def _format_processed_data(self, processed_data: Any, sampling_frequency: float) -> FrameworkData:
         formatted_data = FrameworkData(sampling_frequency_hz=sampling_frequency)

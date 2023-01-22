@@ -1,5 +1,9 @@
 import abc
-from typing import Final, List, final
+import os
+from typing import Final, List, final, Any
+
+import joblib
+import time
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
@@ -42,7 +46,41 @@ class TrainableProcessingNode(ProcessingNode):
                 raise InvalidParameterValue(module=self._MODULE_NAME,
                                             parameter='buffer_options.process_input_buffer_after_training',
                                             cause='must_be_bool')
-
+        if 'save_after_training' not in parameters:
+            raise MissingParameterError(module=self._MODULE_NAME,
+                                        parameter='save_after_training')
+        if type(parameters['save_after_training']) is not bool:
+            raise InvalidParameterValue(module=self._MODULE_NAME,
+                                        parameter='save_after_training',
+                                        cause='must_be_bool')
+        if parameters['save_after_training'] is True:
+            if 'save_file_path' not in parameters:
+                raise MissingParameterError(module=self._MODULE_NAME,
+                                            parameter='save_file_path')
+            # TODO validate path str
+            if type(parameters['save_file_path']) is not str:
+                raise InvalidParameterValue(module=self._MODULE_NAME,
+                                            parameter='save_file_path',
+                                            cause='must_be_str')
+        if 'load_trained' not in parameters:
+            raise MissingParameterError(module=self._MODULE_NAME,
+                                        parameter='load_trained')
+        if type(parameters['load_trained']) is not bool:
+            raise InvalidParameterValue(module=self._MODULE_NAME,
+                                        parameter='load_trained',
+                                        cause='must_be_bool')
+        if parameters['load_trained'] is True:
+            if 'load_file_path' not in parameters:
+                raise MissingParameterError(module=self._MODULE_NAME,
+                                            parameter='load_file_path')
+            if type(parameters['load_file_path']) is not str:
+                raise InvalidParameterValue(module=self._MODULE_NAME,
+                                            parameter='load_file_path',
+                                            cause='must_be_str')
+            if not os.path.exists(parameters['load_file_path']):
+                raise InvalidParameterValue(module=self._MODULE_NAME,
+                                            parameter='load_file_path',
+                                            cause='file_doesnt_exist')
 
     @abc.abstractmethod
     def _initialize_parameter_fields(self, parameters: dict):
@@ -53,7 +91,24 @@ class TrainableProcessingNode(ProcessingNode):
             if parameters['buffer_options']['clear_input_buffer_after_training'] \
             else parameters['buffer_options']['process_input_buffer_after_training']
         self.training_set_size: int = parameters['training_set_size']
+
         self._is_trained: bool = False
+
+        if parameters['load_trained']:
+            self._is_trained: bool = True
+            self._load_trained_processor(joblib.load(parameters['load_file_path']))
+
+        self._save_after_training = parameters['save_after_training']
+        if self._save_after_training:
+            self._save_file_path = parameters['save_file_path']
+
+    @abc.abstractmethod
+    def _load_trained_processor(self, loaded_processor: Any) -> None:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def _save_trained_processor(self, save_path: str) -> None:
+        raise NotImplementedError()
 
     def _process_input_buffer(self):
         if self._is_trained:
@@ -67,6 +122,8 @@ class TrainableProcessingNode(ProcessingNode):
 
         self._train(self._input_buffer[self.INPUT_DATA], self._input_buffer[self.INPUT_LABEL])
         self._is_trained = True
+        if self._save_after_training:
+            self._save_trained_processor(f'{self._save_file_path}_{int(time.time() * 1000)}')
 
         if self._clear_input_buffer_after_training:
             super()._clear_input_buffer()

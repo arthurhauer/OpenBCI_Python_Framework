@@ -238,4 +238,4 @@ class Node:
     def dispose(self) -> None:
         """Node self implementation of disposal of allocated resources.
         """
-        raise NotImplementedError()
+        return

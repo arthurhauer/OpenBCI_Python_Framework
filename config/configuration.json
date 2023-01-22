@@ -7,7 +7,7 @@
         "buffer_options": {
           "clear_output_buffer_on_generate": true
         },
-        "file_path": "C:\\Users\\Arthur Hauer\\Desktop\\A\\subj1_series1_data.csv",
+        "file_path": "D:\\Desktop\\A\\subj1_series1_data.csv",
         "data_type": "float",
         "sampling_frequency": 500,
         "channel_column_names": [
@@ -60,7 +60,7 @@
         "buffer_options": {
           "clear_output_buffer_on_generate": true
         },
-        "file_path": "C:\\Users\\Arthur Hauer\\Desktop\\A\\subj1_series1_events.csv",
+        "file_path": "D:\\Desktop\\A\\subj1_series1_events.csv",
         "data_type": "float",
         "sampling_frequency": 500,
         "channel_column_names": [
@@ -172,7 +172,10 @@
           "clear_input_buffer_after_training": false,
           "process_input_buffer_after_training": true
         },
-        "training_set_size": 25,
+        "training_set_size": 10,
+        "save_after_training": false,
+        "load_file_path": "D:\\Desktop\\A\\trained_csp",
+        "load_trained": false,
         "number_of_components": 4,
         "outputs": {
           "main": [
@@ -193,11 +196,14 @@
           "clear_input_buffer_after_training": false,
           "process_input_buffer_after_training": true
         },
-        "training_set_size": 25,
+        "training_set_size": 10,
+        "save_after_training": false,
+        "load_file_path": "D:\\Desktop\\A\\trained_lda",
+        "load_trained": false,
         "outputs": {
           "main": [
             {
-              "node": "test",
+              "node": "label_decoder",
               "input": "main"
             }
           ]
@@ -214,6 +220,38 @@
         "outputs": {
           "main": []
         }
+      },
+      "label_decoder": {
+        "module": "models.node.processing.encoder",
+        "type": "SingleToOneHot",
+        "labels": [
+          "HandStart",
+          "FirstDigitTouch",
+          "BothStartLoadPhase",
+          "LiftOff",
+          "Replace",
+          "BothReleased"
+        ],
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs": {
+          "main": [
+            {
+              "node": "csv_out",
+              "input": "main"
+            }
+          ]
+        }
+      },
+      "csv_out": {
+        "module": "models.node.output.file",
+        "type": "CSVFile",
+        "file_path": "D:\\Desktop\\A\\subj1_series1_events_generated.csv",
+        "buffer_options": {},
+        "outputs": {}
       }
     }
   }

@@ -7,9 +7,10 @@ from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 from models.node.generator.generator_node import GeneratorNode
+from models.node.generator.single_run_generator_node import SingleRunGeneratorNode
 
 
-class CSVFile(GeneratorNode):
+class CSVFile(SingleRunGeneratorNode):
     _MODULE_NAME: Final[str] = 'node.generator.file.csvfile'
 
     OUTPUT_MAIN: Final[str] = 'main'
@@ -34,6 +35,10 @@ class CSVFile(GeneratorNode):
             raise InvalidParameterValue(module=self._MODULE_NAME,
                                         parameter='file_path',
                                         cause='must_be_csv_file')
+        if not os.path.exists(parameters['file_path']):
+            raise InvalidParameterValue(module=self._MODULE_NAME,
+                                        parameter='file_path',
+                                        cause='file_doesnt_exist')
         if 'timestamp_column_name' in parameters and type(parameters['timestamp_column_name']) is not str:
             raise InvalidParameterValue(module=self._MODULE_NAME,
                                         parameter='timestamp_column_name',

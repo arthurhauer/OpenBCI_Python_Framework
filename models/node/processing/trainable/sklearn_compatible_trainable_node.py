@@ -1,6 +1,7 @@
 import abc
 from typing import List, Dict, Final, Any
 
+import joblib
 import numpy as np
 from sklearn.base import TransformerMixin, BaseEstimator
 
@@ -25,6 +26,13 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
     @abc.abstractmethod
     def _initialize_trainable_processor(self) -> (TransformerMixin, BaseEstimator):
         raise NotImplementedError()
+
+    def _load_trained_processor(self, loaded_processor: Any) -> None:
+        self.sklearn_processor = loaded_processor
+
+    @abc.abstractmethod
+    def _save_trained_processor(self, save_path: str) -> None:
+        joblib.dump(self.sklearn_processor, save_path)
 
     @classmethod
     def from_config_json(cls, parameters: dict):

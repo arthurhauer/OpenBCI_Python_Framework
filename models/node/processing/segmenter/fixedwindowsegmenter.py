@@ -46,7 +46,7 @@ class FixedWindowSegmenter(Segmenter):
     def segment_data(self, data: FrameworkData) -> FrameworkData:
         segmented_data: FrameworkData = FrameworkData(sampling_frequency_hz=data.sampling_frequency)
         for channel in data.channels:
-            raw_signal = data.get_data(channel)
+            raw_signal = data.get_data_on_channel(channel)
             segmented_channel = []
             total_count = len(raw_signal)
             window_count = math.floor(total_count / self.window_size)

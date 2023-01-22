@@ -66,7 +66,7 @@ class FrameworkData:
 
         for channel in self.channels:
             try:
-                self._data[channel].extend(data.get_data(channel))
+                self._data[channel].extend(data.get_data_on_channel(channel))
             except KeyError:
                 raise NonCompatibleData(module=self._MODULE_NAME)
 
@@ -99,15 +99,18 @@ class FrameworkData:
         self._data[channel].extend(data)
 
     def get_data_single_channel(self) -> list:
-        if not len(self._data) == 1:
+        if not self.is_1d():
             raise NonCompatibleData(module=self._MODULE_NAME, cause='operation_allowed_on_single_channel_only')
-        return self._data[self.channels[0]]
+        return self.get_data_on_channel(self.channels[0])
 
-    def get_data(self, channel: str) -> list:
+    def get_data_on_channel(self, channel: str) -> list:
         return self._data[channel]
 
+    def get_data(self) -> Dict[str, list]:
+        return self._data
+
     def __getitem__(self, item: str) -> List:
-        return self.get_data(item)
+        return self.get_data_on_channel(item)
 
     def get_data_as_2d_array(self) -> List[list]:
         return_value = []
@@ -123,3 +126,6 @@ class FrameworkData:
 
     def has_data(self) -> bool:
         return len(self._data) > 0 and len(self._data[self.channels[0]]) > 0
+
+    def is_1d(self) -> bool:
+        return len(self._data) == 1
