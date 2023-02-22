@@ -21,25 +21,25 @@ class FixedWindowSegmenter(Segmenter):
 
     def _validate_parameters(self, parameters: dict):
         if 'window_size' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='window_size')
         if 'filling_value' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='filling_type')
         if type(parameters['window_size']) is not int:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='window_size',
                                         cause='must_be_int')
         if parameters['window_size'] < 1:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='window_size',
                                         cause='must_be_greater_than_0')
         if type(parameters['filling_value']) is not str:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='filling_value',
                                         cause='must_be_str')
         if parameters['filling_value'] not in ['zero', 'latest']:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='filling_value',
                                         cause='must_be_in.[zero, latest]')
 

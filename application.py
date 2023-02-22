@@ -5,6 +5,7 @@ import time
 import importlib
 
 from config.configuration import Configuration
+from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.node.generator.generator_node import GeneratorNode
 from models.node.node import Node
 
@@ -12,6 +13,7 @@ from models.node.node import Node
 class Application:
 
     def __init__(self) -> None:
+        print('Starting application')
         super().__init__()
         self._stop_execution = False
         signal.signal(signal.SIGINT, lambda x, y: self.dispose())
@@ -60,6 +62,11 @@ class Application:
             node_config['name'] = node_name
             node: Node = node_type.from_config_json(node_config)
             for output_name in node_config['outputs']:
+                if type(node_config['outputs'][output_name]) is not list:
+                    raise InvalidParameterValue(module=node.module_name,
+                                                name=node.name,
+                                                parameter=f'outputs.{output_name}',
+                                                cause='must_be_list')
                 for output_config in node_config['outputs'][output_name]:
                     child_node = self._get_node(output_config['node'])
                     child_node.check_input(output_config['input'])
@@ -80,7 +87,7 @@ class Application:
                 self._root_nodes[key].run()
             except Exception as e:
                 self.dispose()
-                raise
+                # raise
 
     def dispose(self):
         self._stop_execution = True

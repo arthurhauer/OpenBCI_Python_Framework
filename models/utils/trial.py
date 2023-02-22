@@ -13,20 +13,20 @@ class Trial:
     def __init__(self, name: str, code: int, duration: Duration, cue: Cue) -> None:
         super().__init__()
         if name is None:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='name')
         if code is None:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='code')
         if len(name) == 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='name',
                                         cause='len==0')
         if duration is None:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='duration')
         if cue is None:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='cue')
         self.name = name
         self.code = code

@@ -60,15 +60,15 @@ class FrameworkData:
             self._init_data_dictionary()
 
         elif self.sampling_frequency != data.sampling_frequency:
-            raise NonCompatibleData(module=self._MODULE_NAME)
+            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
         elif self.get_channels_as_set() != data.get_channels_as_set():
-            raise NonCompatibleData(module=self._MODULE_NAME)
+            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
 
         for channel in self.channels:
             try:
                 self._data[channel].extend(data.get_data_on_channel(channel))
             except KeyError:
-                raise NonCompatibleData(module=self._MODULE_NAME)
+                raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
 
     # def input_dict_data(self,data:dict):
     #
@@ -77,9 +77,9 @@ class FrameworkData:
         self_data_len = len(self._data)
         input_data_len = len(data)
         if self_data_len == 0:
-            raise NonCompatibleData(module=self._MODULE_NAME)
+            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
         if self_data_len != input_data_len:
-            raise NonCompatibleData(module=self._MODULE_NAME)
+            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
 
         for index, channel in enumerate(self._data):
             self.input_data_on_channel(data[index], channel)
@@ -100,7 +100,7 @@ class FrameworkData:
 
     def get_data_single_channel(self) -> list:
         if not self.is_1d():
-            raise NonCompatibleData(module=self._MODULE_NAME, cause='operation_allowed_on_single_channel_only')
+            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name, cause='operation_allowed_on_single_channel_only')
         return self.get_data_on_channel(self.channels[0])
 
     def get_data_on_channel(self, channel: str) -> list:

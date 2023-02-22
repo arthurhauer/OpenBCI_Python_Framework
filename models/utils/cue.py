@@ -11,7 +11,7 @@ class Cue:
     def __init__(self, function: Any, parameters: dict) -> None:
         super().__init__()
         if function is None:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='function')
         if parameters is None:
             parameters = {}

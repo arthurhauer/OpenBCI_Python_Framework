@@ -2,9 +2,15 @@ import json
 
 
 class Configuration:
+
     __config: dict = None
 
     # ----------------------------------------------------------------------------------------------------------------------#
+
+    @staticmethod
+    def reset_config():
+        Configuration.__config = None
+
     @staticmethod
     def _config() -> dict:
         if Configuration.__config is None:

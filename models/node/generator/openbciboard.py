@@ -21,13 +21,13 @@ class OpenBCIBoard(GeneratorNode):
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
         if 'communication' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='communication')
         if 'log_level' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='log_level')
         if 'board' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='board')
 
     def _initialize_parameter_fields(self, parameters: dict):

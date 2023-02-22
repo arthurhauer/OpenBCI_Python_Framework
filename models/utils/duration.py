@@ -12,39 +12,39 @@ class Duration:
     def __init__(self, mean: float, standard_deviation: float, maximum: float, minimum: float) -> None:
         super().__init__()
         if mean is None:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='mean')
         if standard_deviation is None:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='standard_deviation')
         if maximum is None:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='maximum')
         if minimum is None:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='minimum')
         if mean <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='mean',
                                         cause='<=0')
         if standard_deviation <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='standard_deviation',
                                         cause='<=0')
         if maximum <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='maximum',
                                         cause='<=0')
         if maximum < mean:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='maximum',
                                         cause='<mean')
         if minimum <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='minimum',
                                         cause='<=0')
         if minimum > mean:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='minimum',
                                         cause='>mean')
         self.mean = mean

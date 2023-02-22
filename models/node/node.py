@@ -15,12 +15,12 @@ class Node:
 
     def __init__(self, parameters=None) -> None:
         super().__init__()
+        self.name: Final[str] = parameters['name']
         self._validate_parameters(parameters)
         self.parameters = parameters
 
         self._initialize_buffer_options(parameters['buffer_options'])
         self._type: Final[str] = parameters['type']
-        self.name: Final[str] = parameters['name']
 
         self._initialize_parameter_fields(parameters)
 
@@ -35,33 +35,33 @@ class Node:
     def _validate_parameters(self, parameters: dict):
         if 'module' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,
+                module=self._MODULE_NAME,name=self.name,
                 parameter='module'
             )
         if 'models.node.' not in parameters['module']:
             raise InvalidParameterValue(
-                module=self._MODULE_NAME,
+                module=self._MODULE_NAME,name=self.name,
                 parameter='module',
                 cause='must_be_part_of_[models.node]_module'
             )
         if 'type' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,
+                module=self._MODULE_NAME,name=self.name,
                 parameter='type'
             )
         if 'buffer_options' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,
+                module=self._MODULE_NAME,name=self.name,
                 parameter='buffer_options'
             )
         if 'outputs' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,
+                module=self._MODULE_NAME,name=self.name,
                 parameter='outputs'
             )
         if 'name' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,
+                module=self._MODULE_NAME,name=self.name,
                 parameter='name'
             )
 
@@ -133,6 +133,7 @@ class Node:
             {
                 'node': node,
                 'run': lambda data: node.run(data, input_name),
+                'run_': lambda data: node.run(),
                 'dispose': lambda x: node.dispose()
             }
         )
@@ -238,4 +239,12 @@ class Node:
     def dispose(self) -> None:
         """Node self implementation of disposal of allocated resources.
         """
+        self.print('Disposing...')
         return
+
+    def print(self, message: str) -> None:
+        print(f'{self._MODULE_NAME}.{self.name} - {message}')
+
+    @property
+    def module_name(self):
+        return self._MODULE_NAME

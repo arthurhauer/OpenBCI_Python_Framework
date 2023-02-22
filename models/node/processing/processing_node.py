@@ -17,17 +17,17 @@ class ProcessingNode(Node):
         super()._validate_parameters(parameters)
         if 'clear_output_buffer_on_data_input' not in parameters['buffer_options']:
             raise MissingParameterError(
-                module=self._MODULE_NAME,
+                module=self._MODULE_NAME,name=self.name,
                 parameter='buffer_options.clear_output_buffer_on_data_input'
             )
         if 'clear_input_buffer_after_process' not in parameters['buffer_options']:
             raise MissingParameterError(
-                module=self._MODULE_NAME,
+                module=self._MODULE_NAME,name=self.name,
                 parameter='buffer_options.clear_input_buffer_after_process'
             )
         if 'clear_output_buffer_after_process' not in parameters['buffer_options']:
             raise MissingParameterError(
-                module=self._MODULE_NAME,
+                module=self._MODULE_NAME,name=self.name,
                 parameter='buffer_options.clear_output_buffer_after_process'
             )
 
@@ -54,11 +54,13 @@ class ProcessingNode(Node):
     def _process_input_buffer(self):
         if not self._is_processing_condition_satisfied():
             return
+        self.print('Starting processing of input buffer')
         processed_data = self._process(self._input_buffer)
         if self._clear_input_buffer_after_process:
             self._clear_input_buffer()
         if self._clear_output_buffer_after_process:
             self._clear_output_buffer()
+        self.print('Outputting data')
         for output_name in self._get_outputs():
             self._output_buffer[output_name].extend(processed_data[output_name])
 

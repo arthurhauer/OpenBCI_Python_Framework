@@ -1,6 +1,4 @@
 import statistics
-import string
-from random import random
 from typing import List, Dict, Final
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
@@ -24,15 +22,15 @@ class Synchronize(ProcessingNode):
 
     def _validate_parameters(self, parameters: dict):
         if 'slave_filling' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='slave_filling')
 
         if parameters['slave_filling'] not in [self.FILL_TYPE_ZEROFILL, self.FILL_TYPE_SAMPLE_AND_HOLD]:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='slave_filling',
                                         cause=f'not_in_[{self.FILL_TYPE_ZEROFILL},{self.FILL_TYPE_SAMPLE_AND_HOLD}]')
         if 'statistics_enabled' in parameters and type(parameters['statistics_enabled']) is not bool:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='statistics_enabled',
                                         cause='must_be_bool')
 
@@ -57,15 +55,17 @@ class Synchronize(ProcessingNode):
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
         lookup_start_index = 0
         print('Starting sync')
-        master_main = data[self.INPUT_MASTER_MAIN]
+        # master_main = data[self.INPUT_MASTER_MAIN]
         master_timestamp_data = data[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()
         slave_main = data[self.INPUT_SLAVE_MAIN]
         slave_timestamp = data[self.INPUT_SLAVE_TIMESTAMP]
-        # Check if input data from master and slave have channels with the same name
-        if not slave_main.get_channels_as_set().isdisjoint(master_main.channels):
-            raise NonCompatibleData(self._MODULE_NAME, 'channels_with_same_name')
 
-        new_slave_data = FrameworkData(sampling_frequency_hz=master_main.sampling_frequency,
+        master_sampling_frequency = data[self.INPUT_MASTER_TIMESTAMP].sampling_frequency
+        # Check if input data from master and slave have channels with the same name
+        # if not slave_main.get_channels_as_set().isdisjoint(master_main.channels):
+        #     raise NonCompatibleData(self._MODULE_NAME, 'channels_with_same_name')
+
+        new_slave_data = FrameworkData(sampling_frequency_hz=master_sampling_frequency,
                                        channels=slave_main.channels)
 
         for slave_timestamp_index, slave_timestamp_value in enumerate(slave_timestamp.get_data_single_channel()):
@@ -80,7 +80,7 @@ class Synchronize(ProcessingNode):
                     closest_point,
                     slave_main,
                     slave_timestamp_index,
-                    master_main.sampling_frequency
+                    master_sampling_frequency
                 )
             )
             self._statistics(abs(master_timestamp_data[closest_point] - slave_timestamp_value) * 1000000)
@@ -101,7 +101,7 @@ class Synchronize(ProcessingNode):
 
     def _get_inputs(self) -> List[str]:
         return [
-            self.INPUT_MASTER_MAIN,
+            # self.INPUT_MASTER_MAIN,
             self.INPUT_MASTER_TIMESTAMP,
             self.INPUT_SLAVE_MAIN,
             self.INPUT_SLAVE_TIMESTAMP,
@@ -139,7 +139,7 @@ class Synchronize(ProcessingNode):
                 channel_data = [input_data[channel]] * fill_size
                 fill_data.input_data_on_channel(channel_data, channel)
         else:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='slave_filling',
                                         cause='not_set')
 

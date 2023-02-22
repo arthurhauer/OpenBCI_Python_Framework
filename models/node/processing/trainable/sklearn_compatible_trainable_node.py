@@ -1,4 +1,5 @@
 import abc
+import os
 from typing import List, Dict, Final, Any
 
 import joblib
@@ -20,8 +21,10 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
 
     @abc.abstractmethod
     def _initialize_parameter_fields(self, parameters: dict):
+        self.sklearn_processor = None
         super()._initialize_parameter_fields(parameters)
-        self.sklearn_processor: (TransformerMixin, BaseEstimator) = self._initialize_trainable_processor()
+        if self.sklearn_processor is None:
+            self.sklearn_processor: (TransformerMixin, BaseEstimator) = self._initialize_trainable_processor()
 
     @abc.abstractmethod
     def _initialize_trainable_processor(self) -> (TransformerMixin, BaseEstimator):

@@ -25,16 +25,18 @@ class SingleToOneHot(ProcessingNode):
         return self._input_buffer[self.INPUT_MAIN].get_data_count() > 0
 
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
+        self.print('encoding...')
         raw_data = data[self.INPUT_MAIN]
         if not raw_data.is_1d():
-            raise NonCompatibleData(module=self._MODULE_NAME, cause='provided_data_is_multichannel')
+            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name, cause='provided_data_is_multichannel')
 
         encoded_data: FrameworkData = FrameworkData(sampling_frequency_hz=raw_data.sampling_frequency,
                                                     channels=self.labels)
         for data_entry in raw_data.get_data_single_channel():
             for channel_index, channel in enumerate(self.labels):
-                encoded_value = 1 if channel_index == data_entry else 0
+                encoded_value = 1 if channel_index == data_entry-1 else 0
                 encoded_data.input_data_on_channel([encoded_value], channel)
+        self.print('encoded!')
         return {
             self.OUTPUT_MAIN: encoded_data
         }

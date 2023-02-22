@@ -18,10 +18,10 @@ class MotorImagery(GeneratorNode):
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
         if 'trials' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='trials')
         if 'shuffle_when_sequence_is_finished' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='shuffle_when_sequence_is_finished')
 
     def _initialize_parameter_fields(self, parameters: dict):

@@ -6,7 +6,6 @@ from typing import List, Dict, Final
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
-from models.node.generator.generator_node import GeneratorNode
 from models.node.generator.single_run_generator_node import SingleRunGeneratorNode
 
 
@@ -18,43 +17,43 @@ class CSVFile(SingleRunGeneratorNode):
 
     def _validate_parameters(self, parameters: dict):
         if 'sampling_frequency' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='sampling_frequency')
         if 'file_path' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='file_path')
         if type(parameters['sampling_frequency']) is not float and type(parameters['sampling_frequency']) is not int:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='sampling_frequency',
                                         cause='must_be_number')
         if type(parameters['file_path']) is not str:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='file_path',
                                         cause='must_be_string')
         if os.path.splitext(parameters['file_path'])[1] != '.csv':
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='file_path',
                                         cause='must_be_csv_file')
         if not os.path.exists(parameters['file_path']):
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='file_path',
                                         cause='file_doesnt_exist')
         if 'timestamp_column_name' in parameters and type(parameters['timestamp_column_name']) is not str:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='timestamp_column_name',
                                         cause='must_be_string')
 
         if 'channel_column_names' in parameters:
             if type(parameters['channel_column_names']) is not list:
-                raise InvalidParameterValue(module=self._MODULE_NAME,
+                raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                             parameter='channel_column_names',
                                             cause='must_be_list')
             if len(parameters['channel_column_names']) < 1:
-                raise InvalidParameterValue(module=self._MODULE_NAME,
+                raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                             parameter='channel_column_names',
                                             cause='is_empty')
             if any(type(element) is not str for element in parameters['channel_column_names']):
-                raise InvalidParameterValue(module=self._MODULE_NAME,
+                raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                             parameter='channel_column_names',
                                             cause='must_contain_strings_only')
 

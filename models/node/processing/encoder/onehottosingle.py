@@ -23,17 +23,20 @@ class OneHotToSingle(ProcessingNode):
         return self._input_buffer[self.INPUT_MAIN].get_data_count() > 0
 
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
+        self.print('encoding...')
         raw_data = data[self.INPUT_MAIN]
         encoded_data: FrameworkData = FrameworkData(sampling_frequency_hz=raw_data.sampling_frequency)
         for data_index in range(0, raw_data.get_data_count()):
             found_for_index = False
             for channel_index, channel in enumerate(raw_data.channels):
                 if raw_data.get_data_at_index(data_index)[channel] > 0:
-                    encoded_data.input_data_on_channel([channel_index])
+                    encoded_data.input_data_on_channel([channel_index+1])
                     found_for_index = True
                     break
             if not found_for_index:
                 encoded_data.input_data_on_channel([0])
+
+        self.print('encoded!')
         return {
             self.OUTPUT_MAIN: encoded_data
         }

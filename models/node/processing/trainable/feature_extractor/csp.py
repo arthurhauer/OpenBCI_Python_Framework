@@ -18,10 +18,10 @@ class CSP(SKLearnFeatureExtractor):
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
         if 'number_of_components' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='number_of_components')
         if type(parameters['number_of_components']) is not int:
-            raise InvalidParameterValue(module=self._MODULE_NAME,
+            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
                                         parameter='number_of_components',
                                         cause='must_be_int')
 

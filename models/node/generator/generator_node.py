@@ -14,7 +14,7 @@ class GeneratorNode(Node):
     def _validate_parameters(self, parameters: dict):
         super()._validate_parameters(parameters)
         if 'clear_output_buffer_on_generate' not in parameters['buffer_options']:
-            raise MissingParameterError(module=self._MODULE_NAME,
+            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='buffer_options.clear_output_buffer_on_generate')
 
     def _initialize_parameter_fields(self, parameters: dict):
