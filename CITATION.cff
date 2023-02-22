@@ -1,0 +1,59 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: OpenBCIPythonFramework
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Arthur
+    family-names: Hauer
+    email: arthurhauer@alunos.utfpr.edu.br
+    affiliation: CPGEI - UTFPR
+    orcid: 'https://orcid.org/0009-0007-0076-793X'
+repository-code: 'https://github.com/arthurhauer/OpenBCI_Python_Framework'
+abstract: >-
+  É uma verdade incontestável que o processamento de sinais
+  biomédicos tem muitas aplicações. De biometria à
+  fisioterapia, o processamento destes sinais ocorre,
+  normalmente, atrelado a ferramentas já consolidadas no
+  mercado - normalmente fechadas para contribuição externa ,
+  ferramentas open-source com arquitetura complexa, ou ao
+  dispendioso trabalho de programar o pipeline de
+  processamento para o problema em mãos. Ainda, o ato de
+  programar o processamento por conta própria aumenta a
+  probabilidade de erros no processamento, podendo
+  comprometer o experimento executado e seus resultados. No
+  caso de ferramentas open-source de arquitetura complexa, o
+  problema acaba sendo o mesmo do mencionado anteriormente,
+  já que a complexidade compromete a capacidade de
+  contribuição. A tendência observável - em pesquisas
+  envolvendo, especialmente, imagética motora - nos últimos
+  anos é o uso das linguagens Python e Matlab. Python é uma
+  escolha popular por ser uma linguagem interpretada, de
+  alto nível, de fácil uso e extensa seleção de bibliotecas
+  voltadas para processamento de sinais e aprendizado de
+  máquina. Assim, este trabalho propõe um novo framework
+  baseado em Python, para execução de experimentos
+  envolvendo biossinais. O framework foi desenvolvido de
+  modo a ser acessível a pesquisadores com conhecimento
+  mínimo em programação. O framework tem arquitetura com
+  abordagem orientada a nós, onde cada nó representa uma
+  etapa no pipeline de processamento do sinal, como
+  aquisição, filtragem, extração de features e
+  classificação. A configuração do pipeline é feita através
+  de um arquivo JSON de leitura intuitiva, que torna o setup
+  experimental facilmente replicável.
+keywords:
+  - Python
+  - Biosignal
+  - Open-Source
+  - Framework
+  - Processing
+license: MIT
+commit: >-
+  https://github.com/arthurhauer/OpenBCI_Python_Framework/commit/f0e6d584cc163c2f4eb67363c6b78f32e9e781f4
+version: 1.0.0
+date-released: '2023-02-22'
