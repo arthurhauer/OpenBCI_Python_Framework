@@ -54,6 +54,6 @@ keywords:
   - Processing
 license: MIT
 commit: >-
-  https://github.com/arthurhauer/OpenBCI_Python_Framework/commit/f0e6d584cc163c2f4eb67363c6b78f32e9e781f4
+  https://github.com/arthurhauer/OpenBCI_Python_Framework/commit/9646d367489908478f8912600966fd2a1f2809a9
 version: 1.0.0
 date-released: '2023-02-22'
