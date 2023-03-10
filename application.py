@@ -87,7 +87,7 @@ class Application:
                 self._root_nodes[key].run()
             except Exception as e:
                 self.dispose()
-                # raise
+                raise e
 
     def dispose(self):
         self._stop_execution = True

@@ -16,6 +16,7 @@ class Node:
     def __init__(self, parameters=None) -> None:
         super().__init__()
         self.name: Final[str] = parameters['name']
+        self.print("Initializing")
         self._validate_parameters(parameters)
         self.parameters = parameters
 
@@ -161,7 +162,11 @@ class Node:
         :param input_name: Node input name. Can be None if node takes no input data.
         :type input_name: str
         """
-        self._run(data, input_name)
+        try:
+            self._run(data, input_name)
+        except Exception as e:
+            self.print(f'Error:{e}')
+            raise e
         if not self._is_next_node_call_enabled():
             return
         self._call_children()
