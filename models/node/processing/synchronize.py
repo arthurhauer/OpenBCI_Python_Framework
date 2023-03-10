@@ -101,7 +101,7 @@ class Synchronize(ProcessingNode):
 
     def _get_inputs(self) -> List[str]:
         return [
-            # self.INPUT_MASTER_MAIN,
+            self.INPUT_MASTER_MAIN,
             self.INPUT_MASTER_TIMESTAMP,
             self.INPUT_SLAVE_MAIN,
             self.INPUT_SLAVE_TIMESTAMP,

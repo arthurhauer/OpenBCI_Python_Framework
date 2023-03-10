@@ -31,7 +31,12 @@ class Application:
                 root_node.check_output(output_name)
                 for output_config in node_config['outputs'][output_name]:
                     child_node = self._get_node(output_config['node'])
-                    child_node.check_input(output_config['input'])
+                    input = output_config['input']
+                    try:
+                        child_node.check_input(output_config['input'])
+                    except Exception as e:
+                        print(f'error in {key} output {output_name} config: {child_node.name} doesnt have configured input {input}')
+                        raise e
                     root_node.add_child(output_name, child_node, output_config['input'])
             self._add_root_node(
                 key,
@@ -69,8 +74,13 @@ class Application:
                                                 cause='must_be_list')
                 for output_config in node_config['outputs'][output_name]:
                     child_node = self._get_node(output_config['node'])
-                    child_node.check_input(output_config['input'])
-                    node.add_child(output_name, child_node, output_config['input'])
+                    input = output_config['input']
+                    try:
+                        child_node.check_input(output_config['input'])
+                    except Exception as e:
+                        print(f'error in {node_name} output {output_name} config: {child_node.name} doesnt have configured input {input}')
+                        raise e
+                    node.add_child(output_name, child_node, input)
             self._nodes[node_name] = node
         return self._nodes[node_name]
 
