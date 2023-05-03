@@ -11,6 +11,25 @@ from models.node.generator.single_run_generator_node import SingleRunGeneratorNo
 
 
 class CSVFileArray(SingleRunGeneratorNode):
+    """Node that reads data from multiple CSV files and outputs it as a FrameworkData object.
+    The working principle is similar to the CSVFile node, but it reads multiple files instead of one.
+
+    When the node is initialized, it reads the CSV files and stores their data in memory(FrameworkData class). When the node is executed, it
+    sends the data to its outputs.
+
+    If you want to use this node in your pipeline, you must define the following parameters in the pipeline configuration.json file:
+
+        **name** (*str*): Node name.\n
+        **module** (*str*): Current module name (in this case ``models.node.generator.file.csvfilearray``).\n
+        **type** (*str*): Current node type (in this case ``CSVFileArray``).\n
+        **file_path** (*List[str]*): List of paths to the CSV files.\n
+        **sampling_frequency** (*float*): The sample frequency used to collect the data in the CSV file.\n
+        **timestamp_column_name** (*str, optional*): Name of the column that contains the timestamp data.\n
+        **channel_column_names** (*List[str], optional*): List of column names of the channels that will be read from the CSV file.\n
+        **buffer_options** (*dict*): Buffer options.
+            **clear_output_buffer_on_generate** (*bool*): If ``True``, the output buffer will be cleared when the node is executed.\n    
+        **output** (*dict*): Dictionary containing the node outputs. Where you want to send the data read from the CSV file to, in other words, the next node in the pipeline.\n
+    """
     _MODULE_NAME: Final[str] = 'node.generator.file.csvfilearray'
 
     OUTPUT_MAIN: Final[str] = 'main'
