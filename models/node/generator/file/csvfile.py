@@ -10,12 +10,40 @@ from models.node.generator.single_run_generator_node import SingleRunGeneratorNo
 
 
 class CSVFile(SingleRunGeneratorNode):
+    """Node that reads data from a CSV file and sends it to its outputs. It can be used to read data from a file
+    and send it to a processing pipeline.
+    
+    When the node is initialized, it reads the CSV file and stores its data in memory(FrameworkData class). When the node is executed, it
+    sends the data to its outputs.
+    
+    If you want to use this node in your pipeline, you must define the following parameters in the pipeline configuration.json file:
+
+        **name** (*str*): Node name.\n
+        **module** (*str*): Current module name (in this case ``models.node.generator.file.csvfile``).\n
+        **type** (*str*): Current node type (in this case ``CSVFile``).\n
+        **file_path** (*str*): Path to the CSV file.\n
+        **sampling_frequency** (*float*): The sample frequency used to collect the data in the CSV file.\n
+        **timestamp_column_name** (*str, optional*): Name of the column that contains the timestamp data.\n
+        **channel_column_names** (*List[str], optional*): List of column names of the channels that will be read from the CSV file.\n
+        **buffer_options** (*dict*): Buffer options.
+            **clear_output_buffer_on_generate** (*bool*): If ``True``, the output buffer will be cleared when the node is executed.\n    
+        **outputs** (*dict*): Dictionary containing the node outputs. Where you want to send the data read from the CSV file to, in other words, the next node in the pipeline.\n
+    """
+    
     _MODULE_NAME: Final[str] = 'node.generator.file.csvfile'
 
     OUTPUT_MAIN: Final[str] = 'main'
     OUTPUT_TIMESTAMP: Final[str] = 'timestamp'
 
     def _validate_parameters(self, parameters: dict):
+        """This method validates the parameters passed to this node. It checks if the required parameters are present and if they have the correct type.
+
+        :param parameters: Parameters passed to this node.
+        :type parameters: dict
+
+        :raises MissingParameterError: If a required parameter is missing.
+        :raises InvalidParameterValue: If a parameter has an invalid value.
+        """
         if 'sampling_frequency' not in parameters:
             raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
                                         parameter='sampling_frequency')
@@ -59,6 +87,11 @@ class CSVFile(SingleRunGeneratorNode):
 
     @abc.abstractmethod
     def _initialize_parameter_fields(self, parameters: dict):
+        """This method initializes the parameters of this node.
+
+        :param parameters: Parameters passed to this node.
+        :type parameters: dict
+        """
         super()._initialize_parameter_fields(parameters)
         self.sampling_frequency = parameters['sampling_frequency']
         self.file_path = parameters['file_path']
@@ -71,6 +104,8 @@ class CSVFile(SingleRunGeneratorNode):
         self._init_csv_reader()
 
     def _init_csv_reader(self) -> None:
+        """This method initializes the CSV reader object. It opens the CSV file and creates a CSV reader object that will be used to read the file.
+        """
         self._csv_file = open(self.file_path)
         self._csv_reader = csv.DictReader(self._csv_file)
 
@@ -84,6 +119,8 @@ class CSVFile(SingleRunGeneratorNode):
         return not self._csv_file.closed
 
     def _generate_data(self) -> Dict[str, FrameworkData]:
+        """This method reads the csv file and store the data in a FrameworkData object.
+        """
         main_data = FrameworkData(self.sampling_frequency, self.channel_column_names)
         timestamp_data = FrameworkData(self.sampling_frequency)
         for row_index, row in enumerate(self._csv_reader):
@@ -102,6 +139,11 @@ class CSVFile(SingleRunGeneratorNode):
         }
 
     def _get_outputs(self) -> List[str]:
+        """This method returns the outputs of this node.
+
+        :return: List of outputs of this node.
+        :rtype: List[str]
+        """
         return [
             self.OUTPUT_MAIN,
             self.OUTPUT_TIMESTAMP
