@@ -172,6 +172,18 @@
 <li class="toctree-l5"><a class="reference internal" href="models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="models.utils.html">models.utils package</a></li>
@@ -224,6 +236,25 @@
 <dt class="sig sig-object py" id="models.node.generator.file.csvfile.CSVFile">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.generator.file.csvfile.</span></span><span class="sig-name descname"><span class="pre">CSVFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/file/csvfile.html#CSVFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.file.csvfile.CSVFile" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.generator.html#models.node.generator.single_run_generator_node.SingleRunGeneratorNode" title="models.node.generator.single_run_generator_node.SingleRunGeneratorNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleRunGeneratorNode</span></code></a></p>
+<p>Node that reads data from a CSV file and sends it to its outputs. It can be used to read data from a file
+and send it to a processing pipeline.</p>
+<p>When the node is initialized, it reads the CSV file and stores its data in memory(FrameworkData class). When the node is executed, it
+sends the data to its outputs.</p>
+<p>If you want to use this node in your pipeline, you must define the following parameters in the pipeline configuration.json file:</p>
+<blockquote>
+<div><p><strong>name</strong> (<em>str</em>): Node name.</p>
+<p><strong>module</strong> (<em>str</em>): Current module name (in this case <code class="docutils literal notranslate"><span class="pre">models.node.generator.file.csvfile</span></code>).</p>
+<p><strong>type</strong> (<em>str</em>): Current node type (in this case <code class="docutils literal notranslate"><span class="pre">CSVFile</span></code>).</p>
+<p><strong>file_path</strong> (<em>str</em>): Path to the CSV file.</p>
+<p><strong>sampling_frequency</strong> (<em>float</em>): The sample frequency used to collect the data in the CSV file.</p>
+<p><strong>timestamp_column_name</strong> (<em>str, optional</em>): Name of the column that contains the timestamp data.</p>
+<p><strong>channel_column_names</strong> (<em>List[str], optional</em>): List of column names of the channels that will be read from the CSV file.</p>
+<dl class="simple">
+<dt><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</dt><dd><p><strong>clear_output_buffer_on_generate</strong> (<em>bool</em>): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the output buffer will be cleared when the node is executed.</p>
+</dd>
+</dl>
+<p><strong>outputs</strong> (<em>dict</em>): Dictionary containing the node outputs. Where you want to send the data read from the CSV file to, in other words, the next node in the pipeline.</p>
+</div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.generator.file.csvfile.CSVFile.OUTPUT_MAIN">
 <span class="sig-name descname"><span class="pre">OUTPUT_MAIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'main'</span></em><a class="headerlink" href="#models.node.generator.file.csvfile.CSVFile.OUTPUT_MAIN" title="Permalink to this definition">#</a></dt>
@@ -249,6 +280,25 @@
 <dt class="sig sig-object py" id="models.node.generator.file.csvfilearray.CSVFileArray">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.generator.file.csvfilearray.</span></span><span class="sig-name descname"><span class="pre">CSVFileArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/file/csvfilearray.html#CSVFileArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.file.csvfilearray.CSVFileArray" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.generator.html#models.node.generator.single_run_generator_node.SingleRunGeneratorNode" title="models.node.generator.single_run_generator_node.SingleRunGeneratorNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleRunGeneratorNode</span></code></a></p>
+<p>Node that reads data from multiple CSV files and outputs it as a FrameworkData object.
+The working principle is similar to the CSVFile node, but it reads multiple files instead of one.</p>
+<p>When the node is initialized, it reads the CSV files and stores their data in memory(FrameworkData class). When the node is executed, it
+sends the data to its outputs.</p>
+<p>If you want to use this node in your pipeline, you must define the following parameters in the pipeline configuration.json file:</p>
+<blockquote>
+<div><p><strong>name</strong> (<em>str</em>): Node name.</p>
+<p><strong>module</strong> (<em>str</em>): Current module name (in this case <code class="docutils literal notranslate"><span class="pre">models.node.generator.file.csvfilearray</span></code>).</p>
+<p><strong>type</strong> (<em>str</em>): Current node type (in this case <code class="docutils literal notranslate"><span class="pre">CSVFileArray</span></code>).</p>
+<p><strong>file_path</strong> (<em>List[str]</em>): List of paths to the CSV files.</p>
+<p><strong>sampling_frequency</strong> (<em>float</em>): The sample frequency used to collect the data in the CSV file.</p>
+<p><strong>timestamp_column_name</strong> (<em>str, optional</em>): Name of the column that contains the timestamp data.</p>
+<p><strong>channel_column_names</strong> (<em>List[str], optional</em>): List of column names of the channels that will be read from the CSV file.</p>
+<dl class="simple">
+<dt><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</dt><dd><p><strong>clear_output_buffer_on_generate</strong> (<em>bool</em>): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the output buffer will be cleared when the node is executed.</p>
+</dd>
+</dl>
+<p><strong>output</strong> (<em>dict</em>): Dictionary containing the node outputs. Where you want to send the data read from the CSV file to, in other words, the next node in the pipeline.</p>
+</div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.generator.file.csvfilearray.CSVFileArray.OUTPUT_MAIN">
 <span class="sig-name descname"><span class="pre">OUTPUT_MAIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'main'</span></em><a class="headerlink" href="#models.node.generator.file.csvfilearray.CSVFileArray.OUTPUT_MAIN" title="Permalink to this definition">#</a></dt>

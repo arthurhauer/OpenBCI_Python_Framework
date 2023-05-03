@@ -4,7 +4,7 @@ models.exception package
 Submodules
 ----------
 
-models.exception.framework\_base\_exception module
+framework\_base\_exception module
 --------------------------------------------------
 
 .. automodule:: models.exception.framework_base_exception
@@ -12,15 +12,15 @@ models.exception.framework\_base\_exception module
    :undoc-members:
    :show-inheritance:
 
-models.exception.invalid\_parameter\_value module
+invalid\_parameter\_value module
 -------------------------------------------------
 
 .. automodule:: models.exception.invalid_parameter_value
    :members:
    :undoc-members:
-   :show-inheritance:
+   :show-inheritance: false
 
-models.exception.missing\_parameter module
+missing\_parameter module
 ------------------------------------------
 
 .. automodule:: models.exception.missing_parameter
@@ -28,7 +28,7 @@ models.exception.missing\_parameter module
    :undoc-members:
    :show-inheritance:
 
-models.exception.non\_compatible\_data module
+non\_compatible\_data module
 ---------------------------------------------
 
 .. automodule:: models.exception.non_compatible_data

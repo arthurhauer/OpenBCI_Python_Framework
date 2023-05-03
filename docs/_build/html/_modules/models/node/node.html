@@ -171,6 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../models.utils.html">models.utils package</a></li>
@@ -225,6 +237,7 @@
 <div class="viewcode-block" id="Node"><a class="viewcode-back" href="../../../models.node.html#models.node.node.Node">[docs]</a><span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;models.node&#39;</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract base class for processing pipeline execution on this framework.</span>
+<span class="sd">        A node is a component that receives data from its inputs, process it and send it to its outputs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -248,6 +261,13 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates parameters passed to this node.</span>
+
+<span class="sd">        :param parameters: Parameters passed to this node.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        :raises MissingParameterError: If a required parameter is missing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s1">&#39;module&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span>
                 <span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -282,6 +302,12 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_initialize_parameter_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes parameter fields of this node. This is a abstract method and should be implemented by subclasses.</span>
+
+<span class="sd">        :param parameters: Parameters passed to this node.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span>
 
     <span class="k">def</span> <span class="nf">_clear_input_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -313,7 +339,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_input_buffer</span><span class="p">[</span><span class="n">input_name</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_insert_new_output_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">,</span> <span class="n">output_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Appends new data to the end of already existing output buffer</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Appends new data to the end of already existing output buffer</span>
 
 <span class="sd">        :param data: Data to be added. Should be in channel X sample format</span>
 <span class="sd">        :type data: FrameworkData</span>
@@ -369,7 +396,8 @@
                 <span class="n">child</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">](</span><span class="n">output</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Node.run"><a class="viewcode-back" href="../../../models.node.html#models.node.node.Node.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FrameworkData</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">input_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run node main function</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run node main function</span>
 
 <span class="sd">        :param data: Node input data (channel X sample). Can be None if node takes no input data.</span>
 <span class="sd">        :type data: FrameworkData</span>

@@ -172,6 +172,18 @@
 <li class="toctree-l5"><a class="reference internal" href="models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="models.utils.html">models.utils package</a></li>
@@ -219,38 +231,42 @@
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="module-models.exception.framework_base_exception">
-<span id="models-exception-framework-base-exception-module"></span><h2>models.exception.framework_base_exception module<a class="headerlink" href="#module-models.exception.framework_base_exception" title="Permalink to this heading">#</a></h2>
+<span id="framework-base-exception-module"></span><h2>framework_base_exception module<a class="headerlink" href="#module-models.exception.framework_base_exception" title="Permalink to this heading">#</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="models.exception.framework_base_exception.FrameworkBaseException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.exception.framework_base_exception.</span></span><span class="sig-name descname"><span class="pre">FrameworkBaseException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/exception/framework_base_exception.html#FrameworkBaseException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.exception.framework_base_exception.FrameworkBaseException" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base exception for all framework exceptions.</p>
 </dd></dl>
 
 </section>
 <section id="module-models.exception.invalid_parameter_value">
-<span id="models-exception-invalid-parameter-value-module"></span><h2>models.exception.invalid_parameter_value module<a class="headerlink" href="#module-models.exception.invalid_parameter_value" title="Permalink to this heading">#</a></h2>
+<span id="invalid-parameter-value-module"></span><h2>invalid_parameter_value module<a class="headerlink" href="#module-models.exception.invalid_parameter_value" title="Permalink to this heading">#</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="models.exception.invalid_parameter_value.InvalidParameterValue">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.exception.invalid_parameter_value.</span></span><span class="sig-name descname"><span class="pre">InvalidParameterValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cause</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/exception/invalid_parameter_value.html#InvalidParameterValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.exception.invalid_parameter_value.InvalidParameterValue" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.exception.framework_base_exception.FrameworkBaseException" title="models.exception.framework_base_exception.FrameworkBaseException"><code class="xref py py-class docutils literal notranslate"><span class="pre">FrameworkBaseException</span></code></a></p>
+<p>Exception for invalid parameter value. This exception is used when a parameter value is invalid.</p>
 </dd></dl>
 
 </section>
 <section id="module-models.exception.missing_parameter">
-<span id="models-exception-missing-parameter-module"></span><h2>models.exception.missing_parameter module<a class="headerlink" href="#module-models.exception.missing_parameter" title="Permalink to this heading">#</a></h2>
+<span id="missing-parameter-module"></span><h2>missing_parameter module<a class="headerlink" href="#module-models.exception.missing_parameter" title="Permalink to this heading">#</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="models.exception.missing_parameter.MissingParameterError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.exception.missing_parameter.</span></span><span class="sig-name descname"><span class="pre">MissingParameterError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/exception/missing_parameter.html#MissingParameterError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.exception.missing_parameter.MissingParameterError" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.exception.framework_base_exception.FrameworkBaseException" title="models.exception.framework_base_exception.FrameworkBaseException"><code class="xref py py-class docutils literal notranslate"><span class="pre">FrameworkBaseException</span></code></a></p>
+<p>Exception for missing parameter. This exception is used when a parameter is missing.</p>
 </dd></dl>
 
 </section>
 <section id="module-models.exception.non_compatible_data">
-<span id="models-exception-non-compatible-data-module"></span><h2>models.exception.non_compatible_data module<a class="headerlink" href="#module-models.exception.non_compatible_data" title="Permalink to this heading">#</a></h2>
+<span id="non-compatible-data-module"></span><h2>non_compatible_data module<a class="headerlink" href="#module-models.exception.non_compatible_data" title="Permalink to this heading">#</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="models.exception.non_compatible_data.NonCompatibleData">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.exception.non_compatible_data.</span></span><span class="sig-name descname"><span class="pre">NonCompatibleData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cause</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/exception/non_compatible_data.html#NonCompatibleData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.exception.non_compatible_data.NonCompatibleData" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.exception.framework_base_exception.FrameworkBaseException" title="models.exception.framework_base_exception.FrameworkBaseException"><code class="xref py py-class docutils literal notranslate"><span class="pre">FrameworkBaseException</span></code></a></p>
+<p>Exception for non compatible data. This exception is used when a data is not compatible with the expected data.</p>
 </dd></dl>
 
 </section>
@@ -316,19 +332,19 @@
             <ul>
 <li><a class="reference internal" href="#">models.exception package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-models.exception.framework_base_exception">models.exception.framework_base_exception module</a><ul>
+<li><a class="reference internal" href="#module-models.exception.framework_base_exception">framework_base_exception module</a><ul>
 <li><a class="reference internal" href="#models.exception.framework_base_exception.FrameworkBaseException"><code class="docutils literal notranslate"><span class="pre">FrameworkBaseException</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-models.exception.invalid_parameter_value">models.exception.invalid_parameter_value module</a><ul>
+<li><a class="reference internal" href="#module-models.exception.invalid_parameter_value">invalid_parameter_value module</a><ul>
 <li><a class="reference internal" href="#models.exception.invalid_parameter_value.InvalidParameterValue"><code class="docutils literal notranslate"><span class="pre">InvalidParameterValue</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-models.exception.missing_parameter">models.exception.missing_parameter module</a><ul>
+<li><a class="reference internal" href="#module-models.exception.missing_parameter">missing_parameter module</a><ul>
 <li><a class="reference internal" href="#models.exception.missing_parameter.MissingParameterError"><code class="docutils literal notranslate"><span class="pre">MissingParameterError</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-models.exception.non_compatible_data">models.exception.non_compatible_data module</a><ul>
+<li><a class="reference internal" href="#module-models.exception.non_compatible_data">non_compatible_data module</a><ul>
 <li><a class="reference internal" href="#models.exception.non_compatible_data.NonCompatibleData"><code class="docutils literal notranslate"><span class="pre">NonCompatibleData</span></code></a></li>
 </ul>
 </li>

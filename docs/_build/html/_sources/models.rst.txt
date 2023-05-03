@@ -14,7 +14,7 @@ Subpackages
 Submodules
 ----------
 
-models.framework\_data module
+framework\_data module
 -----------------------------
 
 .. automodule:: models.framework_data

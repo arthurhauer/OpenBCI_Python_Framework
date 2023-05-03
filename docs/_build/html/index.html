@@ -172,6 +172,18 @@
 <li class="toctree-l5"><a class="reference internal" href="models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="models.utils.html">models.utils package</a></li>
@@ -219,9 +231,340 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">OpenBCI_Python_Framework</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="application.html">application module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="application.html">application module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="application.html#application.Application"><code class="docutils literal notranslate"><span class="pre">Application</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="application.html#application.Application.dispose"><code class="docutils literal notranslate"><span class="pre">Application.dispose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="application.html#application.Application.get_generator_node_from_module_and_type"><code class="docutils literal notranslate"><span class="pre">Application.get_generator_node_from_module_and_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="application.html#application.Application.get_node_from_module_and_type"><code class="docutils literal notranslate"><span class="pre">Application.get_node_from_module_and_type()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="application.html#application.Application.run"><code class="docutils literal notranslate"><span class="pre">Application.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models.html">models package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">models package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="models.exception.html">models.exception package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.exception.html#submodules">Submodules</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.exception.html#module-models.exception.framework_base_exception">framework_base_exception module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.exception.html#models.exception.framework_base_exception.FrameworkBaseException"><code class="docutils literal notranslate"><span class="pre">FrameworkBaseException</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.exception.html#module-models.exception.invalid_parameter_value">invalid_parameter_value module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.exception.html#models.exception.invalid_parameter_value.InvalidParameterValue"><code class="docutils literal notranslate"><span class="pre">InvalidParameterValue</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.exception.html#module-models.exception.missing_parameter">missing_parameter module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.exception.html#models.exception.missing_parameter.MissingParameterError"><code class="docutils literal notranslate"><span class="pre">MissingParameterError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.exception.html#module-models.exception.non_compatible_data">non_compatible_data module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.exception.html#models.exception.non_compatible_data.NonCompatibleData"><code class="docutils literal notranslate"><span class="pre">NonCompatibleData</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.exception.html#module-models.exception">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html">models.node package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.node.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.node.generator.html">models.node.generator package</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="models.node.generator.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.generator.file.html">models.node.generator.file package</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.file.html#submodules">Submodules</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.file.html#module-models.node.generator.file.csvfile">models.node.generator.file.csvfile module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.generator.file.html#models.node.generator.file.csvfile.CSVFile"><code class="docutils literal notranslate"><span class="pre">CSVFile</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.file.html#module-models.node.generator.file.csvfilearray">models.node.generator.file.csvfilearray module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.generator.file.html#models.node.generator.file.csvfilearray.CSVFileArray"><code class="docutils literal notranslate"><span class="pre">CSVFileArray</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.file.html#module-models.node.generator.file">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.generator.html#submodules">Submodules</a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.generator.html#module-models.node.generator.generator_node">models.node.generator.generator_node module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.generator.html#models.node.generator.generator_node.GeneratorNode"><code class="docutils literal notranslate"><span class="pre">GeneratorNode</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.generator.html#module-models.node.generator.motorimagery">models.node.generator.motorimagery module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.generator.html#models.node.generator.motorimagery.MotorImagery"><code class="docutils literal notranslate"><span class="pre">MotorImagery</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.motorimagery.MotorImagery.OUTPUT_MARKER"><code class="docutils literal notranslate"><span class="pre">MotorImagery.OUTPUT_MARKER</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.motorimagery.MotorImagery.OUTPUT_TIMESTAMP"><code class="docutils literal notranslate"><span class="pre">MotorImagery.OUTPUT_TIMESTAMP</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.motorimagery.MotorImagery.dispose"><code class="docutils literal notranslate"><span class="pre">MotorImagery.dispose()</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.motorimagery.MotorImagery.from_config_json"><code class="docutils literal notranslate"><span class="pre">MotorImagery.from_config_json()</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.motorimagery.MotorImagery.start"><code class="docutils literal notranslate"><span class="pre">MotorImagery.start()</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.motorimagery.MotorImagery.stop"><code class="docutils literal notranslate"><span class="pre">MotorImagery.stop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.generator.html#module-models.node.generator.openbciboard">models.node.generator.openbciboard module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard"><code class="docutils literal notranslate"><span class="pre">OpenBCIBoard</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard.OUTPUT_ACCELEROMETER"><code class="docutils literal notranslate"><span class="pre">OpenBCIBoard.OUTPUT_ACCELEROMETER</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard.OUTPUT_EEG"><code class="docutils literal notranslate"><span class="pre">OpenBCIBoard.OUTPUT_EEG</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard.OUTPUT_TIMESTAMP"><code class="docutils literal notranslate"><span class="pre">OpenBCIBoard.OUTPUT_TIMESTAMP</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard.dispose"><code class="docutils literal notranslate"><span class="pre">OpenBCIBoard.dispose()</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard.start"><code class="docutils literal notranslate"><span class="pre">OpenBCIBoard.start()</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard.stop"><code class="docutils literal notranslate"><span class="pre">OpenBCIBoard.stop()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.generator.html#module-models.node.generator.single_run_generator_node">models.node.generator.single_run_generator_node module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.generator.html#models.node.generator.single_run_generator_node.SingleRunGeneratorNode"><code class="docutils literal notranslate"><span class="pre">SingleRunGeneratorNode</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.generator.html#models.node.generator.single_run_generator_node.SingleRunGeneratorNode.run"><code class="docutils literal notranslate"><span class="pre">SingleRunGeneratorNode.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.generator.html#module-models.node.generator">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="models.node.output.html">models.node.output package</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="models.node.output.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.output.device.html">models.node.output.device package</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.device.html#submodules">Submodules</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.device.html#module-models.node.output.device.eletroestimuladordopaulo">models.node.output.device.eletroestimuladordopaulo module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.output.device.html#models.node.output.device.eletroestimuladordopaulo.EletroEstimuladorDoPaulo"><code class="docutils literal notranslate"><span class="pre">EletroEstimuladorDoPaulo</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.device.html#module-models.node.output.device">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l8"><a class="reference internal" href="models.node.output.display.html">models.node.output.display package</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.display.html#submodules">Submodules</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.display.html#module-models.node.output.display.simplegraph">models.node.output.display.simplegraph module</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.display.html#module-models.node.output.display">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l8"><a class="reference internal" href="models.node.output.file.html">models.node.output.file package</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.file.html#submodules">Submodules</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.file.html#module-models.node.output.file.csvfile">models.node.output.file.csvfile module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.output.file.html#models.node.output.file.csvfile.CSVFile"><code class="docutils literal notranslate"><span class="pre">CSVFile</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.file.html#module-models.node.output.file.writeedf">models.node.output.file.writeedf module</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.file.html#module-models.node.output.file">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.output.html#submodules">Submodules</a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.output.html#module-models.node.output.output_node">models.node.output.output_node module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.output.html#models.node.output.output_node.OutputNode"><code class="docutils literal notranslate"><span class="pre">OutputNode</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.output.html#models.node.output.output_node.OutputNode.dispose"><code class="docutils literal notranslate"><span class="pre">OutputNode.dispose()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.output.html#module-models.node.output">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="models.node.processing.html">models.node.processing package</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="models.node.processing.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.encoder.html">models.node.processing.encoder package</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.encoder.html#submodules">Submodules</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.encoder.html#module-models.node.processing.encoder.onehottosingle">models.node.processing.encoder.onehottosingle module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.encoder.html#models.node.processing.encoder.onehottosingle.OneHotToSingle"><code class="docutils literal notranslate"><span class="pre">OneHotToSingle</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.encoder.html#module-models.node.processing.encoder.singletoonehot">models.node.processing.encoder.singletoonehot module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.encoder.html#models.node.processing.encoder.singletoonehot.SingleToOneHot"><code class="docutils literal notranslate"><span class="pre">SingleToOneHot</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.encoder.html#module-models.node.processing.encoder">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.feature_extractor.html#submodules">Submodules</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.feature_extractor.html#module-models.node.processing.feature_extractor.feature_extractor">models.node.processing.feature_extractor.feature_extractor module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.feature_extractor.html#models.node.processing.feature_extractor.feature_extractor.FeatureExtractor"><code class="docutils literal notranslate"><span class="pre">FeatureExtractor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.feature_extractor.html#module-models.node.processing.feature_extractor">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.filter.html">models.node.processing.filter package</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.filter.html#submodules">Submodules</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.filter.html#module-models.node.processing.filter.bandpass">models.node.processing.filter.bandpass module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.filter.html#models.node.processing.filter.bandpass.BandPass"><code class="docutils literal notranslate"><span class="pre">BandPass</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.filter.html#module-models.node.processing.filter.filter">models.node.processing.filter.filter module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.filter.html#models.node.processing.filter.filter.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.filter.html#module-models.node.processing.filter">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.segmenter.html">models.node.processing.segmenter package</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.segmenter.html#submodules">Submodules</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.segmenter.html#module-models.node.processing.segmenter.fixedwindowsegmenter">models.node.processing.segmenter.fixedwindowsegmenter module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.segmenter.html#models.node.processing.segmenter.fixedwindowsegmenter.FixedWindowSegmenter"><code class="docutils literal notranslate"><span class="pre">FixedWindowSegmenter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.segmenter.html#module-models.node.processing.segmenter.segmenter">models.node.processing.segmenter.segmenter module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.segmenter.html#models.node.processing.segmenter.segmenter.Segmenter"><code class="docutils literal notranslate"><span class="pre">Segmenter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.segmenter.html#module-models.node.processing.segmenter">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.trainable.html">models.node.processing.trainable package</a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.trainable.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.trainable.html#submodules">Submodules</a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.trainable.html#module-models.node.processing.trainable.sklearn_compatible_trainable_node">models.node.processing.trainable.sklearn_compatible_trainable_node module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.trainable.html#models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode"><code class="docutils literal notranslate"><span class="pre">SKLearnCompatibleTrainableNode</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.trainable.html#module-models.node.processing.trainable.trainable_processing_node">models.node.processing.trainable.trainable_processing_node module</a><ul>
+<li class="toctree-l10"><a class="reference internal" href="models.node.processing.trainable.html#models.node.processing.trainable.trainable_processing_node.TrainableProcessingNode"><code class="docutils literal notranslate"><span class="pre">TrainableProcessingNode</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.trainable.html#module-models.node.processing.trainable">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.processing.html#submodules">Submodules</a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.fill">models.node.processing.fill module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.html#models.node.processing.fill.Fill"><code class="docutils literal notranslate"><span class="pre">Fill</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.fill.Fill.FILL_TYPE_SAMPLE_AND_HOLD"><code class="docutils literal notranslate"><span class="pre">Fill.FILL_TYPE_SAMPLE_AND_HOLD</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.fill.Fill.FILL_TYPE_ZEROFILL"><code class="docutils literal notranslate"><span class="pre">Fill.FILL_TYPE_ZEROFILL</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.fill.Fill.INPUT_MAIN"><code class="docutils literal notranslate"><span class="pre">Fill.INPUT_MAIN</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.fill.Fill.OUTPUT_MAIN"><code class="docutils literal notranslate"><span class="pre">Fill.OUTPUT_MAIN</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.merge">models.node.processing.merge module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.html#models.node.processing.merge.Merge"><code class="docutils literal notranslate"><span class="pre">Merge</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.merge.Merge.OUTPUT_MERGED_MAIN"><code class="docutils literal notranslate"><span class="pre">Merge.OUTPUT_MERGED_MAIN</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.merge.Merge.OUTPUT_MERGED_TIMESTAMP"><code class="docutils literal notranslate"><span class="pre">Merge.OUTPUT_MERGED_TIMESTAMP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.html#models.node.processing.merge.random"><code class="docutils literal notranslate"><span class="pre">random()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.processing_node">models.node.processing.processing_node module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.html#models.node.processing.processing_node.ProcessingNode"><code class="docutils literal notranslate"><span class="pre">ProcessingNode</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.processing_node.ProcessingNode.dispose"><code class="docutils literal notranslate"><span class="pre">ProcessingNode.dispose()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.signalcheck">models.node.processing.signalcheck module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.html#models.node.processing.signalcheck.SignalCheck"><code class="docutils literal notranslate"><span class="pre">SignalCheck</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.signalcheck.SignalCheck.INPUT_MAIN"><code class="docutils literal notranslate"><span class="pre">SignalCheck.INPUT_MAIN</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.signalcheck.SignalCheck.OUTPUT_MAIN"><code class="docutils literal notranslate"><span class="pre">SignalCheck.OUTPUT_MAIN</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.synchronize">models.node.processing.synchronize module</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="models.node.processing.html#models.node.processing.synchronize.Synchronize"><code class="docutils literal notranslate"><span class="pre">Synchronize</span></code></a><ul>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.synchronize.Synchronize.FILL_TYPE_SAMPLE_AND_HOLD"><code class="docutils literal notranslate"><span class="pre">Synchronize.FILL_TYPE_SAMPLE_AND_HOLD</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.synchronize.Synchronize.FILL_TYPE_ZEROFILL"><code class="docutils literal notranslate"><span class="pre">Synchronize.FILL_TYPE_ZEROFILL</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.synchronize.Synchronize.INPUT_MASTER_MAIN"><code class="docutils literal notranslate"><span class="pre">Synchronize.INPUT_MASTER_MAIN</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.synchronize.Synchronize.INPUT_MASTER_TIMESTAMP"><code class="docutils literal notranslate"><span class="pre">Synchronize.INPUT_MASTER_TIMESTAMP</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.synchronize.Synchronize.INPUT_SLAVE_MAIN"><code class="docutils literal notranslate"><span class="pre">Synchronize.INPUT_SLAVE_MAIN</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.synchronize.Synchronize.INPUT_SLAVE_TIMESTAMP"><code class="docutils literal notranslate"><span class="pre">Synchronize.INPUT_SLAVE_TIMESTAMP</span></code></a></li>
+<li class="toctree-l9"><a class="reference internal" href="models.node.processing.html#models.node.processing.synchronize.Synchronize.OUTPUT_SYNCHRONIZED_MAIN"><code class="docutils literal notranslate"><span class="pre">Synchronize.OUTPUT_SYNCHRONIZED_MAIN</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.processing.html#module-models.node.processing">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.html#submodules">Submodules</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.html#module-models.node.node">models.node.node module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.node.html#models.node.node.Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="models.node.html#models.node.node.Node.add_child"><code class="docutils literal notranslate"><span class="pre">Node.add_child()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.html#models.node.node.Node.check_input"><code class="docutils literal notranslate"><span class="pre">Node.check_input()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.html#models.node.node.Node.check_output"><code class="docutils literal notranslate"><span class="pre">Node.check_output()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.html#models.node.node.Node.dispose"><code class="docutils literal notranslate"><span class="pre">Node.dispose()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.html#models.node.node.Node.dispose_all"><code class="docutils literal notranslate"><span class="pre">Node.dispose_all()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.html#models.node.node.Node.from_config_json"><code class="docutils literal notranslate"><span class="pre">Node.from_config_json()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.html#models.node.node.Node.module_name"><code class="docutils literal notranslate"><span class="pre">Node.module_name</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.html#models.node.node.Node.print"><code class="docutils literal notranslate"><span class="pre">Node.print()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.node.html#models.node.node.Node.run"><code class="docutils literal notranslate"><span class="pre">Node.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.html#module-models.node">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="models.utils.html">models.utils package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.utils.html#module-models.utils.cue">models.utils.cue module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.utils.html#models.utils.cue.Cue"><code class="docutils literal notranslate"><span class="pre">Cue</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="models.utils.html#models.utils.cue.Cue.execute"><code class="docutils literal notranslate"><span class="pre">Cue.execute()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.utils.html#models.utils.cue.Cue.from_config_json"><code class="docutils literal notranslate"><span class="pre">Cue.from_config_json()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.utils.html#module-models.utils.duration">models.utils.duration module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.utils.html#models.utils.duration.Duration"><code class="docutils literal notranslate"><span class="pre">Duration</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="models.utils.html#models.utils.duration.Duration.from_config_json"><code class="docutils literal notranslate"><span class="pre">Duration.from_config_json()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.utils.html#models.utils.duration.Duration.get_duration"><code class="docutils literal notranslate"><span class="pre">Duration.get_duration()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.utils.html#module-models.utils.script_execution">models.utils.script_execution module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.utils.html#models.utils.script_execution.script_execute"><code class="docutils literal notranslate"><span class="pre">script_execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.utils.html#module-models.utils.trial">models.utils.trial module</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.utils.html#models.utils.trial.Trial"><code class="docutils literal notranslate"><span class="pre">Trial</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="models.utils.html#models.utils.trial.Trial.from_config_json"><code class="docutils literal notranslate"><span class="pre">Trial.from_config_json()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.utils.html#models.utils.trial.Trial.on_stop"><code class="docutils literal notranslate"><span class="pre">Trial.on_stop()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="models.utils.html#models.utils.trial.Trial.start"><code class="docutils literal notranslate"><span class="pre">Trial.start()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="models.utils.html#module-models.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#module-models.framework_data">framework_data module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="models.html#models.framework_data.FrameworkData"><code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.extend"><code class="docutils literal notranslate"><span class="pre">FrameworkData.extend()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.from_multi_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.from_multi_channel()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.from_single_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.from_single_channel()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.get_channels_as_set"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_channels_as_set()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.get_data"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.get_data_as_2d_array"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_as_2d_array()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.get_data_at_index"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_at_index()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.get_data_count"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_count()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.get_data_on_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_on_channel()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.get_data_single_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_single_channel()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.has_data"><code class="docutils literal notranslate"><span class="pre">FrameworkData.has_data()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.input_2d_data"><code class="docutils literal notranslate"><span class="pre">FrameworkData.input_2d_data()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.input_data_on_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.input_data_on_channel()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.html#models.framework_data.FrameworkData.is_1d"><code class="docutils literal notranslate"><span class="pre">FrameworkData.is_1d()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="models.html#module-models">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

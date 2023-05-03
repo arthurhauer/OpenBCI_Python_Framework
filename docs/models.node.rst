@@ -9,6 +9,7 @@ Subpackages
 
    models.node.generator
    models.node.output
+   models.node.processing
 
 Submodules
 ----------
