@@ -46,9 +46,18 @@ class CSVFile(OutputNode):
             self.print('Creating csv file')
             self._csv_file = open(self.file_path, "w", newline='')
             self._csv_writer = csv.writer(self._csv_file)
-            self.print('Writing columns')
-            channels = data.channels
-            self._csv_writer.writerow(channels)
+            self._channels = None
+
+    def _write_csv_columns(self, channels: List[str]) -> None:
+        if self._channels is not None:
+            return
+
+        if len(channels) == 0:
+            return
+
+        self._channels = channels
+        self.print('Writing columns')
+        self._csv_writer.writerow(self._channels)
 
     def _write_data(self, data: FrameworkData) -> None:
         self.print(f'Writing data to file')
@@ -58,6 +67,7 @@ class CSVFile(OutputNode):
 
     def _run(self, data: FrameworkData, input_name: str) -> None:
         self._init_csv_writer(data)
+        self._write_csv_columns(data.channels)
         self._write_data(data)
         self._csv_file.flush()
 

@@ -20,7 +20,7 @@ class FrameworkData:
 
     :raises NonCompatibleData: Raised when the data that is being input is not compatible with the data that is already stored in the ``FrameworkData`` object.
     """
-  
+
     _MODULE_NAME: Final[str] = 'models.framework_data'
     _DEFAULT_CHANNEL_NAME: Final[str] = 'main'
 
@@ -90,7 +90,6 @@ class FrameworkData:
         :return: None
         """
 
-
         self._data = {}
         for channel in self.channels:
             self._data[channel] = []
@@ -146,7 +145,7 @@ class FrameworkData:
             return
         if not data.has_data():
             return
-        
+
         if len(self.channels) == 0:
             self.channels = data.channels
             self.sampling_frequency = data.sampling_frequency
@@ -163,9 +162,6 @@ class FrameworkData:
             except KeyError:
                 raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data')
 
-    # def input_dict_data(self,data:dict):
-    #
-
     def input_2d_data(self, data: List[list]):
         """This method is used to input 2D data into the ``FrameworkData`` object. A 2D data is a
         list of lists. Each list in the list of lists is a channel of data. The data is
@@ -181,10 +177,16 @@ class FrameworkData:
         :return: None
         """
 
+        if len(data) == 0:
+            return
+
+        if len(data[0]) == 0:
+            return
+
         self_data_len = len(self._data)
         input_data_len = len(data)
         if self_data_len == 0:
-            raise NonCompatibleData(module=self._MODULE_NAME,)
+            raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data')
         if self_data_len != input_data_len:
             raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data')
 
@@ -202,6 +204,9 @@ class FrameworkData:
 
         :return: None
         """
+
+        if len(data) == 0:
+            return
 
         if channel is None:
             if len(self.channels) < 1:
@@ -229,7 +234,8 @@ class FrameworkData:
         """
 
         if not self.is_1d():
-            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name, cause='operation_allowed_on_single_channel_only')
+            raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data',
+                                    cause='operation_allowed_on_single_channel_only')
         return self.get_data_on_channel(self.channels[0])
 
     def get_data_on_channel(self, channel: str) -> list:

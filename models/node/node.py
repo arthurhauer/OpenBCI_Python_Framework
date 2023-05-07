@@ -1,5 +1,6 @@
 from __future__ import annotations
 import abc
+import copy
 from typing import List, Dict, Final, Any
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
@@ -100,7 +101,7 @@ class Node:
 
     @staticmethod
     def _insert_data_in_buffer(data: FrameworkData, buffer_data_name: str, buffer: Dict[str, FrameworkData]):
-        buffer[buffer_data_name].extend(data)
+        buffer[buffer_data_name].extend(copy.deepcopy(data))
 
     def _insert_new_input_data(self, data: FrameworkData, input_name: str):
         """Appends new data to the end of already existing input buffer
@@ -110,7 +111,7 @@ class Node:
         :param input_name: Node input name.
         :type input_name: str
         """
-        self._input_buffer[input_name].extend(data)
+        self._input_buffer[input_name].extend(copy.deepcopy(data))
 
     def _insert_new_output_data(self, data: FrameworkData, output_name: str):
         """
@@ -121,7 +122,7 @@ class Node:
         :param output_name: Node output name.
         :type output_name: str
         """
-        self._output_buffer[output_name].extend(data)
+        self._output_buffer[output_name].extend(copy.deepcopy(data))
 
     def _initialize_children(self):
         """Sets child nodes dictionary to a new, empty dict
