@@ -11,6 +11,7 @@ from models.framework_data import FrameworkData
 class Node:
     _MODULE_NAME: Final[str] = 'models.node'
     """Abstract base class for processing pipeline execution on this framework.
+        A node is a component that receives data from its inputs, process it and send it to its outputs.
     """
 
     def __init__(self, parameters=None) -> None:
@@ -34,6 +35,13 @@ class Node:
 
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):
+        """
+        Validates parameters passed to this node.
+
+        :param parameters: Parameters passed to this node.
+        :type parameters: dict
+        :raises MissingParameterError: If a required parameter is missing.
+        """
         if 'module' not in parameters:
             raise MissingParameterError(
                 module=self._MODULE_NAME,name=self.name,
@@ -68,6 +76,12 @@ class Node:
 
     @abc.abstractmethod
     def _initialize_parameter_fields(self, parameters: dict):
+        """
+        Initializes parameter fields of this node. This is a abstract method and should be implemented by subclasses.
+
+        :param parameters: Parameters passed to this node.
+        :type parameters: dict
+        """
         return
 
     def _clear_input_buffer(self):
@@ -99,7 +113,8 @@ class Node:
         self._input_buffer[input_name].extend(data)
 
     def _insert_new_output_data(self, data: FrameworkData, output_name: str):
-        """Appends new data to the end of already existing output buffer
+        """
+        Appends new data to the end of already existing output buffer
 
         :param data: Data to be added. Should be in channel X sample format
         :type data: FrameworkData
