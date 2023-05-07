@@ -1,6 +1,5 @@
 import csv
 import os
-import time
 from typing import List, Final
 
 from models.exception.invalid_parameter_value import InvalidParameterValue

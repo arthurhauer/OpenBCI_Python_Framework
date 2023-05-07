@@ -54,21 +54,26 @@ class FrameworkData:
         return self._channels_set
 
     def extend(self, data: FrameworkData):
+        if len(data.channels) == 0:
+            return
+        if not data.has_data():
+            return
+
         if len(self.channels) == 0:
             self.channels = data.channels
             self.sampling_frequency = data.sampling_frequency
             self._init_data_dictionary()
 
         elif self.sampling_frequency != data.sampling_frequency:
-            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
+            raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data')
         elif self.get_channels_as_set() != data.get_channels_as_set():
-            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
+            raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data')
 
         for channel in self.channels:
             try:
                 self._data[channel].extend(data.get_data_on_channel(channel))
             except KeyError:
-                raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
+                raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data')
 
     # def input_dict_data(self,data:dict):
     #
@@ -77,9 +82,9 @@ class FrameworkData:
         self_data_len = len(self._data)
         input_data_len = len(data)
         if self_data_len == 0:
-            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
+            raise NonCompatibleData(module=self._MODULE_NAME,)
         if self_data_len != input_data_len:
-            raise NonCompatibleData(module=self._MODULE_NAME,name=self.name)
+            raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data')
 
         for index, channel in enumerate(self._data):
             self.input_data_on_channel(data[index], channel)
