@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../models.utils.html">models.utils package</a></li>
@@ -222,9 +233,53 @@
 
 
 <div class="viewcode-block" id="Duration"><a class="viewcode-back" href="../../../models.utils.html#models.utils.duration.Duration">[docs]</a><span class="k">class</span> <span class="nc">Duration</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class generates a random number based on the parameters that you define. The data generated is random, but</span>
+<span class="sd">    it is restricted to the statistical parameters that you define. For example, if you define a mean of 5 seconds and a</span>
+<span class="sd">    standard deviation of 1 second, the data generated will be random, but it will be restricted to the range of 4 to 6</span>
+<span class="sd">    seconds.</span>
+
+<span class="sd">    :param mean: Mean value for the trial duration.</span>
+<span class="sd">    :type mean: float</span>
+<span class="sd">    :param standard_deviation: Standard deviation value for the trial duration.</span>
+<span class="sd">    :type standard_deviation: float</span>
+<span class="sd">    :param maximum: Maximum value for the trial duration.</span>
+<span class="sd">    :type maximum: float</span>
+<span class="sd">    :param minimum: Minimum value for the trial duration.</span>
+<span class="sd">    :type minimum: float</span>
+
+<span class="sd">    ``configuration.json`` usage:</span>
+
+<span class="sd">        **mean** (*float*): Mean value for the trial duration.\n</span>
+<span class="sd">        **standard_deviation** (*float*): Standard deviation value for the trial duration.\n</span>
+<span class="sd">        **maximum** (*float*): Maximum value for the trial duration.\n</span>
+<span class="sd">        **minimum** (*float*): Minimum value for the trial duration.\n</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;utils.duration&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">standard_deviation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">maximum</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">minimum</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor method. Initializes and validates the parameters of the class.</span>
+<span class="sd">        The self._distribution variable is used to generate the random numbers. It uses the scypy.stats.truncnorm</span>
+<span class="sd">        function to generate the random numbers in a truncated normal distribution. The truncated normal distribution</span>
+<span class="sd">        is used because it restricts the random numbers to the range that you define.</span>
+
+<span class="sd">        :param mean: Mean value for the trial duration.</span>
+<span class="sd">        :type mean: float</span>
+<span class="sd">        :param standard_deviation: Standard deviation value for the trial duration.</span>
+<span class="sd">        :type standard_deviation: float</span>
+<span class="sd">        :param maximum: Maximum value for the trial duration.</span>
+<span class="sd">        :type maximum: float</span>
+<span class="sd">        :param minimum: Minimum value for the trial duration.</span>
+<span class="sd">        :type minimum: float</span>
+
+<span class="sd">        :raises MissingParameterError: The ``mean``, ``standard_deviation``, ``maximum`` and ``minimum`` parameters are required.</span>
+<span class="sd">        :raises InvalidParameterValue: The ``mean``, ``standard_deviation``, ``maximum`` and ``minimum`` parameters must be greater than 0.</span>
+<span class="sd">        :raises InvalidParameterValue: The ``maximum`` parameter must be greater than the ``mean`` parameter.</span>
+<span class="sd">        :raises InvalidParameterValue: The ``minimum`` parameter must be less than the ``mean`` parameter.</span>
+
+<span class="sd">        :return: A new instance of ``Duration``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">mean</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -272,6 +327,15 @@
 
 <div class="viewcode-block" id="Duration.from_config_json"><a class="viewcode-back" href="../../../models.utils.html#models.utils.duration.Duration.from_config_json">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_config_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a new instance of this class and initializes it with the parameters that were passed to it.</span>
+<span class="sd">        </span>
+<span class="sd">        :param parameters: The parameters that will be passed to the node. This comes from the configuration file.</span>
+<span class="sd">        :type parameters: dict</span>
+
+<span class="sd">        :raises MissingParameterError: The ``mean``, ``standard_deviation``, ``maximum`` and ``minimum`` parameters are required.</span>
+
+<span class="sd">        :return: A new instance of this class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s1">&#39;mean&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span>
                                         <span class="n">parameter</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
@@ -292,6 +356,8 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Duration.get_duration"><a class="viewcode-back" href="../../../models.utils.html#models.utils.duration.Duration.get_duration">[docs]</a>    <span class="k">def</span> <span class="nf">get_duration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a random number based on the parameters that you defined when you created the instance of this class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_distribution</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div></div>
 </pre></div>
         </article>

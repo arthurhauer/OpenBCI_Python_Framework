@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../models.utils.html">models.utils package</a></li>
@@ -221,9 +232,28 @@
 
 
 <div class="viewcode-block" id="Cue"><a class="viewcode-back" href="../../../models.utils.html#models.utils.cue.Cue">[docs]</a><span class="k">class</span> <span class="nc">Cue</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class executes a specific cue (a script/function) defined by the user in a different python file (e.g. Print a value, Save a</span>
+<span class="sd">    velue in a file, etc.). The cue can be anything that the user wants to execute when the trial starts or ends.</span>
+
+<span class="sd">    :param function: The function that will be executed when the cue is called.</span>
+<span class="sd">    :type function: Any</span>
+<span class="sd">    :param parameters: The parameters that will be passed to the cue function when it is executed.</span>
+<span class="sd">    :type parameters: dict</span>
+
+<span class="sd">    :raises MissingParameterError: The ``function`` parameter is required.</span>
+
+<span class="sd">    ``config.json`` example:</span>
+<span class="sd">    </span>
+<span class="sd">        **file** (*str*): Cue file path.\n</span>
+<span class="sd">        **parameters** (*dict*): The parameters that will be passed to the cue function defined in **file** when it is executed. This can </span>
+<span class="sd">        be anything that the user needs to pass to the cue function.\n</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;utils.cue&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor method. Initializes and validates the parameters of the class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -235,6 +265,8 @@
 
 <div class="viewcode-block" id="Cue.from_config_json"><a class="viewcode-back" href="../../../models.utils.html#models.utils.cue.Cue.from_config_json">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_config_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a new instance of this class and initializes it with the parameters that were passed to it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s1">&#39;file&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span>
                                         <span class="n">parameter</span><span class="o">=</span><span class="s1">&#39;file&#39;</span><span class="p">)</span>
@@ -253,6 +285,8 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Cue.execute"><a class="viewcode-back" href="../../../models.utils.html#models.utils.cue.Cue.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the cue function with the parameters that were passed to it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_function_parameters</span><span class="p">)</span></div></div>
 </pre></div>
         </article>

@@ -266,6 +266,16 @@
 <dt class="sig sig-object py" id="models.node.generator.generator_node.GeneratorNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.generator.generator_node.</span></span><span class="sig-name descname"><span class="pre">GeneratorNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/generator_node.html#GeneratorNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.generator_node.GeneratorNode" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.html#models.node.node.Node" title="models.node.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
+<p>This node is the basic implementation of the nodes that generates data. It contains the basic methods that are
+common to all the generator nodes, so that it can be inherited by the other generator nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em>) – The parameters that were passed to the node. This comes from the configuration file.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="models.exception.html#models.exception.missing_parameter.MissingParameterError" title="models.exception.missing_parameter.MissingParameterError"><strong>MissingParameterError</strong></a> – The <code class="docutils literal notranslate"><span class="pre">buffer_options</span></code> dictionary is required.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -275,6 +285,40 @@
 <dt class="sig sig-object py" id="models.node.generator.motorimagery.MotorImagery">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.generator.motorimagery.</span></span><span class="sig-name descname"><span class="pre">MotorImagery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/motorimagery.html#MotorImagery"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.motorimagery.MotorImagery" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.node.generator.generator_node.GeneratorNode" title="models.node.generator.generator_node.GeneratorNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeneratorNode</span></code></a></p>
+<p>This node generates data for motor imagery. It generates data for a specific number of trials, and then it stops
+generating data. The trials are defined by the user in the configuration file. The node generates data for each
+trial in the order that they are defined in the configuration file. When the node finishes generating data for all
+the trials, it can either stop generating data or it can shuffle the trials and start generating data again.</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>configuration.json``usage:</p>
+<blockquote>
+<div><p><strong>module</strong> (<em>str</em>): Current module name (in this case <code class="docutils literal notranslate"><span class="pre">models.node.generator</span></code>).</p>
+<p><strong>type</strong> (<em>str</em>): Current node type (in this case <code class="docutils literal notranslate"><span class="pre">MotorImagery</span></code>).</p>
+<p><strong>trials</strong> (<em>List[Trial]</em>): List of trials. A trial represents a specific event that you want to generate data for
+(e.g. Hand Grasp, Feet Movement, etc.). Each trial is defined by a dictionary containing the following parameters:</p>
+<blockquote>
+<div><p><strong>name</strong> (<em>str</em>): Trial name.</p>
+<p><strong>code</strong> (<em>int</em>): Trial code. Just a number that identifies the trial.</p>
+<p><strong>duration</strong> (<em>Duration</em>): Trial duration. This class generates a random numbers based on the parameters
+that you define. It is defined by a dictionary containing the following parameters:</p>
+<blockquote>
+<div><p><strong>mean</strong> (<em>float</em>): Mean value for the trial duration.</p>
+<p><strong>standard_deviation</strong> (<em>float</em>): Standard deviation value for the trial duration.</p>
+<p><strong>maximum</strong> (<em>float</em>): Maximum value for the trial duration.</p>
+<p><strong>minimum</strong> (<em>float</em>): Minimum value for the trial duration.</p>
+</div></blockquote>
+<p><strong>cue</strong> (<em>Cue</em>): Trial cue. This class executes a specific cue defined by the user in a different python file
+(e.g. Print a value, Save a velue in a file, etc.). It is defined by a dictionary containing the following parameters:</p>
+<blockquote>
+<div><p><strong>file</strong> (<em>str</em>): Cue file path.</p>
+<p><strong>parameters</strong> (<em>dict</em>): The parameters that will be passed to the cue function defined in <strong>file</strong> when it is executed.</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_output_buffer_on_generate</strong> (<em>bool</em>): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the output buffer will be cleared when the node is executed.</p>
+</div></blockquote>
+<p><strong>shuffle_when_sequence_is_finished</strong> (<em>bool</em>): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the node will shuffle the trials when it finishes generating data for all the trials.</p>
+</div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.generator.motorimagery.MotorImagery.OUTPUT_MARKER">
 <span class="sig-name descname"><span class="pre">OUTPUT_MARKER</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'marker'</span></em><a class="headerlink" href="#models.node.generator.motorimagery.MotorImagery.OUTPUT_MARKER" title="Permalink to this definition">#</a></dt>
@@ -294,10 +338,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.generator.motorimagery.MotorImagery.from_config_json">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_config_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/motorimagery.html#MotorImagery.from_config_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.motorimagery.MotorImagery.from_config_json" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns node instance from given parameters in dict form</p>
+<dd><p>Creates a new instance of this class and initializes it with the parameters that were passed to it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em>) – Node parameters in dict form.</p>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em>) – The parameters that will be passed to the node. This comes from the configuration file.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="models.exception.html#models.exception.missing_parameter.MissingParameterError" title="models.exception.missing_parameter.MissingParameterError"><strong>MissingParameterError</strong></a> – The <code class="docutils literal notranslate"><span class="pre">Trial</span></code> list is required.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A new instance of this class.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -305,12 +355,14 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.generator.motorimagery.MotorImagery.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/motorimagery.html#MotorImagery.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.motorimagery.MotorImagery.start" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Starts the <code class="docutils literal notranslate"><span class="pre">Trial</span></code> execution using a thread.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.generator.motorimagery.MotorImagery.stop">
 <span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/motorimagery.html#MotorImagery.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.motorimagery.MotorImagery.stop" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stops the <code class="docutils literal notranslate"><span class="pre">Trial</span></code> execution.</p>
+</dd></dl>
 
 </dd></dl>
 

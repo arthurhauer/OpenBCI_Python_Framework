@@ -236,15 +236,36 @@
 <dt class="sig sig-object py" id="models.utils.cue.Cue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.utils.cue.</span></span><span class="sig-name descname"><span class="pre">Cue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/utils/cue.html#Cue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.cue.Cue" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class executes a specific cue (a script/function) defined by the user in a different python file (e.g. Print a value, Save a
+velue in a file, etc.). The cue can be anything that the user wants to execute when the trial starts or ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function</strong> (<em>Any</em>) – The function that will be executed when the cue is called.</p></li>
+<li><p><strong>parameters</strong> (<em>dict</em>) – The parameters that will be passed to the cue function when it is executed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="models.exception.html#models.exception.missing_parameter.MissingParameterError" title="models.exception.missing_parameter.MissingParameterError"><strong>MissingParameterError</strong></a> – The <code class="docutils literal notranslate"><span class="pre">function</span></code> parameter is required.</p>
+</dd>
+</dl>
+<p><code class="docutils literal notranslate"><span class="pre">config.json</span></code> example:</p>
+<blockquote>
+<div><p><strong>file</strong> (<em>str</em>): Cue file path.</p>
+<p><strong>parameters</strong> (<em>dict</em>): The parameters that will be passed to the cue function defined in <strong>file</strong> when it is executed. This can 
+be anything that the user needs to pass to the cue function.</p>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="models.utils.cue.Cue.execute">
 <span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/utils/cue.html#Cue.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.cue.Cue.execute" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Executes the cue function with the parameters that were passed to it.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="models.utils.cue.Cue.from_config_json">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_config_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/utils/cue.html#Cue.from_config_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.cue.Cue.from_config_json" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Creates a new instance of this class and initializes it with the parameters that were passed to it.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -255,15 +276,49 @@
 <dt class="sig sig-object py" id="models.utils.duration.Duration">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.utils.duration.</span></span><span class="sig-name descname"><span class="pre">Duration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">standard_deviation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/utils/duration.html#Duration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.duration.Duration" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class generates a random number based on the parameters that you define. The data generated is random, but
+it is restricted to the statistical parameters that you define. For example, if you define a mean of 5 seconds and a
+standard deviation of 1 second, the data generated will be random, but it will be restricted to the range of 4 to 6
+seconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean</strong> (<em>float</em>) – Mean value for the trial duration.</p></li>
+<li><p><strong>standard_deviation</strong> (<em>float</em>) – Standard deviation value for the trial duration.</p></li>
+<li><p><strong>maximum</strong> (<em>float</em>) – Maximum value for the trial duration.</p></li>
+<li><p><strong>minimum</strong> (<em>float</em>) – Minimum value for the trial duration.</p></li>
+</ul>
+</dd>
+</dl>
+<p><code class="docutils literal notranslate"><span class="pre">configuration.json</span></code> usage:</p>
+<blockquote>
+<div><p><strong>mean</strong> (<em>float</em>): Mean value for the trial duration.</p>
+<p><strong>standard_deviation</strong> (<em>float</em>): Standard deviation value for the trial duration.</p>
+<p><strong>maximum</strong> (<em>float</em>): Maximum value for the trial duration.</p>
+<p><strong>minimum</strong> (<em>float</em>): Minimum value for the trial duration.</p>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="models.utils.duration.Duration.from_config_json">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_config_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/utils/duration.html#Duration.from_config_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.duration.Duration.from_config_json" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Creates a new instance of this class and initializes it with the parameters that were passed to it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em>) – The parameters that will be passed to the node. This comes from the configuration file.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="models.exception.html#models.exception.missing_parameter.MissingParameterError" title="models.exception.missing_parameter.MissingParameterError"><strong>MissingParameterError</strong></a> – The <code class="docutils literal notranslate"><span class="pre">mean</span></code>, <code class="docutils literal notranslate"><span class="pre">standard_deviation</span></code>, <code class="docutils literal notranslate"><span class="pre">maximum</span></code> and <code class="docutils literal notranslate"><span class="pre">minimum</span></code> parameters are required.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A new instance of this class.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="models.utils.duration.Duration.get_duration">
 <span class="sig-name descname"><span class="pre">get_duration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/models/utils/duration.html#Duration.get_duration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.duration.Duration.get_duration" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a random number based on the parameters that you defined when you created the instance of this class.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -273,7 +328,19 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="models.utils.script_execution.script_execute">
 <span class="sig-prename descclassname"><span class="pre">models.utils.script_execution.</span></span><span class="sig-name descname"><span class="pre">script_execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/models/utils/script_execution.html#script_execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.script_execution.script_execute" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>This function executes a custom python script and returns the locals dict that was generated by the script.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>script_path</strong> (<em>str</em>) – The path to the custom python script.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – The script file doesn’t exist.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The locals dict that was generated by the script.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-models.utils.trial">
@@ -282,10 +349,45 @@
 <dt class="sig sig-object py" id="models.utils.trial.Trial">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.utils.trial.</span></span><span class="sig-name descname"><span class="pre">Trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#models.utils.duration.Duration" title="models.utils.duration.Duration"><span class="pre">Duration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#models.utils.cue.Cue" title="models.utils.cue.Cue"><span class="pre">Cue</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/utils/trial.html#Trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.trial.Trial" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class represents a trial. A trial is a specific event that you want to generate data for (e.g. Hand Grasp,
+Feet Movement, etc.).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The trial name defined by the user in the configuration file.</p></li>
+<li><p><strong>code</strong> (<em>int</em>) – The code defined by the user in the configuration file.</p></li>
+<li><p><strong>duration</strong> (<a class="reference internal" href="#models.utils.duration.Duration" title="models.utils.duration.Duration"><em>Duration</em></a>) – The trial duration defined by the user in the configuration file.</p></li>
+<li><p><strong>cue</strong> (<a class="reference internal" href="#models.utils.cue.Cue" title="models.utils.cue.Cue"><em>Cue</em></a>) – The trial cue defined by the user in the configuration file.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The data generated is random, but it is restricted to the statistical parameters that you
+define. For example, if you define a mean of 5 seconds and a standard deviation of 1 second, the data generated
+will be random, but it will be restricted to the range of 4 to 6 seconds.</p>
+<p><code class="docutils literal notranslate"><span class="pre">configuration.json</span></code> usage:</p>
+<blockquote>
+<div><p><strong>name</strong> (<em>str</em>): Trial name.</p>
+<p><strong>code</strong> (<em>int</em>): Trial code. Just a number that identifies the trial.</p>
+<p><strong>duration</strong> (<em>Duration</em>): Trial duration. This class generates a random numbers based on the parameters
+that you define. It is defined by a dictionary containing the following parameters:</p>
+<blockquote>
+<div><p><strong>mean</strong> (<em>float</em>): Mean value for the trial duration.</p>
+<p><strong>standard_deviation</strong> (<em>float</em>): Standard deviation value for the trial duration.</p>
+<p><strong>maximum</strong> (<em>float</em>): Maximum value for the trial duration.</p>
+<p><strong>minimum</strong> (<em>float</em>): Minimum value for the trial duration.</p>
+</div></blockquote>
+<p><strong>cue</strong> (<em>Cue</em>): Trial cue. This class executes a specific cue defined by the user in a different python file
+(e.g. Print a value, Save a velue in a file, etc.). It is defined by a dictionary containing the following parameters:</p>
+<blockquote>
+<div><p><strong>file</strong> (<em>str</em>): Cue file path.</p>
+<p><strong>parameters</strong> (<em>dict</em>): The parameters that will be passed to the cue function defined in <strong>file</strong> when it is executed.</p>
+</div></blockquote>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="models.utils.trial.Trial.from_config_json">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_config_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/utils/trial.html#Trial.from_config_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.trial.Trial.from_config_json" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Creates a new instance of this class and initializes it with the parameters that were passed to it.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="models.utils.trial.Trial.on_stop">
@@ -295,7 +397,9 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="models.utils.trial.Trial.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/utils/trial.html#Trial.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.utils.trial.Trial.start" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Starts the trial execution by executing the cue and starting a timer that will call the <code class="docutils literal notranslate"><span class="pre">on_stop</span></code> method
+when the trial duration is reached using the <code class="docutils literal notranslate"><span class="pre">duration</span></code> parameter.</p>
+</dd></dl>
 
 </dd></dl>
 

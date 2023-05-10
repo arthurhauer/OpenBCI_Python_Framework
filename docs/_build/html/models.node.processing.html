@@ -405,6 +405,41 @@
 <dt class="sig sig-object py" id="models.node.processing.processing_node.ProcessingNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.processing_node.</span></span><span class="sig-name descname"><span class="pre">ProcessingNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/processing_node.html#ProcessingNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.processing_node.ProcessingNode" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.html#models.node.node.Node" title="models.node.node.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
+<p>A ProcessingNode is a type of Node that processes data from its input buffer to produce output data, based on its implemented
+processing logic. It extends the Node abstract class.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (Final[str]): a constant string representing the name of the module where this class is defined.</p>
+</dd>
+<dt>Methods:</dt><dd><dl class="simple">
+<dt>__init__(self, parameters=None):</dt><dd><p>Initializes a ProcessingNode instance with the specified parameters.</p>
+</dd>
+<dt>_validate_parameters(self, parameters: dict):</dt><dd><p>Validates the specified parameters for the ProcessingNode instance, raising MissingParameterError if any required
+parameters are missing.</p>
+</dd>
+<dt>_initialize_parameter_fields(self, parameters: dict):</dt><dd><p>Initializes any custom parameter fields for the ProcessingNode instance.</p>
+</dd>
+<dt>_initialize_buffer_options(self, buffer_options: dict) -&gt; None:</dt><dd><p>Initializes buffer behavior options for the ProcessingNode instance.</p>
+</dd>
+<dt>_run(self, data: FrameworkData, input_name: str) -&gt; None:</dt><dd><p>Runs the ProcessingNode instance by inserting new input data, processing the input buffer, and outputting the processed
+data.</p>
+</dd>
+<dt>_process_input_buffer(self):</dt><dd><p>Processes the input buffer to produce output data.</p>
+</dd>
+<dt>_is_next_node_call_enabled(self) -&gt; bool:</dt><dd><p>Returns True if the ProcessingNode instance allows the next node to be called, False otherwise.</p>
+</dd>
+<dt>_is_processing_condition_satisfied(self) -&gt; bool:</dt><dd><p>Returns True if the processing condition for the ProcessingNode instance is satisfied, False otherwise.</p>
+</dd>
+<dt>_process(self, data: Dict[str, FrameworkData]) -&gt; Dict[str, FrameworkData]:</dt><dd><p>Processes the specified data to produce output data.</p>
+</dd>
+<dt>_get_inputs(self) -&gt; List[str]:</dt><dd><p>Returns a list of input names for the ProcessingNode instance.</p>
+</dd>
+<dt>_get_outputs(self) -&gt; List[str]:</dt><dd><p>Returns a list of output names for the ProcessingNode instance.</p>
+</dd>
+<dt>dispose(self) -&gt; None:</dt><dd><p>Disposes of the ProcessingNode instance.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.processing.processing_node.ProcessingNode.dispose">
 <span class="sig-name descname"><span class="pre">dispose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/models/node/processing/processing_node.html#ProcessingNode.dispose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.processing_node.ProcessingNode.dispose" title="Permalink to this definition">#</a></dt>
