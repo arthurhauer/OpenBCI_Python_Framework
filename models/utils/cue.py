@@ -6,9 +6,28 @@ from models.utils.script_execution import script_execute
 
 
 class Cue:
+    """This class executes a specific cue (a script/function) defined by the user in a different python file (e.g. Print a value, Save a
+    velue in a file, etc.). The cue can be anything that the user wants to execute when the trial starts or ends.
+
+    :param function: The function that will be executed when the cue is called.
+    :type function: Any
+    :param parameters: The parameters that will be passed to the cue function when it is executed.
+    :type parameters: dict
+
+    :raises MissingParameterError: The ``function`` parameter is required.
+
+    ``config.json`` example:
+    
+        **file** (*str*): Cue file path.\n
+        **parameters** (*dict*): The parameters that will be passed to the cue function defined in **file** when it is executed. This can 
+        be anything that the user needs to pass to the cue function.\n
+
+    """
     _MODULE_NAME: Final[str] = 'utils.cue'
 
     def __init__(self, function: Any, parameters: dict) -> None:
+        """Constructor method. Initializes and validates the parameters of the class.
+        """
         super().__init__()
         if function is None:
             raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
@@ -20,6 +39,8 @@ class Cue:
 
     @classmethod
     def from_config_json(cls, parameters: dict):
+        """Creates a new instance of this class and initializes it with the parameters that were passed to it.
+        """
         if 'file' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
                                         parameter='file')
@@ -38,4 +59,6 @@ class Cue:
         )
 
     def execute(self):
+        """Executes the cue function with the parameters that were passed to it.
+        """
         self._function(self._function_parameters)
