@@ -48,6 +48,9 @@ class MotorImagery(GeneratorNode):
 
         :param parameters: The parameters that were passed to the node. this comes from the configuration file.
         :type parameters: dict
+
+        :raises MissingParameterError: The ``Trial`` list is required.
+        :raises MissingParameterError: The ``shuffle_when_sequence_is_finished`` parameter is required.
         """
         super()._validate_parameters(parameters)
         if 'trials' not in parameters:
