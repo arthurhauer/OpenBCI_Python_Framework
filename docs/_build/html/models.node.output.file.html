@@ -236,6 +236,24 @@
 <dt class="sig sig-object py" id="models.node.output.file.csvfile.CSVFile">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.output.file.csvfile.</span></span><span class="sig-name descname"><span class="pre">CSVFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/output/file/csvfile.html#CSVFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.output.file.csvfile.CSVFile" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.output.html#models.node.output.output_node.OutputNode" title="models.node.output.output_node.OutputNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutputNode</span></code></a></p>
+<p>This node is capable of creating/writing the output data to a CSV file.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (str): The name of this module (in this case, ‘node.output.file.csvfile’).
+INPUT_MAIN (str): The name of the main input (in this case, ‘main’).</p>
+</dd>
+</dl>
+<p><code class="docutils literal notranslate"><span class="pre">configuration.json</span></code> usage example:</p>
+<blockquote>
+<div><p><strong>module</strong>: Current module name (in this case <code class="docutils literal notranslate"><span class="pre">models.node.output.file</span></code>).</p>
+<p><strong>name</strong>: Current node instance name (in this case, <code class="docutils literal notranslate"><span class="pre">CSVFile</span></code>).</p>
+<p><strong>file_path</strong> (str): The path to the CSV file that will be created/written to.</p>
+<p><strong>buffer_options</strong> (dict): The buffer options.</p>
+<blockquote>
+<div><p><strong>clear_output_buffer_on_data_input</strong> (bool): Whether to clear the output buffer when data is inputted.</p>
+<p><strong>clear_input_buffer_after_process</strong> (bool): Whether to clear the input buffer after the process method is called.</p>
+<p><strong>clear_output_buffer_after_process</strong> (bool): Whether to clear the output buffer after the process method is called.</p>
+</div></blockquote>
+</div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.output.file.csvfile.CSVFile.INPUT_MAIN">
 <span class="sig-name descname"><span class="pre">INPUT_MAIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'main'</span></em><a class="headerlink" href="#models.node.output.file.csvfile.CSVFile.INPUT_MAIN" title="Permalink to this definition">#</a></dt>

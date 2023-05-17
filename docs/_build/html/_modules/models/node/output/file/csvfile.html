@@ -235,11 +235,37 @@
 
 
 <div class="viewcode-block" id="CSVFile"><a class="viewcode-back" href="../../../../../models.node.output.file.html#models.node.output.file.csvfile.CSVFile">[docs]</a><span class="k">class</span> <span class="nc">CSVFile</span><span class="p">(</span><span class="n">OutputNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This node is capable of creating/writing the output data to a CSV file. </span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _MODULE_NAME (str): The name of this module (in this case, &#39;node.output.file.csvfile&#39;).</span>
+<span class="sd">        INPUT_MAIN (str): The name of the main input (in this case, &#39;main&#39;).</span>
+<span class="sd">    </span>
+<span class="sd">    ``configuration.json`` usage example:</span>
+
+<span class="sd">        **module**: Current module name (in this case ``models.node.output.file``).\n</span>
+<span class="sd">        **name**: Current node instance name (in this case, ``CSVFile``).\n</span>
+<span class="sd">        **file_path** (str): The path to the CSV file that will be created/written to.\n</span>
+<span class="sd">        **buffer_options** (dict): The buffer options.\n</span>
+<span class="sd">            **clear_output_buffer_on_data_input** (bool): Whether to clear the output buffer when data is inputted.\n</span>
+<span class="sd">            **clear_input_buffer_after_process** (bool): Whether to clear the input buffer after the process method is called.\n</span>
+<span class="sd">            **clear_output_buffer_after_process** (bool): Whether to clear the output buffer after the process method is called.\n</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;node.output.file.csvfile&#39;</span>
 
     <span class="n">INPUT_MAIN</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span>
 
     <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validates the parameters that were passed to the node.</span>
+
+<span class="sd">        :param parameters: The parameters that were passed to the node.</span>
+<span class="sd">        :type parameters: dict</span>
+
+<span class="sd">        :raises MissingParameterError: The ``file_path`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: The ``file_path`` parameter must be a string.</span>
+<span class="sd">        :raises InvalidParameterValue: The ``file_path`` parameter must be a CSV file.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s1">&#39;file_path&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                         <span class="n">parameter</span><span class="o">=</span><span class="s1">&#39;file_path&#39;</span><span class="p">)</span>
@@ -253,6 +279,11 @@
                                         <span class="n">cause</span><span class="o">=</span><span class="s1">&#39;must_be_csv_file&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_initialize_parameter_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initializes the parameters that were passed to the node.</span>
+
+<span class="sd">        :param parameters: The parameters that were passed to the node.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_parameter_fields</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">file_path</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;file_path&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="p">):</span>
@@ -261,11 +292,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_csv_file</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the input names of this node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">INPUT_MAIN</span>
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_init_csv_writer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initializes the CSV writer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_csv_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
@@ -275,6 +310,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_write_csv_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Writes the CSV columns labels.</span>
+
+<span class="sd">        :param channels: The channels to write.</span>
+<span class="sd">        :type channels: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -286,18 +326,27 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_csv_writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Writes the data to the CSV file.</span>
+
+<span class="sd">        :param data: The data to write.</span>
+<span class="sd">        :type data: FrameworkData</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Writing data to file&#39;</span><span class="p">)</span>
         <span class="n">formatted_data</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_csv_writer</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">formatted_data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Done&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">,</span> <span class="n">input_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Runs the node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_csv_writer</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_csv_columns</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">channels</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_csv_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
 <div class="viewcode-block" id="CSVFile.dispose"><a class="viewcode-back" href="../../../../../models.node.output.file.html#models.node.output.file.csvfile.CSVFile.dispose">[docs]</a>    <span class="k">def</span> <span class="nf">dispose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Node self implementation of disposal of allocated resources.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_output_buffer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_input_buffer</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_csv_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_csv_file</span><span class="o">.</span><span class="n">closed</span><span class="p">:</span>

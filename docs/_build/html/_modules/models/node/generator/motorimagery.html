@@ -241,7 +241,7 @@
 <span class="sd">    trial in the order that they are defined in the configuration file. When the node finishes generating data for all</span>
 <span class="sd">    the trials, it can either stop generating data or it can shuffle the trials and start generating data again.</span>
 
-<span class="sd">    ``configuration.json``usage:</span>
+<span class="sd">    ``configuration.json`` usage:</span>
 
 <span class="sd">        **module** (*str*): Current module name (in this case ``models.node.generator``).\n</span>
 <span class="sd">        **type** (*str*): Current node type (in this case ``MotorImagery``).\n</span>
@@ -274,6 +274,9 @@
 
 <span class="sd">        :param parameters: The parameters that were passed to the node. this comes from the configuration file.</span>
 <span class="sd">        :type parameters: dict</span>
+
+<span class="sd">        :raises MissingParameterError: The ``Trial`` list is required.</span>
+<span class="sd">        :raises MissingParameterError: The ``shuffle_when_sequence_is_finished`` parameter is required.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;trials&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>

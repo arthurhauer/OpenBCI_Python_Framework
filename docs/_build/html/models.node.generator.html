@@ -289,7 +289,7 @@ common to all the generator nodes, so that it can be inherited by the other gene
 generating data. The trials are defined by the user in the configuration file. The node generates data for each
 trial in the order that they are defined in the configuration file. When the node finishes generating data for all
 the trials, it can either stop generating data or it can shuffle the trials and start generating data again.</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a>configuration.json``usage:</p>
+<p><code class="docutils literal notranslate"><span class="pre">configuration.json</span></code> usage:</p>
 <blockquote>
 <div><p><strong>module</strong> (<em>str</em>): Current module name (in this case <code class="docutils literal notranslate"><span class="pre">models.node.generator</span></code>).</p>
 <p><strong>type</strong> (<em>str</em>): Current node type (in this case <code class="docutils literal notranslate"><span class="pre">MotorImagery</span></code>).</p>
@@ -373,6 +373,49 @@ that you define. It is defined by a dictionary containing the following paramete
 <dt class="sig sig-object py" id="models.node.generator.openbciboard.OpenBCIBoard">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.generator.openbciboard.</span></span><span class="sig-name descname"><span class="pre">OpenBCIBoard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/openbciboard.html#OpenBCIBoard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.openbciboard.OpenBCIBoard" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.node.generator.generator_node.GeneratorNode" title="models.node.generator.generator_node.GeneratorNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeneratorNode</span></code></a></p>
+<p>This node is used to connect to an OpenBCI board and collect data from it.
+The node is based on the BrainFlow library and it is compatible with all the boards
+supported by the library. The node is able to connect to the board all BrainFlow
+supported communication methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Wifi;</p></li>
+<li><p>Bluetooth;</p></li>
+<li><p>USB;</p></li>
+<li><p>Synthetic board (for testing purposes).</p></li>
+</ul>
+</div></blockquote>
+<p>The node is able to collect data from the board and send it to the next node in the pipeline.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (str): The name of the module (in this case, <code class="docutils literal notranslate"><span class="pre">models.node.generator.open_bci_board</span></code>).
+OUTPUT_EEG (str): Output data type (in this case, <code class="docutils literal notranslate"><span class="pre">eeg</span></code>).
+OUTPUT_ACCELEROMETER (str): The name of the output containing the accelerometer data (in this case, <code class="docutils literal notranslate"><span class="pre">accelerometer</span></code>).
+OUTPUT_TIMESTAMP (str): The name of the output containing the timestamp data (in this case, <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>).</p>
+</dd>
+</dl>
+<p><code class="docutils literal notranslate"><span class="pre">configuration.json</span></code> usage:</p>
+<blockquote>
+<div><p><strong>module</strong> (<em>str</em>): Current module name (in this case <code class="docutils literal notranslate"><span class="pre">models.node.generator</span></code>).</p>
+<p><strong>type</strong> (<em>str</em>): Current node type (in this case <code class="docutils literal notranslate"><span class="pre">OpenBCIBoard</span></code>).</p>
+<p><strong>communication</strong> (<em>dict</em>): OpenBCIBoard communication parameters.</p>
+<blockquote>
+<div><p><strong>ip_port</strong> (<em>int</em>): ip port for socket connection, for some boards where we know it in front you dont need this parameter (default: <code class="docutils literal notranslate"><span class="pre">0</span></code>).</p>
+<p><strong>mac_address</strong> (<em>str</em>): mac address for example its used for bluetooth based boards, if not provided BrainFlow will try to autodiscover the device (default: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>).</p>
+<p><strong>other_info</strong> (<em>str</em>): other info, for example it can be ip address for wifi shield (default: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>).</p>
+<p><strong>serial_number</strong> (<em>str</em>): serial number of device. Important if you have multiple devices in the same place. If not provided BrainFlow will try to autodiscover the device (default: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>).</p>
+<p><strong>ip_address</strong> (<em>str</em>): ip address is used for boards which reads data from socket connection (default: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>).</p>
+<p><strong>ip_protocol</strong> (<em>int</em>): ip protocol type from IpProtocolType enum from brainflow lib (default: <code class="docutils literal notranslate"><span class="pre">IpProtocolType.NONE.value</span></code>).</p>
+<p><strong>timeout</strong> (<em>int</em>): timeout for device discovery (default: <code class="docutils literal notranslate"><span class="pre">0</span></code>).</p>
+<p><strong>file</strong> (<em>str</em>): file is used for file boards (default: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>).</p>
+<p><strong>serial_port</strong> (<em>str</em>): serial port, e.g. COM4, /dev/ttyACM0, etc (default: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code>).</p>
+</div></blockquote>
+<p><strong>log_level</strong> (<em>str</em>): The log level of the node (default: <code class="docutils literal notranslate"><span class="pre">&quot;OFF&quot;</span></code>).</p>
+<p><strong>board</strong> (<em>str</em>): The type of the board (default: <code class="docutils literal notranslate"><span class="pre">&quot;SYNTHETIC_BOARD&quot;</span></code>). Check all the supported boards in <a class="reference external" href="https://brainflow.readthedocs.io/en/stable/SupportedBoards.html#supported-boards-label">https://brainflow.readthedocs.io/en/stable/SupportedBoards.html#supported-boards-label</a>.</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_output_buffer_on_generate</strong> (<em>bool</em>): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the output buffer will be cleared when the node is executed.</p>
+</div></blockquote>
+</div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.generator.openbciboard.OpenBCIBoard.OUTPUT_ACCELEROMETER">
 <span class="sig-name descname"><span class="pre">OUTPUT_ACCELEROMETER</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'accelerometer'</span></em><a class="headerlink" href="#models.node.generator.openbciboard.OpenBCIBoard.OUTPUT_ACCELEROMETER" title="Permalink to this definition">#</a></dt>
@@ -397,12 +440,14 @@ that you define. It is defined by a dictionary containing the following paramete
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.generator.openbciboard.OpenBCIBoard.start">
 <span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/openbciboard.html#OpenBCIBoard.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.openbciboard.OpenBCIBoard.start" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Starts the thread that collects data from the board.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.generator.openbciboard.OpenBCIBoard.stop">
 <span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/openbciboard.html#OpenBCIBoard.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.openbciboard.OpenBCIBoard.stop" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Stops the thread that collects data from the board.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -413,16 +458,31 @@ that you define. It is defined by a dictionary containing the following paramete
 <dt class="sig sig-object py" id="models.node.generator.single_run_generator_node.SingleRunGeneratorNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.generator.single_run_generator_node.</span></span><span class="sig-name descname"><span class="pre">SingleRunGeneratorNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/generator/single_run_generator_node.html#SingleRunGeneratorNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.single_run_generator_node.SingleRunGeneratorNode" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.node.generator.generator_node.GeneratorNode" title="models.node.generator.generator_node.GeneratorNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">GeneratorNode</span></code></a></p>
+<p>This node generates data for a single run. It is used to get the data from a non real-time source, such as a
+CSV file, and feed it to the framework. It is not meant to be used in a real-time scenario, as it is not
+thread-safe. It is meant to be used in a single run scenario, such as a batch processing scenario.</p>
+<p>This node is not meant to be used directly, but to be inherited by other nodes that implement the
+<code class="docutils literal notranslate"><span class="pre">_generate_data</span></code> method. This method is responsible for generating the data for a single run. The node will
+generate the data for all the trials in the run, and then stop executing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em>) – The parameters of the node(default: None).</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.generator.single_run_generator_node.SingleRunGeneratorNode.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><span class="pre">FrameworkData</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/models/node/generator/single_run_generator_node.html#SingleRunGeneratorNode.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.generator.single_run_generator_node.SingleRunGeneratorNode.run" title="Permalink to this definition">#</a></dt>
-<dd><p>Run node main function</p>
+<dd><p>This method runs the node. It is called by the framework when the node is executed. If this is the first
+execution, it will run. If it is not the first execution, it will raise an exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference internal" href="models.html#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><em>FrameworkData</em></a>) – Node input data (channel X sample). Can be None if node takes no input data.</p></li>
-<li><p><strong>input_name</strong> (<em>str</em>) – Node input name. Can be None if node takes no input data.</p></li>
+<li><p><strong>data</strong> (<a class="reference internal" href="models.html#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><em>FrameworkData</em></a>) – The data that will be passed to the node. This comes from the previous node in the pipeline(default: None).</p></li>
+<li><p><strong>input_name</strong> (<em>str</em>) – The name of the input that the data comes from(default: None).</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If this is not the first execution.</p>
 </dd>
 </dl>
 </dd></dl>
