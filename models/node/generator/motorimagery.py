@@ -15,7 +15,7 @@ class MotorImagery(GeneratorNode):
     trial in the order that they are defined in the configuration file. When the node finishes generating data for all
     the trials, it can either stop generating data or it can shuffle the trials and start generating data again.
 
-    ``configuration.json``usage:
+    ``configuration.json`` usage:
 
         **module** (*str*): Current module name (in this case ``models.node.generator``).\n
         **type** (*str*): Current node type (in this case ``MotorImagery``).\n
