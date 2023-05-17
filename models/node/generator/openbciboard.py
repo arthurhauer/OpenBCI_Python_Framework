@@ -13,7 +13,7 @@ class OpenBCIBoard(GeneratorNode):
     """ This node is used to connect to an OpenBCI board and collect data from it.
     The node is based on the BrainFlow library and it is compatible with all the boards
     supported by the library. The node is able to connect to the board all BrainFlow
-    supported communication methods:
+    supported communication methods:\n
         - Wifi;
         - Bluetooth;
         - USB;
