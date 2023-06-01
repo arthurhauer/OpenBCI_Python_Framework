@@ -9,6 +9,12 @@ from models.node.processing.trainable.sklearn_compatible_trainable_node import S
 
 
 class SKLearnClassifier(SKLearnCompatibleTrainableNode):
+    """ Base class for all SKLearn classifiers. This node is just a serie of methods that need to be implemented
+    by the node that will extend this class.
+
+    Attributes:
+        _MODULE_NAME (str): The name of the module(in this case ``node.processing.trainable.classifier``)
+    """
     _MODULE_NAME: Final[str] = 'node.processing.trainable.classifier.sklearn_classifier'
 
     @abc.abstractmethod
