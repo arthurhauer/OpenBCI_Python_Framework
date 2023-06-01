@@ -37,9 +37,9 @@ class BandPass(Filter):
         :param parameters: The parameters passed to this node.
         :type parameters: dict
 
-        :raises MissingParameterError:  the ``low_cut_frequency_hz`` parameter is required.
-        :raises MissingParameterError:  the ``high_cut_frequency_hz`` parameter is required.
-        :raises MissingParameterError:  the ``order`` parameter is required.
+        :raises MissingParameterError: the ``low_cut_frequency_hz`` parameter is required.
+        :raises MissingParameterError: the ``high_cut_frequency_hz`` parameter is required.
+        :raises MissingParameterError: the ``order`` parameter is required.
         :raises InvalidParameterValue: the ``low_cut_frequency_hz`` parameter must be a number.
         :raises InvalidParameterValue: the ``high_cut_frequency_hz`` parameter must be a number.
         :raises InvalidParameterValue: the ``order`` parameter must be an int.
