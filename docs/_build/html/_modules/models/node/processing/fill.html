@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../models.utils.html">models.utils package</a></li>
@@ -222,6 +233,28 @@
 
 
 <div class="viewcode-block" id="Fill"><a class="viewcode-back" href="../../../../models.node.processing.html#models.node.processing.fill.Fill">[docs]</a><span class="k">class</span> <span class="nc">Fill</span><span class="p">(</span><span class="n">ProcessingNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This node is used to fill the input buffer with a certain amount of samples. This is useful when the input buffer</span>
+<span class="sd">    is not filled with the desired amount of samples. This node can fill the input buffer with zeros or with the last</span>
+<span class="sd">    sample in the input buffer.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _MODULE_NAME (str): The name of the module(in this case ``node.processing.fill``)</span>
+<span class="sd">        INPUT_MAIN (str): The name of the main input(in this case ``main``)</span>
+<span class="sd">        OUTPUT_MAIN (str): The name of the main output(in this case ``main``)</span>
+<span class="sd">        FILL_TYPE_ZEROFILL (str): The name of the fill type that fills the input buffer with zeros(in this case ``zero_fill``)</span>
+<span class="sd">        FILL_TYPE_SAMPLE_AND_HOLD (str): The name of the fill type that fills the input buffer with the last sample(in this case ``sample_and_hold``)</span>
+
+<span class="sd">    configuration.json usage:</span>
+<span class="sd">        **module** (*str*): The name of the module (``node.processing.fill``)\n</span>
+<span class="sd">        **type** (*str*): The name of the class (``Fill``)\n</span>
+<span class="sd">        **fill_size** (*int*): The size of the input buffer after filling.\n</span>
+<span class="sd">        **filling_type** (*str*): The type of filling to use. Can be ``zero_fill`` or ``sample_and_hold``.\n</span>
+<span class="sd">        **buffer_options** (*dict*): Buffer options.\n</span>
+<span class="sd">            **clear_output_buffer_after_process** (*bool*): Whether to clear the output buffer after processing.\n</span>
+<span class="sd">            **clear_input_buffer_after_process** (*bool*): Whether to clear the input buffer after processing.\n</span>
+<span class="sd">            **clear_output_buffer_on_data_input** (*bool*): Whether to clear the output buffer when new data is inserted in the input buffer.\n</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;node.processing.fill&#39;</span>
 
     <span class="n">INPUT_MAIN</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span>
@@ -231,6 +264,17 @@
     <span class="n">FILL_TYPE_SAMPLE_AND_HOLD</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;sample_and_hold&#39;</span>
 
     <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validate the parameters passed to the node. This method will raise an exception if the parameters are not</span>
+<span class="sd">        valid or when they don&#39;t exist.</span>
+
+<span class="sd">        :param parameters: The parameters passed to the node.</span>
+<span class="sd">        :type parameters: dict</span>
+
+<span class="sd">        :raises MissingParameterError: the ``full_size`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``fill_size`` parameter must be an integer.</span>
+<span class="sd">        :raises MissingParameterError: the ``filling_type`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``filling_type`` parameter must be ``zero_fill`` or ``sample_and_hold``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="s1">&#39;fill_size&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -250,18 +294,42 @@
                                         <span class="n">cause</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;not_in_[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FILL_TYPE_ZEROFILL</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">FILL_TYPE_SAMPLE_AND_HOLD</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_initialize_parameter_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialize the parameter fields of the node. This method will set the ``_fill_size`` and ``_fill_type``</span>
+<span class="sd">        attributes and  all the parent attributes as well.</span>
+
+<span class="sd">        :param parameters: The parameters passed to the node.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_parameter_fields</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_zero_fill</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;filling_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">FILL_TYPE_ZEROFILL</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sample_and_hold</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;filling_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">FILL_TYPE_SAMPLE_AND_HOLD</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fill_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;fill_size&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_is_next_node_call_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method will return ``True`` if the next node call is enabled. This method will always return ``True``</span>
+<span class="sd">        because the next node call is always enabled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_is_processing_condition_satisfied</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method will return ``True`` if the processing condition is satisfied. This method will return ``True``</span>
+<span class="sd">        if the input buffer has data.</span>
+
+<span class="sd">        :return: ``True`` if the input buffer has data, ``False`` otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_MAIN</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FrameworkData</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FrameworkData</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method will process the data in the input buffer and return the result in the output buffer. This</span>
+<span class="sd">        method will fill the input buffer with a certain amount of samples. This is done using the _fill method.</span>
+
+<span class="sd">        :param data: The data to process.</span>
+<span class="sd">        :type data: dict</span>
+
+<span class="sd">        :return: The processed data.</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">slave_main</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_MAIN</span><span class="p">]</span>
 
         <span class="n">new_data</span> <span class="o">=</span> <span class="n">FrameworkData</span><span class="p">(</span><span class="n">sampling_frequency_hz</span><span class="o">=</span><span class="n">slave_main</span><span class="o">.</span><span class="n">sampling_frequency</span><span class="p">,</span>
@@ -280,11 +348,21 @@
         <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">_get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method will return the inputs of the node.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: The inputs of the node.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">INPUT_MAIN</span><span class="p">,</span>
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method will return the outputs of the node.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: The outputs of the node.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">OUTPUT_MAIN</span>
         <span class="p">]</span>
@@ -293,6 +371,21 @@
               <span class="n">data_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
               <span class="n">slave_main</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">,</span>
               <span class="n">sampling_frequency</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FrameworkData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method will fill the input buffer with a certain amount of samples with the desired filling type. This filling</span>
+<span class="sd">        type can be ``zero_fill`` or ``sample_and_hold``. If the filling type is ``zero_fill`` the input buffer will be filled</span>
+<span class="sd">        with zeros. If the filling type is ``sample_and_hold`` the input buffer will be filled with the last sample in the</span>
+<span class="sd">        input buffer.</span>
+
+<span class="sd">        :param data_index: The index of the data to fill.</span>
+<span class="sd">        :type data_index: int</span>
+<span class="sd">        :param slave_main: The INPUT_MAIN data.</span>
+<span class="sd">        :type slave_main: FrameworkData</span>
+<span class="sd">        :param sampling_frequency: The sampling frequency of the data to fill.</span>
+<span class="sd">        :type sampling_frequency: float</span>
+
+<span class="sd">        :return: The filled data.</span>
+<span class="sd">        :rtype: FrameworkData</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fill_data</span> <span class="o">=</span> <span class="n">FrameworkData</span><span class="p">(</span><span class="n">sampling_frequency</span><span class="p">,</span> <span class="n">slave_main</span><span class="o">.</span><span class="n">channels</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zero_fill</span><span class="p">:</span>

@@ -236,13 +236,27 @@
 <dt class="sig sig-object py" id="models.node.processing.feature_extractor.feature_extractor.FeatureExtractor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.feature_extractor.feature_extractor.</span></span><span class="sig-name descname"><span class="pre">FeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/feature_extractor/feature_extractor.html#FeatureExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.feature_extractor.feature_extractor.FeatureExtractor" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.processing.html#models.node.processing.processing_node.ProcessingNode" title="models.node.processing.processing_node.ProcessingNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingNode</span></code></a></p>
+<p>This is the base class for all feature extractors. A feature extractor is a node that extracts features from a dataset.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (<cite>str</cite>): The name of the module (in his case <code class="docutils literal notranslate"><span class="pre">node.processing.feature_extractor.feature_extractor</span></code>)</p>
+</dd>
+<dt>configuration.json usage:</dt><dd><p><strong>module</strong> (<em>str</em>): The name of the module (<code class="docutils literal notranslate"><span class="pre">node.processing.feature_extractor</span></code>)</p>
+<p><strong>type</strong> (<em>str</em>): The type of the node (<code class="docutils literal notranslate"><span class="pre">FeatureExtractor</span></code>)</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): Whether to clear the output buffer when new data is inserted in the input buffer.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): Whether to clear the input buffer after processing.</p>
+<p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): Whether to clear the output buffer after processing.</p>
+</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.processing.feature_extractor.feature_extractor.FeatureExtractor.from_config_json">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_config_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/feature_extractor/feature_extractor.html#FeatureExtractor.from_config_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.feature_extractor.feature_extractor.FeatureExtractor.from_config_json" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns node instance from given parameters in dict form</p>
+<dd><p>Adds the configuration.json parameters to a new instance of this class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em>) – Node parameters in dict form.</p>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em>) – The parameters passed to this node.</p>
 </dd>
 </dl>
 </dd></dl>

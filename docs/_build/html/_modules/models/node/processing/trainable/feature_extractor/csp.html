@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../../models.utils.html">models.utils package</a></li>
@@ -227,10 +238,43 @@
 
 
 <div class="viewcode-block" id="CSP"><a class="viewcode-back" href="../../../../../../models.node.processing.trainable.feature_extractor.html#models.node.processing.trainable.feature_extractor.csp.CSP">[docs]</a><span class="k">class</span> <span class="nc">CSP</span><span class="p">(</span><span class="n">SKLearnFeatureExtractor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This node is a wrapper for the sklearn CSP feature extractor. A CSP is used for M/EEG signal decomposition using </span>
+<span class="sd">    the Common Spatial Patterns (CSP). This node can be used as a supervised decomposition to estimate spatial </span>
+<span class="sd">    filters for feature extraction in a 2 class decoding problem.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _MODULE_NAME (str): The name of the module(in this case ``node.processing.trainable.feature_extractor.csp``)</span>
+<span class="sd">    </span>
+<span class="sd">    configuration.json usage:</span>
+<span class="sd">        **module** (*str*): The name of the module (``node.processing.trainable.feature_extractor``)\n</span>
+<span class="sd">        **type** (*str*): The type of the node (``CSP``)\n</span>
+<span class="sd">        **number_of_components** (*int*): The number of components to decompose the signal into.\n</span>
+<span class="sd">        **training_set_size** (*int*): The size of the training set in samples.\n</span>
+<span class="sd">        **save_after_training** (*bool*): Whether to save the trained processor after training. This is a optional parameter.\n</span>
+<span class="sd">        **save_file_path** (*str*): The path to save the trained processor if ``save_after_training`` is True. Only mandatory if ``save_after_training`` is True.\n</span>
+<span class="sd">        **load_trained** (*bool*): Whether to load a trained processor.\n</span>
+<span class="sd">        **load_file_path** (*str*): The path to load the trained processor if ``load_trained`` is True. Only mandatory if ``load_trained`` is True.\n</span>
+<span class="sd">        **buffer_options** (*dict*): Buffer options.\n</span>
+<span class="sd">            **clear_input_buffer_after_training** (*bool*): Whether to clear the input buffer after training.\n</span>
+<span class="sd">            **process_input_buffer_after_training** (*bool*): Whether to process the input buffer after training.\n</span>
+<span class="sd">            **clear_output_buffer_on_data_input** (*bool*): Whether to clear the output buffer when new data is inserted in the input buffer.\n</span>
+<span class="sd">            **clear_input_buffer_after_process** (*bool*): Whether to clear the input buffer after processing.\n</span>
+<span class="sd">            **clear_output_buffer_after_process** (*bool*): Whether to clear the output buffer after processing.\n</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;node.processing.trainable.feature_extractor.csp&#39;</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validates the parameters passed to this node. In this case it checks if the parameters are present and if they</span>
+<span class="sd">        are of the correct type.</span>
+
+<span class="sd">        :param parameters: The parameters passed to this node.</span>
+<span class="sd">        :type parameters: dict</span>
+
+<span class="sd">        :raises MissingParameterError: the ``number_of_components`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``number_of_components`` parameter must be an int.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;number_of_components&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -242,21 +286,54 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_initialize_parameter_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initializes the parameter fields of this node. In this case it initializes the ``number_of_components``</span>
+<span class="sd">        parameter and the parent node parameters as well.</span>
+<span class="sd">        </span>
+<span class="sd">        :param parameters: The parameters passed to this node.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">number_of_components</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;number_of_components&#39;</span><span class="p">]</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_parameter_fields</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_initialize_trainable_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">TransformerMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initializes the trainable processor of this node. In this case it initializes the sklearn CSP processor.</span>
+
+<span class="sd">        :return: The initialized sklearn CSP processor.</span>
+<span class="sd">        :rtype: (TransformerMixin, BaseEstimator)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">mne</span><span class="o">.</span><span class="n">decoding</span><span class="o">.</span><span class="n">CSP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_components</span><span class="p">)</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_should_retrain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the processor should be retrained. In this case it returns False always.</span>
+
+<span class="sd">        :return: Whether the processor should be retrained.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_is_next_node_call_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the next node call is enabled. In this case it returns True if the processor is trained and</span>
+<span class="sd">        the output buffer has data.</span>
+
+<span class="sd">        :return: Whether the next node call is enabled.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_trained</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OUTPUT_MAIN</span><span class="p">]</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_format_processed_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processed_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">sampling_frequency</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FrameworkData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Formats the processed data so that it can be passed to the next node. In this case it moves the channels axis</span>
+<span class="sd">        to the first position and creates a FrameworkData object with the processed data.</span>
+
+<span class="sd">        :param processed_data: The processed data.</span>
+<span class="sd">        :type processed_data: Any</span>
+<span class="sd">        :param sampling_frequency: The sampling frequency of the processed data.</span>
+<span class="sd">        :type sampling_frequency: float</span>
+
+<span class="sd">        :return: The formatted processed data.</span>
+<span class="sd">        :rtype: FrameworkData</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">processed_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">processed_data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">formatted_data</span> <span class="o">=</span> <span class="n">FrameworkData</span><span class="p">(</span><span class="n">sampling_frequency_hz</span><span class="o">=</span><span class="n">sampling_frequency</span><span class="p">,</span>
                                        <span class="n">channels</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;source_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_components</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>

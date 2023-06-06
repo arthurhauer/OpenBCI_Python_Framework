@@ -352,6 +352,28 @@
 <dt class="sig sig-object py" id="models.node.processing.fill.Fill">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.fill.</span></span><span class="sig-name descname"><span class="pre">Fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/fill.html#Fill"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.fill.Fill" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.node.processing.processing_node.ProcessingNode" title="models.node.processing.processing_node.ProcessingNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingNode</span></code></a></p>
+<p>This node is used to fill the input buffer with a certain amount of samples. This is useful when the input buffer
+is not filled with the desired amount of samples. This node can fill the input buffer with zeros or with the last
+sample in the input buffer.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (str): The name of the module(in this case <code class="docutils literal notranslate"><span class="pre">node.processing.fill</span></code>)
+INPUT_MAIN (str): The name of the main input(in this case <code class="docutils literal notranslate"><span class="pre">main</span></code>)
+OUTPUT_MAIN (str): The name of the main output(in this case <code class="docutils literal notranslate"><span class="pre">main</span></code>)
+FILL_TYPE_ZEROFILL (str): The name of the fill type that fills the input buffer with zeros(in this case <code class="docutils literal notranslate"><span class="pre">zero_fill</span></code>)
+FILL_TYPE_SAMPLE_AND_HOLD (str): The name of the fill type that fills the input buffer with the last sample(in this case <code class="docutils literal notranslate"><span class="pre">sample_and_hold</span></code>)</p>
+</dd>
+<dt>configuration.json usage:</dt><dd><p><strong>module</strong> (<em>str</em>): The name of the module (<code class="docutils literal notranslate"><span class="pre">node.processing.fill</span></code>)</p>
+<p><strong>type</strong> (<em>str</em>): The name of the class (<code class="docutils literal notranslate"><span class="pre">Fill</span></code>)</p>
+<p><strong>fill_size</strong> (<em>int</em>): The size of the input buffer after filling.</p>
+<p><strong>filling_type</strong> (<em>str</em>): The type of filling to use. Can be <code class="docutils literal notranslate"><span class="pre">zero_fill</span></code> or <code class="docutils literal notranslate"><span class="pre">sample_and_hold</span></code>.</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): Whether to clear the output buffer after processing.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): Whether to clear the input buffer after processing.</p>
+<p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): Whether to clear the output buffer when new data is inserted in the input buffer.</p>
+</div></blockquote>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.processing.fill.Fill.FILL_TYPE_SAMPLE_AND_HOLD">
 <span class="sig-name descname"><span class="pre">FILL_TYPE_SAMPLE_AND_HOLD</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sample_and_hold'</span></em><a class="headerlink" href="#models.node.processing.fill.Fill.FILL_TYPE_SAMPLE_AND_HOLD" title="Permalink to this definition">#</a></dt>
@@ -381,6 +403,78 @@
 <dt class="sig sig-object py" id="models.node.processing.merge.Merge">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.merge.</span></span><span class="sig-name descname"><span class="pre">Merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/merge.html#Merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.merge.Merge" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.node.processing.synchronize.Synchronize" title="models.node.processing.synchronize.Synchronize"><code class="xref py py-class docutils literal notranslate"><span class="pre">Synchronize</span></code></a></p>
+<p>This node merges the data from the master and the slave. The master data is always kept. If the slave data
+contains a channel that is also present in the master data, the slave data is renamed to a new channel name and
+added to the master data. This node also automatically synchronizes the data if the slave data is not synchronized
+with the master data.
+This node usage is a bit tricky. It goes in the “common” section of the configuration file, and it needs to have
+at least two nodes before him (the master and the slave) that will point their outputs to this “merge” node. Those 
+previous nodes must have a additional “timestamp” property, that will define if they have a master or a slave timestamp.
+The “output” property of this previous node will also have a property that defines if this node will be the master or
+the slave. Here’s an example of the previous nodes “output” and “timestamp” properties:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;root&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_a&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="o">...</span><span class="p">,</span>
+                <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;data_a&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="s2">&quot;merge&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;master_main&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="s2">&quot;merge&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;master_timestamp&quot;</span>
+                            <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">},</span>
+            <span class="p">},</span> 
+            <span class="s2">&quot;node_b&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="o">...</span><span class="p">,</span>
+                <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;data_b&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="s2">&quot;merge&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;slave_main&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="s2">&quot;merge&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;slave_timestamp&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;merge&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;models.node.processing&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Merge&quot;</span><span class="p">,</span>
+                <span class="o">...</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="o">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">configuration.json</span></code> usage:</dt><dd><p><strong>module</strong> (<em>str</em>): Current module name (in this case <code class="docutils literal notranslate"><span class="pre">models.node.processing</span></code>).</p>
+<p><strong>type</strong> (<em>str</em>): Current node type (in this case <code class="docutils literal notranslate"><span class="pre">Merge</span></code>).</p>
+<p><strong>slave_filling</strong> (<em>str</em>): Slave filling type. It can be <code class="docutils literal notranslate"><span class="pre">zero_fill</span></code> or <code class="docutils literal notranslate"><span class="pre">sample_and_hold</span></code>.</p>
+<p><strong>statistics_enabled</strong> (<em>bool</em>): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the node will calculate the synchronization error statistics.</p>
+<dl>
+<dt><strong>buffer_options</strong> (<em>dict</em>): Buffer options:</dt><dd><p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the output buffer will be cleared when data is inputted.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the input buffer will be cleared after the node is executed.</p>
+<p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the output buffer will be cleared after the node is executed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.processing.merge.Merge.OUTPUT_MERGED_MAIN">
 <span class="sig-name descname"><span class="pre">OUTPUT_MERGED_MAIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'merged_main'</span></em><a class="headerlink" href="#models.node.processing.merge.Merge.OUTPUT_MERGED_MAIN" title="Permalink to this definition">#</a></dt>

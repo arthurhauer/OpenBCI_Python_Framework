@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../models.utils.html">models.utils package</a></li>
@@ -222,6 +233,28 @@
 
 
 <div class="viewcode-block" id="OneHotToSingle"><a class="viewcode-back" href="../../../../../models.node.processing.encoder.html#models.node.processing.encoder.onehottosingle.OneHotToSingle">[docs]</a><span class="k">class</span> <span class="nc">OneHotToSingle</span><span class="p">(</span><span class="n">ProcessingNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts a one-hot encoded signal to a single channel signal. </span>
+<span class="sd">    One-hot encoded signals are signals where each label is represented by a vector of the same length as the number </span>
+<span class="sd">    of labels, where the label is represented by a 1 at the index of the label and 0 everywhere else. </span>
+<span class="sd">    A Single channel signal is a signal where each label is represented by a single channel, where the label is</span>
+<span class="sd">    represented by the index.</span>
+<span class="sd">    This node converts a one-hot encoded labels to a single channel label. The single label count starts at 1, so the</span>
+<span class="sd">    label 1 is represented by the channel 1, the label 2 by the channel 2, etc. There is no label 0.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _MODULE_NAME (`str`): The name of the module (in his case ``node.processing.encoder.onehottosingle``)</span>
+<span class="sd">        INPUT_MAIN (`str`): The name of the main input signal (in this case ``main``)</span>
+<span class="sd">        OUTPUT_MAIN (`str`): The name of the main output signal (in this case ``main``)</span>
+
+<span class="sd">    configuration.json usage:</span>
+<span class="sd">        **module** (*str*): The name of the module (``node.processing.encoder``)\n</span>
+<span class="sd">        **type** (*str*): The type of the node (``OneHotToSingle``)\n</span>
+<span class="sd">        **buffer_options** (*dict*): Buffer options.\n</span>
+<span class="sd">            **clear_output_buffer_on_data_input** (*bool*): Whether to clear the output buffer when new data is inserted in the input buffer.\n</span>
+<span class="sd">            **clear_input_buffer_after_process** (*bool*): Whether to clear the input buffer after processing.\n</span>
+<span class="sd">            **clear_output_buffer_after_process** (*bool*): Whether to clear the output buffer after processing.\n</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;node.processing.encoder.onehottosingle&#39;</span>
 
     <span class="n">INPUT_MAIN</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span>
@@ -229,15 +262,34 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_initialize_parameter_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initializes the parameter fields of this node.</span>
+
+<span class="sd">        :param parameters: The parameters passed to this node.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_parameter_fields</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_is_next_node_call_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the next node call is enabled. The next node call is enabled if the input buffer is not empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OUTPUT_MAIN</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">_is_processing_condition_satisfied</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the processing condition is satisfied. The processing condition is satisfied if the input buffer is not empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_MAIN</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
     <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FrameworkData</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FrameworkData</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method encodes the data labels that before was one-hot encoded to a single channel labels. It does this</span>
+<span class="sd">        by finding the index of the channel that has a value of 1 and then setting the output channel to that index + 1. It </span>
+<span class="sd">        does this for each data point in the dataset.</span>
+
+<span class="sd">        :param data: The data to process.</span>
+<span class="sd">        :type data: dict[str, FrameworkData]</span>
+
+<span class="sd">        :return: The processed data.</span>
+<span class="sd">        :rtype: dict[str, FrameworkData]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s1">&#39;encoding...&#39;</span><span class="p">)</span>
         <span class="n">raw_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_MAIN</span><span class="p">]</span>
         <span class="n">encoded_data</span><span class="p">:</span> <span class="n">FrameworkData</span> <span class="o">=</span> <span class="n">FrameworkData</span><span class="p">(</span><span class="n">sampling_frequency_hz</span><span class="o">=</span><span class="n">raw_data</span><span class="o">.</span><span class="n">sampling_frequency</span><span class="p">)</span>
@@ -257,11 +309,15 @@
         <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">_get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the inputs of this node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">INPUT_MAIN</span>
         <span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the outputs of this node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">OUTPUT_MAIN</span>
         <span class="p">]</span></div>

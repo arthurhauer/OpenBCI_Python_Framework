@@ -236,6 +236,29 @@
 <dt class="sig sig-object py" id="models.node.processing.trainable.classifier.lda.LDA">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.trainable.classifier.lda.</span></span><span class="sig-name descname"><span class="pre">LDA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/trainable/classifier/lda.html#LDA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.trainable.classifier.lda.LDA" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.node.processing.trainable.classifier.sklearn_classifier.SKLearnClassifier" title="models.node.processing.trainable.classifier.sklearn_classifier.SKLearnClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">SKLearnClassifier</span></code></a></p>
+<p>This node is a wrapper for the <code class="docutils literal notranslate"><span class="pre">LinearDiscriminantAnalysis</span></code> classifier from sklearn. It is a subclass of
+<code class="docutils literal notranslate"><span class="pre">SKLearnClassifier</span></code> and implements the abstract methods from it. The <code class="docutils literal notranslate"><span class="pre">LinearDiscriminantAnalysis</span></code> classifier
+can be used to classify data into two or more classes.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (str): The name of the module(in this case <code class="docutils literal notranslate"><span class="pre">node.processing.trainable.classifier.lda</span></code>)</p>
+</dd>
+<dt>configuration.json usage: </dt><dd><p><strong>module</strong> (<em>str</em>): The name of the module (<code class="docutils literal notranslate"><span class="pre">node.processing.trainable.classifier</span></code>)</p>
+<p><strong>type</strong> (<em>str</em>): The name of the class (<code class="docutils literal notranslate"><span class="pre">LDA</span></code>)</p>
+<p><strong>training_set_size</strong> (<em>int</em>): The size of the training set in samples.</p>
+<p><strong>save_after_training</strong> (<em>bool</em>): Whether to save the trained processor after training. This is a optional parameter.</p>
+<p><strong>save_file_path</strong> (<em>str</em>): The path to save the trained processor if <code class="docutils literal notranslate"><span class="pre">save_after_training</span></code> is True. Only mandatory if <code class="docutils literal notranslate"><span class="pre">save_after_training</span></code> is True.</p>
+<p><strong>load_trained</strong> (<em>bool</em>): Whether to load a trained processor.</p>
+<p><strong>load_file_path</strong> (<em>str</em>): The path to load the trained processor if <code class="docutils literal notranslate"><span class="pre">load_trained</span></code> is True. Only mandatory if <code class="docutils literal notranslate"><span class="pre">load_trained</span></code> is True.</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_input_buffer_after_training</strong> (<em>bool</em>): Whether to clear the input buffer after training.</p>
+<p><strong>process_input_buffer_after_training</strong> (<em>bool</em>): Whether to process the input buffer after training.</p>
+<p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): Whether to clear the output buffer when new data is inserted in the input buffer.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): Whether to clear the input buffer after processing.</p>
+<p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): Whether to clear the output buffer after processing.</p>
+</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -245,6 +268,12 @@
 <dt class="sig sig-object py" id="models.node.processing.trainable.classifier.sklearn_classifier.SKLearnClassifier">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.trainable.classifier.sklearn_classifier.</span></span><span class="sig-name descname"><span class="pre">SKLearnClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/trainable/classifier/sklearn_classifier.html#SKLearnClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.trainable.classifier.sklearn_classifier.SKLearnClassifier" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.processing.trainable.html#models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode" title="models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">SKLearnCompatibleTrainableNode</span></code></a></p>
+<p>Base class for all SKLearn classifiers. This node is just a serie of methods that need to be implemented
+by the node that will extend this class.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (str): The name of the module(in this case <code class="docutils literal notranslate"><span class="pre">node.processing.trainable.classifier</span></code>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../../models.utils.html">models.utils package</a></li>
@@ -224,6 +235,12 @@
 
 
 <div class="viewcode-block" id="SKLearnClassifier"><a class="viewcode-back" href="../../../../../../models.node.processing.trainable.classifier.html#models.node.processing.trainable.classifier.sklearn_classifier.SKLearnClassifier">[docs]</a><span class="k">class</span> <span class="nc">SKLearnClassifier</span><span class="p">(</span><span class="n">SKLearnCompatibleTrainableNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class for all SKLearn classifiers. This node is just a serie of methods that need to be implemented</span>
+<span class="sd">    by the node that will extend this class.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _MODULE_NAME (str): The name of the module(in this case ``node.processing.trainable.classifier``)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;node.processing.trainable.classifier.sklearn_classifier&#39;</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
