@@ -34,9 +34,9 @@ class Segmenter(ProcessingNode):
         super()._initialize_parameter_fields(parameters)
 
     def _is_next_node_call_enabled(self) -> bool:
-        """ Returns whether the next node call is enabled. It's always enabled for this node.
+        """ Returns whether the next node call is enabled. It's enabled whenever there's data in the main output buffer.
         """
-        return True
+        return self._output_buffer[self.OUTPUT_MAIN].get_data_count() > 0
 
     def _is_processing_condition_satisfied(self) -> bool:
         """ Returns whether the processing condition is satisfied. In this case it returns True if there is data in the

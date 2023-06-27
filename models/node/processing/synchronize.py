@@ -3,7 +3,6 @@ from typing import List, Dict, Final
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
-from models.exception.non_compatible_data import NonCompatibleData
 from models.framework_data import FrameworkData
 from models.node.processing.processing_node import ProcessingNode
 
@@ -21,16 +20,17 @@ class Synchronize(ProcessingNode):
     FILL_TYPE_SAMPLE_AND_HOLD: Final[str] = 'sample_and_hold'
 
     def _validate_parameters(self, parameters: dict):
+        super()._validate_parameters(parameters)
         if 'slave_filling' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='slave_filling')
 
         if parameters['slave_filling'] not in [self.FILL_TYPE_ZEROFILL, self.FILL_TYPE_SAMPLE_AND_HOLD]:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='slave_filling',
                                         cause=f'not_in_[{self.FILL_TYPE_ZEROFILL},{self.FILL_TYPE_SAMPLE_AND_HOLD}]')
         if 'statistics_enabled' in parameters and type(parameters['statistics_enabled']) is not bool:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='statistics_enabled',
                                         cause='must_be_bool')
 
@@ -54,7 +54,6 @@ class Synchronize(ProcessingNode):
 
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
         lookup_start_index = 0
-        print('Starting sync')
         # master_main = data[self.INPUT_MASTER_MAIN]
         master_timestamp_data = data[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()
         slave_main = data[self.INPUT_SLAVE_MAIN]
@@ -139,8 +138,10 @@ class Synchronize(ProcessingNode):
                 channel_data = [input_data[channel]] * fill_size
                 fill_data.input_data_on_channel(channel_data, channel)
         else:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='slave_filling',
                                         cause='not_set')
-
+        if fill_data.get_data_count() == 0 and start_index == end_index:
+            for channel in fill_data.channels:
+                fill_data.input_data_on_channel([slave_main.get_data_on_channel(channel)[0]], channel)
         return fill_data

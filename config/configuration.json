@@ -40,10 +40,10 @@
             "name": "Rest",
             "code": 1,
             "duration": {
-              "mean": 1.5,
+              "mean": 0.5,
               "standard_deviation": 1,
-              "maximum": 2,
-              "minimum": 1
+              "maximum": 1,
+              "minimum": 0.2
             },
             "cue": {
               "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
@@ -56,10 +56,10 @@
             "name": "Close right fist",
             "code": 3,
             "duration": {
-              "mean": 1.5,
+              "mean": 0.5,
               "standard_deviation": 1,
-              "maximum": 2,
-              "minimum": 1
+              "maximum": 1,
+              "minimum": 0.2
             },
             "cue": {
               "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
@@ -72,10 +72,10 @@
             "name": "Rest",
             "code": 1,
             "duration": {
-              "mean": 1.5,
+              "mean": 0.5,
               "standard_deviation": 1,
-              "maximum": 2,
-              "minimum": 1
+              "maximum": 1,
+              "minimum": 0.2
             },
             "cue": {
               "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
@@ -88,10 +88,10 @@
             "name": "Close left fist",
             "code": 2,
             "duration": {
-              "mean": 1.5,
+              "mean": 0.5,
               "standard_deviation": 1,
-              "maximum": 2,
-              "minimum": 1
+              "maximum": 1,
+              "minimum": 0.2
             },
             "cue": {
               "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
@@ -104,8 +104,8 @@
         "outputs": {
           "marker": [
             {
-              "node": "merge",
-              "input": "slave_main"
+              "node": "rename",
+              "input": "main"
             }
           ],
           "timestamp": [
@@ -118,6 +118,27 @@
       }
     },
     "common": {
+      "rename": {
+        "module": "models.node.processing",
+        "type": "ChannelRename",
+        "dictionary": {
+          "main": "marker"
+        },
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs": {
+          "main": [
+            {
+              "node": "merge",
+              "input": "slave_main"
+            }
+          ],
+          "merged_timestamp": []
+        }
+      },
       "merge": {
         "module": "models.node.processing",
         "type": "Merge",
@@ -130,18 +151,106 @@
         "outputs": {
           "merged_main": [
             {
-              "node": "csv_out",
+              "node": "segmenter",
+              "input": "main"
+            }
+          ],
+          "merged_timestamp": []
+        }
+      },
+      "segmenter": {
+        "module": "models.node.processing.segmenter",
+        "type": "FixedWindowSegmenter",
+        "window_size": 1000,
+        "filling_value": "latest",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": false,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs": {
+          "main": [
+            {
+              "node": "split",
               "input": "main"
             }
           ]
         }
       },
-      "csv_out": {
-        "module": "models.node.output.file",
-        "type": "CSVFile",
-        "file_path": "D:\\Desktop\\A\\test.csv",
-        "buffer_options": {},
-        "outputs": {}
+      "split": {
+        "module": "models.node.processing",
+        "type": "Split",
+        "split": {
+          "data": [
+            "Fz"
+          ],
+          "label": [
+            "marker"
+          ]
+        },
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs": {
+          "data": [
+            {
+              "node": "csp",
+              "input": "data"
+            }
+          ],
+          "label": [
+            {
+              "node": "csp",
+              "input": "label"
+            }
+          ]
+        }
+      },
+      "csp": {
+        "module": "models.node.processing.trainable.feature_extractor",
+        "type": "CSP",
+        "number_of_components": 4,
+        "training_set_size": 5,
+        "save_after_training": true,
+        "save_file_path": "D:\\Desktop\\A\\csp",
+        "load_trained": false,
+        "enable_log": true,
+        "buffer_options": {
+          "print_buffer_size": true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true,
+          "clear_input_buffer_after_training": true,
+          "process_input_buffer_after_training": true
+        },
+        "outputs": {
+          "main": [
+            {
+              "node": "lda",
+              "input": "data"
+            }
+          ]
+        }
+      },
+      "lda": {
+        "module": "models.node.processing.trainable.classifier",
+        "type": "LDA",
+        "training_set_size": 25,
+        "save_after_training": false,
+        "load_trained": false,
+        "buffer_options": {
+          "print_buffer_size": true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true,
+          "clear_input_buffer_after_training": true,
+          "process_input_buffer_after_training": true
+        },
+        "outputs": {
+          "main": []
+        }
       }
     }
   }

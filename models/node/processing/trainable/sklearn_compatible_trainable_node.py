@@ -1,6 +1,7 @@
 import abc
 import os
 from typing import List, Dict, Final, Any
+from statistics import mode
 
 import joblib
 import numpy as np
@@ -145,7 +146,7 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
         """
         formatted_label = []
         for epoch in raw_label.get_data_single_channel():
-            formatted_label.append(max(epoch))
+            formatted_label.append(mode(epoch))
         formatted_label = np.asarray(formatted_label)
         return formatted_label
 

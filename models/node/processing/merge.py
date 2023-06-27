@@ -139,9 +139,9 @@ class Merge(Synchronize):
         super()._initialize_parameter_fields(parameters)
 
     def _is_next_node_call_enabled(self) -> bool:
-        """ This method allows the next node call. In this case it always returns ``True``.
+        """ This method allows the next node call. In this case it enables whenever there's data in the output buffer.
         """
-        return True
+        return self._output_buffer[self.OUTPUT_MERGED_MAIN].get_data_count() > 0
 
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
         """ This method processes the data that was inputted to the node. It merges the master and the slave data.
@@ -155,7 +155,11 @@ class Merge(Synchronize):
         synchronized_data: Dict[str, FrameworkData] = super()._process(data)
         new_slave_data = synchronized_data[self.OUTPUT_SYNCHRONIZED_MAIN]
         master_main = data[self.INPUT_MASTER_MAIN]
-
+        if new_slave_data.get_data_count() < master_main.get_data_count():
+            new_slave_data.extend(
+                super()._fill(new_slave_data.get_data_count() - 1, master_main.get_data_count() - 1, new_slave_data,
+                              new_slave_data.get_data_count() - 1, new_slave_data.sampling_frequency)
+            )
         merged_data = FrameworkData()
         merged_data.extend(master_main)
         for channel in new_slave_data.channels:
