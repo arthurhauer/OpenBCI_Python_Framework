@@ -19,7 +19,7 @@ class Segmenter(ProcessingNode):
         super()._initialize_parameter_fields(parameters)
 
     def _is_next_node_call_enabled(self) -> bool:
-        return True
+        return self._output_buffer[self.OUTPUT_MAIN].get_data_count() > 0
 
     def _is_processing_condition_satisfied(self) -> bool:
         return self._input_buffer[self.INPUT_MAIN].get_data_count() > 0

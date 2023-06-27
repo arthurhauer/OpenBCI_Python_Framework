@@ -109,7 +109,7 @@ class ProcessingNode(Node):
             self._clear_output_buffer()
         self.print('Outputting data')
         for output_name in self._get_outputs():
-            self._output_buffer[output_name].extend(processed_data[output_name])
+            self._insert_new_output_data(processed_data[output_name], output_name)
 
     @abc.abstractmethod
     def _is_next_node_call_enabled(self) -> bool:

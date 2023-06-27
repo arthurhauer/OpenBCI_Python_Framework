@@ -94,6 +94,28 @@ class FrameworkData:
         for channel in self.channels:
             self._data[channel] = []
 
+    def rename_channel(self, current_name: str, new_name: str):
+        """This method is used to rename a given channel stored in ``FrameworkData``.
+
+        :param current_name: Existing channel key
+        :param new_name: Key to replace existing channel key
+
+        :return: None
+        :rtype: None
+        """
+        if current_name not in self.channels:
+            raise InvalidParameterValue(module=self._MODULE_NAME, name='data',
+                                        parameter='current_name',
+                                        cause='must_be_existing_key')
+        if new_name in self.channels:
+            raise InvalidParameterValue(module=self._MODULE_NAME, name='data',
+                                        parameter='new_name',
+                                        cause='must_be_non_existing_key')
+        self._data[new_name] = self._data[current_name]
+        del self._data[current_name]
+        self.channels.remove(current_name)
+        self.channels.append(new_name)
+
     def get_data_count(self):
         """This method is used to get the number of data points that are stored in the
         ``FrameworkData`` object. This is normally used to check that the data that is input is
@@ -327,3 +349,11 @@ class FrameworkData:
         :rtype: bool
         """
         return len(self._data) == 1
+
+    def splice(self, start_index: int, count: int) -> FrameworkData:
+        return_value: FrameworkData = FrameworkData(self.sampling_frequency, self.channels)
+        end_index = start_index + count
+        for channel in self.channels:
+            return_value.input_data_on_channel(self._data[channel][start_index:end_index], channel)
+            del self._data[channel][start_index:end_index]
+        return return_value

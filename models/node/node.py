@@ -3,6 +3,8 @@ import abc
 import copy
 from typing import List, Dict, Final, Any
 
+import time
+
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
@@ -18,6 +20,7 @@ class Node:
     def __init__(self, parameters=None) -> None:
         super().__init__()
         self.name: Final[str] = parameters['name']
+        self._enable_log = True
         self.print("Initializing")
         self._validate_parameters(parameters)
         self.parameters = parameters
@@ -45,44 +48,55 @@ class Node:
         """
         if 'module' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,name=self.name,
+                module=self._MODULE_NAME, name=self.name,
                 parameter='module'
             )
         if 'models.node.' not in parameters['module']:
             raise InvalidParameterValue(
-                module=self._MODULE_NAME,name=self.name,
+                module=self._MODULE_NAME, name=self.name,
                 parameter='module',
                 cause='must_be_part_of_[models.node]_module'
             )
         if 'type' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,name=self.name,
+                module=self._MODULE_NAME, name=self.name,
                 parameter='type'
             )
+        if 'enable_log' not in parameters:
+            parameters['enable_log'] = False
         if 'buffer_options' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,name=self.name,
+                module=self._MODULE_NAME, name=self.name,
                 parameter='buffer_options'
             )
         if 'outputs' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,name=self.name,
+                module=self._MODULE_NAME, name=self.name,
                 parameter='outputs'
             )
         if 'name' not in parameters:
             raise MissingParameterError(
-                module=self._MODULE_NAME,name=self.name,
+                module=self._MODULE_NAME, name=self.name,
                 parameter='name'
             )
+
+        if 'print_buffer_size' not in parameters['buffer_options']:
+            parameters['buffer_options']['print_buffer_size'] = False
+        elif type(parameters['buffer_options']['print_buffer_size']) is not bool:
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
+                                        parameter='buffer_options.print_buffer_size',
+                                        cause='must_be_bool')
 
     @abc.abstractmethod
     def _initialize_parameter_fields(self, parameters: dict):
         """
-        Initializes parameter fields of this node. This is a abstract method and should be implemented by subclasses.
+        Initializes parameter fields of this node. This is an abstract method and should be implemented by subclasses.
 
         :param parameters: Parameters passed to this node.
         :type parameters: dict
         """
+        self._enable_log = parameters['enable_log']
+        self._should_print_buffer_size = parameters['buffer_options']['print_buffer_size']
         return
 
     def _clear_input_buffer(self):
@@ -103,6 +117,12 @@ class Node:
     def _insert_data_in_buffer(data: FrameworkData, buffer_data_name: str, buffer: Dict[str, FrameworkData]):
         buffer[buffer_data_name].extend(copy.deepcopy(data))
 
+    def _print_buffer_size(self, buffer_name: str, buffer: Dict[str, FrameworkData]):
+        formatted_buffer_sizes = f'Buffer:{buffer_name}\t'
+        for key in buffer:
+            formatted_buffer_sizes += f'###Key:{key}=Length:{buffer[key].get_data_count()}### '
+        self.print(formatted_buffer_sizes)
+
     def _insert_new_input_data(self, data: FrameworkData, input_name: str):
         """Appends new data to the end of already existing input buffer
 
@@ -112,6 +132,8 @@ class Node:
         :type input_name: str
         """
         self._input_buffer[input_name].extend(copy.deepcopy(data))
+        if self._should_print_buffer_size:
+            self._print_buffer_size('input', self._input_buffer)
 
     def _insert_new_output_data(self, data: FrameworkData, output_name: str):
         """
@@ -123,6 +145,8 @@ class Node:
         :type output_name: str
         """
         self._output_buffer[output_name].extend(copy.deepcopy(data))
+        if self._should_print_buffer_size:
+            self._print_buffer_size('output', self._output_buffer)
 
     def _initialize_children(self):
         """Sets child nodes dictionary to a new, empty dict
@@ -264,7 +288,8 @@ class Node:
         return
 
     def print(self, message: str) -> None:
-        print(f'{self._MODULE_NAME}.{self.name} - {message}')
+        if self._enable_log:
+            print(f'{time.time()} - {self._MODULE_NAME}.{self.name} - {message}')
 
     @property
     def module_name(self):

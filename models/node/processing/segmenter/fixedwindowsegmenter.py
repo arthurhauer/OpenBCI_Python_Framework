@@ -20,48 +20,57 @@ class FixedWindowSegmenter(Segmenter):
         return self._input_buffer[self.INPUT_MAIN].get_data_count() >= self.window_size
 
     def _validate_parameters(self, parameters: dict):
+        super()._validate_parameters(parameters)
         if 'window_size' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='window_size')
         if 'filling_value' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
-                                        parameter='filling_type')
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
+                                        parameter='filling_value')
         if type(parameters['window_size']) is not int:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='window_size',
                                         cause='must_be_int')
         if parameters['window_size'] < 1:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='window_size',
                                         cause='must_be_greater_than_0')
         if type(parameters['filling_value']) is not str:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='filling_value',
                                         cause='must_be_str')
         if parameters['filling_value'] not in ['zero', 'latest']:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='filling_value',
                                         cause='must_be_in.[zero, latest]')
 
     def segment_data(self, data: FrameworkData) -> FrameworkData:
         segmented_data: FrameworkData = FrameworkData(sampling_frequency_hz=data.sampling_frequency)
-        for channel in data.channels:
-            raw_signal = data.get_data_on_channel(channel)
-            segmented_channel = []
-            total_count = len(raw_signal)
-            window_count = math.floor(total_count / self.window_size)
-            remaining_samples = total_count % self.window_size
-            for i in range(1, window_count+1):
-                window_start = (i - 1) * self.window_size
-                window_end = i * self.window_size
-                current_window = raw_signal[window_start:window_end]
-                segmented_channel.append(current_window)
-            if remaining_samples > 0:
-                window_start = window_count * self.window_size
-                window_end = total_count
-                fill_value = 0 if self.filling_value == 'zero' else raw_signal[total_count - 1]
-                fill_count = self.window_size - remaining_samples
-                current_window = raw_signal[window_start:window_end] + [fill_value] * fill_count
-                segmented_channel.append(current_window)
-            segmented_data.input_data_on_channel(segmented_channel, channel)
+        while True:
+            if data.get_data_count() > self.window_size:
+                window = data.splice(0, self.window_size)
+                for channel in window.channels:
+                    segmented_data.input_data_on_channel([window.get_data_on_channel(channel)],channel)
+            else:
+                break
+
+        # for channel in data.channels:
+        #     raw_signal = data.get_data_on_channel(channel)
+        #     segmented_channel = []
+        #     total_count = len(raw_signal)
+        #     window_count = math.floor(total_count / self.window_size)
+        #     remaining_samples = total_count % self.window_size
+        #     for i in range(1, window_count + 1):
+        #         window_start = (i - 1) * self.window_size
+        #         window_end = i * self.window_size
+        #         current_window = raw_signal[window_start:window_end]
+        #         segmented_channel.append(current_window)
+        #     if remaining_samples > 0:
+        #         window_start = window_count * self.window_size
+        #         window_end = total_count
+        #         fill_value = 0 if self.filling_value == 'zero' else raw_signal[total_count - 1]
+        #         fill_count = self.window_size - remaining_samples
+        #         current_window = raw_signal[window_start:window_end] + [fill_value] * fill_count
+        #         segmented_channel.append(current_window)
+        #     segmented_data.input_data_on_channel(segmented_channel, channel)
         return segmented_data
