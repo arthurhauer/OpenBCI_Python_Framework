@@ -351,6 +351,14 @@ class FrameworkData:
         return len(self._data) == 1
 
     def splice(self, start_index: int, count: int) -> FrameworkData:
+        """This method is used remove a given number of data points from a starting index and returns the removed items.
+
+        :param start_index: index of removal start
+        :param count: number of data points to be removed
+
+        :return: ``FrameworkData`` with all original channels, and removed data.
+        :rtype: FrameworkData
+        """
         return_value: FrameworkData = FrameworkData(self.sampling_frequency, self.channels)
         end_index = start_index + count
         for channel in self.channels:

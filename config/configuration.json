@@ -135,8 +135,7 @@
               "node": "merge",
               "input": "slave_main"
             }
-          ],
-          "merged_timestamp": []
+          ]
         }
       },
       "merge": {
