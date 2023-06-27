@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../models.utils.html">models.utils package</a></li>
@@ -225,7 +236,42 @@
 
 
 <div class="viewcode-block" id="OpenBCIBoard"><a class="viewcode-back" href="../../../../models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard">[docs]</a><span class="k">class</span> <span class="nc">OpenBCIBoard</span><span class="p">(</span><span class="n">GeneratorNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This node is used to connect to an OpenBCI board and collect data from it.</span>
+<span class="sd">    The node is based on the BrainFlow library and it is compatible with all the boards</span>
+<span class="sd">    supported by the library. The node is able to connect to the board all BrainFlow</span>
+<span class="sd">    supported communication methods:\n</span>
+<span class="sd">        - Wifi;</span>
+<span class="sd">        - Bluetooth;</span>
+<span class="sd">        - USB;</span>
+<span class="sd">        - Synthetic board (for testing purposes).</span>
+<span class="sd">    </span>
+<span class="sd">    The node is able to collect data from the board and send it to the next node in the pipeline.</span>
 
+<span class="sd">    Attributes:</span>
+<span class="sd">        _MODULE_NAME (str): The name of the module (in this case, ``models.node.generator.open_bci_board``).</span>
+<span class="sd">        OUTPUT_EEG (str): Output data type (in this case, ``eeg``).</span>
+<span class="sd">        OUTPUT_ACCELEROMETER (str): The name of the output containing the accelerometer data (in this case, ``accelerometer``).</span>
+<span class="sd">        OUTPUT_TIMESTAMP (str): The name of the output containing the timestamp data (in this case, ``timestamp``).</span>
+<span class="sd">    </span>
+<span class="sd">    ``configuration.json`` usage:</span>
+
+<span class="sd">        **module** (*str*): Current module name (in this case ``models.node.generator``).\n</span>
+<span class="sd">        **type** (*str*): Current node type (in this case ``OpenBCIBoard``).\n</span>
+<span class="sd">        **communication** (*dict*): OpenBCIBoard communication parameters.\n</span>
+<span class="sd">            **ip_port** (*int*): ip port for socket connection, for some boards where we know it in front you dont need this parameter (default: ``0``).\n</span>
+<span class="sd">            **mac_address** (*str*): mac address for example its used for bluetooth based boards, if not provided BrainFlow will try to autodiscover the device (default: ``&quot;&quot;``).\n</span>
+<span class="sd">            **other_info** (*str*): other info, for example it can be ip address for wifi shield (default: ``&quot;&quot;``).\n</span>
+<span class="sd">            **serial_number** (*str*): serial number of device. Important if you have multiple devices in the same place. If not provided BrainFlow will try to autodiscover the device (default: ``&quot;&quot;``).\n</span>
+<span class="sd">            **ip_address** (*str*): ip address is used for boards which reads data from socket connection (default: ``&quot;&quot;``).\n</span>
+<span class="sd">            **ip_protocol** (*int*): ip protocol type from IpProtocolType enum from brainflow lib (default: ``IpProtocolType.NONE.value``).\n</span>
+<span class="sd">            **timeout** (*int*): timeout for device discovery (default: ``0``).\n</span>
+<span class="sd">            **file** (*str*): file is used for file boards (default: ``&quot;&quot;``).\n</span>
+<span class="sd">            **serial_port** (*str*): serial port, e.g. COM4, /dev/ttyACM0, etc (default: ``&quot;&quot;``).\n</span>
+<span class="sd">        **log_level** (*str*): The log level of the node (default: ``&quot;OFF&quot;``).\n</span>
+<span class="sd">        **board** (*str*): The type of the board (default: ``&quot;SYNTHETIC_BOARD&quot;``). Check all the supported boards in https://brainflow.readthedocs.io/en/stable/SupportedBoards.html#supported-boards-label.\n</span>
+<span class="sd">        **buffer_options** (*dict*): Buffer options.\n</span>
+<span class="sd">            **clear_output_buffer_on_generate** (*bool*): If ``True``, the output buffer will be cleared when the node is executed.\n</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;node.generator.open_bci_board&#39;</span>
 
@@ -234,6 +280,17 @@
     <span class="n">OUTPUT_TIMESTAMP</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;timestamp&#39;</span>
 
     <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validates the specified parameters for the OpenBCIBoard instance, raising MissingParameterError if any required</span>
+<span class="sd">        parameters are missing.</span>
+
+<span class="sd">        :param parameters: The parameters to validate.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        </span>
+<span class="sd">        :raises MissingParameterError: the ``communication`` parameter is required.</span>
+<span class="sd">        :raises MissingParameterError: the ``log_level`` parameter is required.</span>
+<span class="sd">        :raises MissingParameterError: the ``board`` parameter is required.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;communication&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -246,6 +303,11 @@
                                         <span class="n">parameter</span><span class="o">=</span><span class="s1">&#39;board&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_initialize_parameter_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initializes the fields of the OpenBCIBoard instance.</span>
+
+<span class="sd">        :param parameters: The parameters to initialize the fields.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_parameter_fields</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_board</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_log_level</span><span class="p">(</span><span class="n">log_level</span><span class="o">=</span><span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;log_level&#39;</span><span class="p">])</span>
@@ -265,47 +327,65 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">_is_next_node_call_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns ``True`` if the next node call is enabled, ``False`` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">OUTPUT_TIMESTAMP</span><span class="p">]</span><span class="o">.</span><span class="n">has_data</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_is_generate_data_condition_satisfied</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_get_sampling_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the sampling rate of the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sampling_rate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_sampling_rate</span> <span class="o">=</span> <span class="n">BoardShim</span><span class="o">.</span><span class="n">get_sampling_rate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">board_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sampling_rate</span>
 
     <span class="k">def</span> <span class="nf">_get_timestamp_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the timestamp channel of the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp_channel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp_channel</span> <span class="o">=</span> <span class="n">BoardShim</span><span class="o">.</span><span class="n">get_timestamp_channel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">board_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp_channel</span>
 
     <span class="k">def</span> <span class="nf">_get_timestamp_channel_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the name of the timestamp channel of the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp_channel_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp_channel_name</span> <span class="o">=</span> <span class="s1">&#39;timestamp&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timestamp_channel_name</span>
 
     <span class="k">def</span> <span class="nf">_get_eeg_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the EEG channels of the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eeg_channels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_eeg_channels</span> <span class="o">=</span> <span class="n">BoardShim</span><span class="o">.</span><span class="n">get_eeg_channels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">board_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eeg_channels</span>
 
     <span class="k">def</span> <span class="nf">_get_eeg_channel_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the names of the EEG channels of the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eeg_channel_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_eeg_channel_names</span> <span class="o">=</span> <span class="n">BoardShim</span><span class="o">.</span><span class="n">get_eeg_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">board_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eeg_channel_names</span>
 
     <span class="k">def</span> <span class="nf">_get_accelerometer_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the accelerometer channels of the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accelerometer_channels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_accelerometer_channels</span> <span class="o">=</span> <span class="n">BoardShim</span><span class="o">.</span><span class="n">get_accel_channels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">board_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accelerometer_channels</span>
 
     <span class="k">def</span> <span class="nf">_get_accelerometer_channel_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the names of the accelerometer channels of the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accelerometer_channel_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_accelerometer_channel_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accelerometer_channel_names</span>
 
     <span class="k">def</span> <span class="nf">_generate_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FrameworkData</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Generates data for the next trial. This method is called by the node when it is executed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_buffer</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -313,9 +393,13 @@
         <span class="k">return</span> <span class="n">return_value</span>
 
     <span class="k">def</span> <span class="nf">_get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the inputs of the node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_outputs</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the outputs of the node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">OUTPUT_EEG</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">OUTPUT_ACCELEROMETER</span><span class="p">,</span>
@@ -323,17 +407,23 @@
         <span class="p">]</span>
 
 <div class="viewcode-block" id="OpenBCIBoard.start"><a class="viewcode-back" href="../../../../models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Starts the thread that collects data from the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stop_execution</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="OpenBCIBoard.stop"><a class="viewcode-back" href="../../../../models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Stops the thread that collects data from the board.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_thread_started</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stop_execution</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="OpenBCIBoard.dispose"><a class="viewcode-back" href="../../../../models.node.generator.html#models.node.generator.openbciboard.OpenBCIBoard.dispose">[docs]</a>    <span class="k">def</span> <span class="nf">dispose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Node self implementation of disposal of allocated resources.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">release_session</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_board_streaming</span> <span class="o">=</span> <span class="kc">False</span>
@@ -343,6 +433,11 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_set_log_level</span><span class="p">(</span><span class="n">log_level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;OFF&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Sets the log level of the node.</span>
+
+<span class="sd">        :param log_level: The log level to set(default: ``&quot;OFF&quot;``).</span>
+<span class="sd">        :type log_level: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">log_level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">log_level</span> <span class="o">=</span> <span class="s2">&quot;OFF&quot;</span>
         <span class="n">log_level</span> <span class="o">=</span> <span class="s2">&quot;LEVEL_&quot;</span> <span class="o">+</span> <span class="n">log_level</span>
@@ -350,9 +445,19 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_board_type</span><span class="p">(</span><span class="n">board</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SYNTHETIC_BOARD&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the board type.</span>
+
+<span class="sd">        :param board: The board type(default: ``&quot;SYNTHETIC_BOARD&quot;``).</span>
+<span class="sd">        :type board: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">BoardIds</span><span class="p">[</span><span class="n">board</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_set_brain_flow_input_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Sets the BrainFlowInputParameters of the node.</span>
+
+<span class="sd">        :param parameters: The parameters to set.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_brain_flow_parameters</span> <span class="o">=</span> <span class="n">BrainFlowInputParams</span><span class="p">()</span>
         <span class="k">if</span> <span class="s1">&#39;ip_port&#39;</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_brain_flow_parameters</span><span class="o">.</span><span class="n">ip_port</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;ip_port&#39;</span><span class="p">]</span>
@@ -374,11 +479,22 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_brain_flow_parameters</span><span class="o">.</span><span class="n">serial_port</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;serial_port&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_get_board</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;SYNTHETIC_BOARD&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BoardShim</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the board instance.</span>
+
+<span class="sd">        :param board: The board type(default: ``&quot;SYNTHETIC_BOARD&quot;``).</span>
+<span class="sd">        :type board: str</span>
+
+<span class="sd">        :return: The board instance.</span>
+<span class="sd">        :rtype: BoardShim</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_board</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_board</span> <span class="o">=</span> <span class="n">BoardShim</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_board_type</span><span class="p">(</span><span class="n">board</span><span class="o">=</span><span class="n">board</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_brain_flow_parameters</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_board</span>
 
     <span class="k">def</span> <span class="nf">_start_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Starts the stream of the board. This method is start streaming thread and store data in internal ringbuffer.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">is_prepared</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">prepare_session</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_get_board</span><span class="p">()</span><span class="o">.</span><span class="n">start_stream</span><span class="p">()</span>
@@ -386,6 +502,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_board_streaming</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Collects data from the board. This method get the data from ringbuffer, create a FrameworkData instance</span>
+<span class="sd">        and insert it in the Node output buffer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_execution</span><span class="p">:</span>
                 <span class="k">return</span>

@@ -236,10 +236,45 @@
 <dt class="sig sig-object py" id="models.node.processing.segmenter.fixedwindowsegmenter.FixedWindowSegmenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.segmenter.fixedwindowsegmenter.</span></span><span class="sig-name descname"><span class="pre">FixedWindowSegmenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/segmenter/fixedwindowsegmenter.html#FixedWindowSegmenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.segmenter.fixedwindowsegmenter.FixedWindowSegmenter" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.node.processing.segmenter.segmenter.Segmenter" title="models.node.processing.segmenter.segmenter.Segmenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Segmenter</span></code></a></p>
+<p>Segments the input data into fixed size windows. Each window is a list of samples, normally called epoch.
+This is important because the other nodes in the pipeline expect the data to be segmented in this way. For exemple,
+the trainable feature extractor node expects the input data to be segmented in epochs, so if you segment the data in epochs of 
+200 samples and configure the feature extractor training_set_size to be 10, the feature extractor will use 2000 samples
+to train the model. If you segment the data in epochs of 100 samples and configure the feature extractor training_set_size
+to be 10, the feature extractor will use 1000 samples to train the model.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (str): The name of the module (in his case <code class="docutils literal notranslate"><span class="pre">node.processing.segmenter.fixedwindowsegmenter</span></code>)</p>
+</dd>
+<dt>configuration.json usage:</dt><dd><p><strong>module</strong> (<em>str</em>): The name of the module (<code class="docutils literal notranslate"><span class="pre">node.processing.segmenter</span></code>)</p>
+<p><strong>type</strong> (<em>str</em>): The type of the node (<code class="docutils literal notranslate"><span class="pre">FixedWindowSegmenter</span></code>)</p>
+<p><strong>window_size</strong> (<em>int</em>): The size of the window (epoch) in samples.</p>
+<p><strong>filling_value</strong> (<em>str</em>): The value to fill the last window if it’s not complete. Can be <code class="docutils literal notranslate"><span class="pre">zero</span></code> or <code class="docutils literal notranslate"><span class="pre">latest</span></code>.</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): Whether to clear the output buffer when new data is inserted in the input buffer.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): Whether to clear the input buffer after processing.</p>
+<p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): Whether to clear the output buffer after processing.</p>
+</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.processing.segmenter.fixedwindowsegmenter.FixedWindowSegmenter.segment_data">
 <span class="sig-name descname"><span class="pre">segment_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><span class="pre">FrameworkData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><span class="pre">FrameworkData</span></a></span></span><a class="reference internal" href="_modules/models/node/processing/segmenter/fixedwindowsegmenter.html#FixedWindowSegmenter.segment_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.segmenter.fixedwindowsegmenter.FixedWindowSegmenter.segment_data" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Method that segments the data into fixed size windows. It just segments the data on the main input channel, 
+and if the last window is not complete, it fills it with zeros or with the last sample of the window, depending on
+the <code class="docutils literal notranslate"><span class="pre">filling_value</span></code> parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference internal" href="models.html#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><em>FrameworkData</em></a>) – The data to segment.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The segmented data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="models.html#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData">FrameworkData</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -250,6 +285,17 @@
 <dt class="sig sig-object py" id="models.node.processing.segmenter.segmenter.Segmenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.segmenter.segmenter.</span></span><span class="sig-name descname"><span class="pre">Segmenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/segmenter/segmenter.html#Segmenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.segmenter.segmenter.Segmenter" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.processing.html#models.node.processing.processing_node.ProcessingNode" title="models.node.processing.processing_node.ProcessingNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingNode</span></code></a></p>
+<p>This is the base class for all segmenters. A segmenter is a node that segments the input data into smaller parts.
+In many applications of the signal processing such as automatic analysis of EEG signal, it is needed that signal is 
+split to smaller parts that each part has the same statistical characterizations such as the amplitude and frequency.
+This is called segmentation. This class does that by segmenting the input data into smaller parts. The segmentation
+itself is done by the segment_data method that must be implemented by the subclasses.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (<cite>str</cite>): The name of the module (in his case <code class="docutils literal notranslate"><span class="pre">node.processing.segmenter.segmenter</span></code>)
+INPUT_MAIN (<cite>str</cite>): The name of the main input (<code class="docutils literal notranslate"><span class="pre">main</span></code>)
+OUTPUT_MAIN (<cite>str</cite>): The name of the main output (<code class="docutils literal notranslate"><span class="pre">main</span></code>)</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.processing.segmenter.segmenter.Segmenter.INPUT_MAIN">
 <span class="sig-name descname"><span class="pre">INPUT_MAIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'main'</span></em><a class="headerlink" href="#models.node.processing.segmenter.segmenter.Segmenter.INPUT_MAIN" title="Permalink to this definition">#</a></dt>
@@ -263,7 +309,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.processing.segmenter.segmenter.Segmenter.segment_data">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">segment_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="models.html#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><span class="pre">FrameworkData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="models.html#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><span class="pre">FrameworkData</span></a></span></span><a class="reference internal" href="_modules/models/node/processing/segmenter/segmenter.html#Segmenter.segment_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.segmenter.segmenter.Segmenter.segment_data" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>This method segments the data. It must be implemented by the subclasses.</p>
+</dd></dl>
 
 </dd></dl>
 

@@ -236,6 +236,30 @@
 <dt class="sig sig-object py" id="models.node.processing.trainable.feature_extractor.csp.CSP">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.trainable.feature_extractor.csp.</span></span><span class="sig-name descname"><span class="pre">CSP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/trainable/feature_extractor/csp.html#CSP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.trainable.feature_extractor.csp.CSP" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.node.processing.trainable.feature_extractor.sklearn_feature_extractor.SKLearnFeatureExtractor" title="models.node.processing.trainable.feature_extractor.sklearn_feature_extractor.SKLearnFeatureExtractor"><code class="xref py py-class docutils literal notranslate"><span class="pre">SKLearnFeatureExtractor</span></code></a></p>
+<p>This node is a wrapper for the sklearn CSP feature extractor. A CSP is used for M/EEG signal decomposition using 
+the Common Spatial Patterns (CSP). This node can be used as a supervised decomposition to estimate spatial 
+filters for feature extraction in a 2 class decoding problem.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (str): The name of the module(in this case <code class="docutils literal notranslate"><span class="pre">node.processing.trainable.feature_extractor.csp</span></code>)</p>
+</dd>
+<dt>configuration.json usage:</dt><dd><p><strong>module</strong> (<em>str</em>): The name of the module (<code class="docutils literal notranslate"><span class="pre">node.processing.trainable.feature_extractor</span></code>)</p>
+<p><strong>type</strong> (<em>str</em>): The type of the node (<code class="docutils literal notranslate"><span class="pre">CSP</span></code>)</p>
+<p><strong>number_of_components</strong> (<em>int</em>): The number of components to decompose the signal into.</p>
+<p><strong>training_set_size</strong> (<em>int</em>): The size of the training set in samples.</p>
+<p><strong>save_after_training</strong> (<em>bool</em>): Whether to save the trained processor after training. This is a optional parameter.</p>
+<p><strong>save_file_path</strong> (<em>str</em>): The path to save the trained processor if <code class="docutils literal notranslate"><span class="pre">save_after_training</span></code> is True. Only mandatory if <code class="docutils literal notranslate"><span class="pre">save_after_training</span></code> is True.</p>
+<p><strong>load_trained</strong> (<em>bool</em>): Whether to load a trained processor.</p>
+<p><strong>load_file_path</strong> (<em>str</em>): The path to load the trained processor if <code class="docutils literal notranslate"><span class="pre">load_trained</span></code> is True. Only mandatory if <code class="docutils literal notranslate"><span class="pre">load_trained</span></code> is True.</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_input_buffer_after_training</strong> (<em>bool</em>): Whether to clear the input buffer after training.</p>
+<p><strong>process_input_buffer_after_training</strong> (<em>bool</em>): Whether to process the input buffer after training.</p>
+<p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): Whether to clear the output buffer when new data is inserted in the input buffer.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): Whether to clear the input buffer after processing.</p>
+<p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): Whether to clear the output buffer after processing.</p>
+</div></blockquote>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -245,6 +269,12 @@
 <dt class="sig sig-object py" id="models.node.processing.trainable.feature_extractor.sklearn_feature_extractor.SKLearnFeatureExtractor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.trainable.feature_extractor.sklearn_feature_extractor.</span></span><span class="sig-name descname"><span class="pre">SKLearnFeatureExtractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/trainable/feature_extractor/sklearn_feature_extractor.html#SKLearnFeatureExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.trainable.feature_extractor.sklearn_feature_extractor.SKLearnFeatureExtractor" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.processing.trainable.html#models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode" title="models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">SKLearnCompatibleTrainableNode</span></code></a></p>
+<p>Base class for all sklearn feature extractors. This node is just a serie of methods that need to be implemented
+by the child classes.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (str): The name of the module(in this case <code class="docutils literal notranslate"><span class="pre">node.processing.trainable.feature_extractor</span></code>)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

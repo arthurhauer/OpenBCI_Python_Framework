@@ -7,9 +7,53 @@ from models.exception.missing_parameter import MissingParameterError
 
 
 class Duration:
+    """This class generates a random number based on the parameters that you define. The data generated is random, but
+    it is restricted to the statistical parameters that you define. For example, if you define a mean of 5 seconds and a
+    standard deviation of 1 second, the data generated will be random, but it will be restricted to the range of 4 to 6
+    seconds.
+
+    :param mean: Mean value for the trial duration.
+    :type mean: float
+    :param standard_deviation: Standard deviation value for the trial duration.
+    :type standard_deviation: float
+    :param maximum: Maximum value for the trial duration.
+    :type maximum: float
+    :param minimum: Minimum value for the trial duration.
+    :type minimum: float
+
+    ``configuration.json`` usage:
+
+        **mean** (*float*): Mean value for the trial duration.\n
+        **standard_deviation** (*float*): Standard deviation value for the trial duration.\n
+        **maximum** (*float*): Maximum value for the trial duration.\n
+        **minimum** (*float*): Minimum value for the trial duration.\n
+    
+    """
     _MODULE_NAME: Final[str] = 'utils.duration'
 
     def __init__(self, mean: float, standard_deviation: float, maximum: float, minimum: float) -> None:
+        """Constructor method. Initializes and validates the parameters of the class.
+        The self._distribution variable is used to generate the random numbers. It uses the scypy.stats.truncnorm
+        function to generate the random numbers in a truncated normal distribution. The truncated normal distribution
+        is used because it restricts the random numbers to the range that you define.
+
+        :param mean: Mean value for the trial duration.
+        :type mean: float
+        :param standard_deviation: Standard deviation value for the trial duration.
+        :type standard_deviation: float
+        :param maximum: Maximum value for the trial duration.
+        :type maximum: float
+        :param minimum: Minimum value for the trial duration.
+        :type minimum: float
+
+        :raises MissingParameterError: The ``mean``, ``standard_deviation``, ``maximum`` and ``minimum`` parameters are required.
+        :raises InvalidParameterValue: The ``mean``, ``standard_deviation``, ``maximum`` and ``minimum`` parameters must be greater than 0.
+        :raises InvalidParameterValue: The ``maximum`` parameter must be greater than the ``mean`` parameter.
+        :raises InvalidParameterValue: The ``minimum`` parameter must be less than the ``mean`` parameter.
+
+        :return: A new instance of ``Duration``.
+        """
+
         super().__init__()
         if mean is None:
             raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
@@ -57,6 +101,15 @@ class Duration:
 
     @classmethod
     def from_config_json(cls, parameters: dict):
+        """Creates a new instance of this class and initializes it with the parameters that were passed to it.
+        
+        :param parameters: The parameters that will be passed to the node. This comes from the configuration file.
+        :type parameters: dict
+
+        :raises MissingParameterError: The ``mean``, ``standard_deviation``, ``maximum`` and ``minimum`` parameters are required.
+
+        :return: A new instance of this class.
+        """
         if 'mean' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
                                         parameter='mean')
@@ -77,4 +130,6 @@ class Duration:
         )
 
     def get_duration(self) -> float:
+        """Returns a random number based on the parameters that you defined when you created the instance of this class.
+        """
         return self._distribution.rvs(1)[0]

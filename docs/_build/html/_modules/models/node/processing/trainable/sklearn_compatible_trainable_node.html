@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../models.utils.html">models.utils package</a></li>
@@ -226,16 +237,51 @@
 
 
 <div class="viewcode-block" id="SKLearnCompatibleTrainableNode"><a class="viewcode-back" href="../../../../../models.node.processing.trainable.html#models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode">[docs]</a><span class="k">class</span> <span class="nc">SKLearnCompatibleTrainableNode</span><span class="p">(</span><span class="n">TrainableProcessingNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class for all trainable processing nodes that use sklearn processors. SKLear has multiple processors</span>
+<span class="sd">    that can be used for different purposes. This class is used to wrap them and make them compatible with the</span>
+<span class="sd">    framework. Many SKLearn processors return a ``TransformerMixin`` object, which is a transformer that can be used</span>
+<span class="sd">    to transform data, and a ``BaseEstimator`` object, which is an estimator that can be used to train the transformer.</span>
+<span class="sd">    This class is abstract and should be inherited by all nodes that use sklearn processors. </span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _MODULE_NAME  (`str`): The name of the module (in his case ``node.processing.trainable.sklearn_compatible_trainable_node``)</span>
+<span class="sd">        OUTPUT_MAIN (`str`): The name of the main output of the node (in this case ``main``)</span>
+<span class="sd">    </span>
+<span class="sd">    This node should not be used directly in the configuration.json file. But every node that extends this node will have the </span>
+<span class="sd">    following parameters in the configuration.json file:</span>
+<span class="sd">        **module** (*str*): The name of the module (``node.processing``)\n</span>
+<span class="sd">        **training_set_size** (*int*): The size of the training set in samples.\n</span>
+<span class="sd">        **save_after_training** (*bool*): Whether to save the trained processor after training. This is a optional parameter.\n</span>
+<span class="sd">        **save_file_path** (*str*): The path to save the trained processor if ``save_after_training`` is True. Only mandatory if ``save_after_training`` is True.\n</span>
+<span class="sd">        **load_trained** (*bool*): Whether to load a trained processor.\n</span>
+<span class="sd">        **load_file_path** (*str*): The path to load the trained processor if ``load_trained`` is True. Only mandatory if ``load_trained`` is True.\n</span>
+<span class="sd">        **buffer_options** (*dict*): Buffer options.\n</span>
+<span class="sd">            **clear_input_buffer_after_training** (*bool*): Whether to clear the input buffer after training.\n</span>
+<span class="sd">            **process_input_buffer_after_training** (*bool*): Whether to process the input buffer after training.\n</span>
+<span class="sd">            **clear_output_buffer_on_data_input** (*bool*): Whether to clear the output buffer when new data is inserted in the input buffer.\n</span>
+<span class="sd">            **clear_input_buffer_after_process** (*bool*): Whether to clear the input buffer after processing.\n</span>
+<span class="sd">            **clear_output_buffer_after_process** (*bool*): Whether to clear the output buffer after processing.\n</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;node.processing.trainable.sklearn_compatible_trainable_node&#39;</span>
 
     <span class="n">OUTPUT_MAIN</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;main&#39;</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validates the parameters of the node. This method calls the parent method to validate the parameters of this node.</span>
+
+<span class="sd">        :param parameters: The parameters of the node.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_initialize_parameter_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initializes the parameter fields calling the parent method and initializes the ``sklearn_processor``.</span>
+
+<span class="sd">        :param parameters: The parameters of the node.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sklearn_processor</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_parameter_fields</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sklearn_processor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -243,24 +289,55 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_initialize_trainable_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">TransformerMixin</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initializes the trainable processor. This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :raises NotImplementedError: If the method is not implemented by the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_load_trained_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loaded_processor</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Loads a trained processor in the node initialization.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sklearn_processor</span> <span class="o">=</span> <span class="n">loaded_processor</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_save_trained_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Saves the trained data in the file specified in the ``save_file_path`` parameter if ``save_after_training`` is True.</span>
+<span class="sd">        This is done joblib.dump that persist an arbitrary Python object into one file, in this case the sklearn processor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sklearn_processor</span><span class="p">,</span> <span class="n">save_path</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SKLearnCompatibleTrainableNode.from_config_json"><a class="viewcode-back" href="../../../../../models.node.processing.trainable.html#models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode.from_config_json">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_config_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Creates a new instance of this node using the parameters specified in the configuration.json file.</span>
+
+<span class="sd">        :param parameters: The parameters of the node.</span>
+<span class="sd">        :type parameters: dict</span>
+
+<span class="sd">        :return: A new instance of this node.</span>
+<span class="sd">        :rtype: SKLearnCompatibleTrainableNode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span></div>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_should_retrain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the node should retrain the processor. This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :raises NotImplementedError: If the method is not implemented by the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FrameworkData</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">FrameworkData</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method formats the raw data and then processes it. This is just a generic pipeline that should be used by all</span>
+<span class="sd">        nodes that extend this node. The developer must implement the ``_inner_process_data`` and ``_format_processed_data`` methods,</span>
+<span class="sd">        so that the data is processed and formatted according to the node needs.</span>
+
+<span class="sd">        :param data: The data to process.</span>
+<span class="sd">        :type data: dict(str, FrameworkData)</span>
+
+<span class="sd">        :return: The processed data.</span>
+<span class="sd">        :rtype: defined by the developer in the ``_format_processed_data`` method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">raw_data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_raw_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_DATA</span><span class="p">])</span>
         <span class="n">processed_data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner_process_data</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span>
@@ -268,11 +345,30 @@
         <span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">_format_raw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Formats the raw data. This method is used to format the raw data in a way that is compatible with the sklearn processors.</span>
+<span class="sd">        It first converts the raw data to a numpy 2d array and then moves the axis to the first position.</span>
+
+<span class="sd">        :param raw_data: The raw data to format.</span>
+<span class="sd">        :type raw_data: FrameworkData</span>
+
+<span class="sd">        :return: The formatted data.</span>
+<span class="sd">        :rtype: ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">formatted_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">raw_data</span><span class="o">.</span><span class="n">get_data_as_2d_array</span><span class="p">())</span>
         <span class="n">formatted_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">formatted_data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">formatted_data</span>
 
     <span class="k">def</span> <span class="nf">_format_raw_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_label</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method add to each raw data epoch the according label. This is done by getting the maximum value of each epoch</span>
+<span class="sd">        and adding it to the label list. Then the label list is converted to a numpy array and stored in the class variable</span>
+<span class="sd">        ``_format_raw_label``.</span>
+
+<span class="sd">        :param raw_label: The raw label to format.</span>
+<span class="sd">        :type raw_label: FrameworkData</span>
+
+<span class="sd">        :return: The formatted label.</span>
+<span class="sd">        :rtype: ndarray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">formatted_label</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="n">raw_label</span><span class="o">.</span><span class="n">get_data_single_channel</span><span class="p">():</span>
             <span class="n">formatted_label</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">epoch</span><span class="p">))</span>
@@ -281,26 +377,65 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_format_processed_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">processed_data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">sampling_frequency</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FrameworkData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Formats the processed data. This method is used to format the processed data in a way that is compatible with the framework.</span>
+<span class="sd">        This method should be implemented by the subclasses.</span>
+
+<span class="sd">        :param processed_data: The processed data to format.</span>
+<span class="sd">        :type processed_data: Any</span>
+<span class="sd">        :param sampling_frequency: The sampling frequency of the processed data.</span>
+<span class="sd">        :type sampling_frequency: float</span>
+
+<span class="sd">        :raises NotImplementedError: If the method is not implemented by the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_inner_process_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Processes the data. This method is used to process the data using the sklearn processor. This method should be implemented</span>
+<span class="sd">        by the subclasses.</span>
+
+<span class="sd">        :param data: The data to process.</span>
+<span class="sd">        :type data: Any</span>
+
+<span class="sd">        :raises NotImplementedError: If the method is not implemented by the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_inner_train_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The SKLearn processor is trained using the ``fit`` method. This method is used to train the processor using the data and</span>
+<span class="sd">        label passed as parameters. This method just calls the ``fit`` method of the sklearn processor, that can be any sklearn processor.</span>
+
+<span class="sd">        :param data: The data to train the processor.</span>
+<span class="sd">        :type data: Any</span>
+<span class="sd">        :param label: The label to train the processor.</span>
+<span class="sd">        :type label: Any</span>
+
+<span class="sd">        :return: The trained processor.</span>
+<span class="sd">        :rtype: Any</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sklearn_processor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method is used to train the processor. This is method just get the raw data and label, formats them </span>
+<span class="sd">        and then calls the ``_inner_train_processor`` method that will train the processor. This is done for each set </span>
+<span class="sd">        size specified in the ``training_set_size`` parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">formatted_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_raw_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="n">formatted_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format_raw_label</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_inner_train_processor</span><span class="p">(</span><span class="n">formatted_data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">training_set_size</span><span class="p">],</span> <span class="n">formatted_label</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">training_set_size</span><span class="p">])</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_is_next_node_call_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the next node call is enabled&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_is_next_node_call_enabled</span><span class="p">()</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the outputs of the node</span>
+<span class="sd">        </span>
+<span class="sd">        :return: The outputs of the node.</span>
+<span class="sd">        :rtype: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">OUTPUT_MAIN</span>
         <span class="p">]</span></div>

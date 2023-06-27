@@ -269,6 +269,34 @@
 <dt class="sig sig-object py" id="models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.trainable.sklearn_compatible_trainable_node.</span></span><span class="sig-name descname"><span class="pre">SKLearnCompatibleTrainableNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/trainable/sklearn_compatible_trainable_node.html#SKLearnCompatibleTrainableNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#models.node.processing.trainable.trainable_processing_node.TrainableProcessingNode" title="models.node.processing.trainable.trainable_processing_node.TrainableProcessingNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TrainableProcessingNode</span></code></a></p>
+<p>Base class for all trainable processing nodes that use sklearn processors. SKLear has multiple processors
+that can be used for different purposes. This class is used to wrap them and make them compatible with the
+framework. Many SKLearn processors return a <code class="docutils literal notranslate"><span class="pre">TransformerMixin</span></code> object, which is a transformer that can be used
+to transform data, and a <code class="docutils literal notranslate"><span class="pre">BaseEstimator</span></code> object, which is an estimator that can be used to train the transformer.
+This class is abstract and should be inherited by all nodes that use sklearn processors.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>_MODULE_NAME  (<cite>str</cite>): The name of the module (in his case <code class="docutils literal notranslate"><span class="pre">node.processing.trainable.sklearn_compatible_trainable_node</span></code>)
+OUTPUT_MAIN (<cite>str</cite>): The name of the main output of the node (in this case <code class="docutils literal notranslate"><span class="pre">main</span></code>)</p>
+</dd>
+</dl>
+<p>This node should not be used directly in the configuration.json file. But every node that extends this node will have the 
+following parameters in the configuration.json file:</p>
+<blockquote>
+<div><p><strong>module</strong> (<em>str</em>): The name of the module (<code class="docutils literal notranslate"><span class="pre">node.processing</span></code>)</p>
+<p><strong>training_set_size</strong> (<em>int</em>): The size of the training set in samples.</p>
+<p><strong>save_after_training</strong> (<em>bool</em>): Whether to save the trained processor after training. This is a optional parameter.</p>
+<p><strong>save_file_path</strong> (<em>str</em>): The path to save the trained processor if <code class="docutils literal notranslate"><span class="pre">save_after_training</span></code> is True. Only mandatory if <code class="docutils literal notranslate"><span class="pre">save_after_training</span></code> is True.</p>
+<p><strong>load_trained</strong> (<em>bool</em>): Whether to load a trained processor.</p>
+<p><strong>load_file_path</strong> (<em>str</em>): The path to load the trained processor if <code class="docutils literal notranslate"><span class="pre">load_trained</span></code> is True. Only mandatory if <code class="docutils literal notranslate"><span class="pre">load_trained</span></code> is True.</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_input_buffer_after_training</strong> (<em>bool</em>): Whether to clear the input buffer after training.</p>
+<p><strong>process_input_buffer_after_training</strong> (<em>bool</em>): Whether to process the input buffer after training.</p>
+<p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): Whether to clear the output buffer when new data is inserted in the input buffer.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): Whether to clear the input buffer after processing.</p>
+<p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): Whether to clear the output buffer after processing.</p>
+</div></blockquote>
+</div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode.OUTPUT_MAIN">
 <span class="sig-name descname"><span class="pre">OUTPUT_MAIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'main'</span></em><a class="headerlink" href="#models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode.OUTPUT_MAIN" title="Permalink to this definition">#</a></dt>
@@ -277,10 +305,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode.from_config_json">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_config_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/trainable/sklearn_compatible_trainable_node.html#SKLearnCompatibleTrainableNode.from_config_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode.from_config_json" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns node instance from given parameters in dict form</p>
+<dd><p>Creates a new instance of this node using the parameters specified in the configuration.json file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em>) – Node parameters in dict form.</p>
+<dd class="field-odd"><p><strong>parameters</strong> (<em>dict</em>) – The parameters of the node.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new instance of this node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode" title="models.node.processing.trainable.sklearn_compatible_trainable_node.SKLearnCompatibleTrainableNode">SKLearnCompatibleTrainableNode</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -294,6 +328,34 @@
 <dt class="sig sig-object py" id="models.node.processing.trainable.trainable_processing_node.TrainableProcessingNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.trainable.trainable_processing_node.</span></span><span class="sig-name descname"><span class="pre">TrainableProcessingNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/trainable/trainable_processing_node.html#TrainableProcessingNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.trainable.trainable_processing_node.TrainableProcessingNode" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.processing.html#models.node.processing.processing_node.ProcessingNode" title="models.node.processing.processing_node.ProcessingNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingNode</span></code></a></p>
+<p>This node is base node for trainable nodes. It implements a generic training logic that can be used by all
+trainable nodes. This node must be extended by all trainable nodes so that the correct parameters are passed to the
+extended class and the correct methods are implemented.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (<cite>str</cite>): The name of the module (in his case <code class="docutils literal notranslate"><span class="pre">node.processing.trainable</span></code>)
+INPUT_DATA (<cite>str</cite>): The name of the input data (in his case <code class="docutils literal notranslate"><span class="pre">data</span></code>)
+INPUT_LABEL (<cite>str</cite>): The name of the input label (in his case <code class="docutils literal notranslate"><span class="pre">label</span></code>)</p>
+</dd>
+</dl>
+<p>This node should not be used directly in the configuration.json file. Instead, it should be extended by other nodes
+that implement the training logic. But every node that extends this node will have the following parameters in the
+configuration.json file:</p>
+<blockquote>
+<div><p><strong>module</strong> (<em>str</em>): The name of the module (<code class="docutils literal notranslate"><span class="pre">node.processing</span></code>)</p>
+<p><strong>training_set_size</strong> (<em>int</em>): The size of the training set in samples.</p>
+<p><strong>save_after_training</strong> (<em>bool</em>): Whether to save the trained processor after training. This is a optional parameter.</p>
+<p><strong>save_file_path</strong> (<em>str</em>): The path to save the trained processor if <code class="docutils literal notranslate"><span class="pre">save_after_training</span></code> is True. Only mandatory if <code class="docutils literal notranslate"><span class="pre">save_after_training</span></code> is True.</p>
+<p><strong>load_trained</strong> (<em>bool</em>): Whether to load a trained processor.</p>
+<p><strong>load_file_path</strong> (<em>str</em>): The path to load the trained processor if <code class="docutils literal notranslate"><span class="pre">load_trained</span></code> is True. Only mandatory if <code class="docutils literal notranslate"><span class="pre">load_trained</span></code> is True.</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_input_buffer_after_training</strong> (<em>bool</em>): Whether to clear the input buffer after training.</p>
+<p><strong>process_input_buffer_after_training</strong> (<em>bool</em>): Whether to process the input buffer after training.</p>
+<p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): Whether to clear the output buffer when new data is inserted in the input buffer.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): Whether to clear the input buffer after processing.</p>
+<p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): Whether to clear the output buffer after processing.</p>
+</div></blockquote>
+</div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.processing.trainable.trainable_processing_node.TrainableProcessingNode.INPUT_DATA">
 <span class="sig-name descname"><span class="pre">INPUT_DATA</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'data'</span></em><a class="headerlink" href="#models.node.processing.trainable.trainable_processing_node.TrainableProcessingNode.INPUT_DATA" title="Permalink to this definition">#</a></dt>

@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../models.utils.html">models.utils package</a></li>
@@ -227,6 +238,32 @@
 
 
 <div class="viewcode-block" id="TrainableProcessingNode"><a class="viewcode-back" href="../../../../../models.node.processing.trainable.html#models.node.processing.trainable.trainable_processing_node.TrainableProcessingNode">[docs]</a><span class="k">class</span> <span class="nc">TrainableProcessingNode</span><span class="p">(</span><span class="n">ProcessingNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This node is base node for trainable nodes. It implements a generic training logic that can be used by all</span>
+<span class="sd">    trainable nodes. This node must be extended by all trainable nodes so that the correct parameters are passed to the</span>
+<span class="sd">    extended class and the correct methods are implemented.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _MODULE_NAME (`str`): The name of the module (in his case ``node.processing.trainable``)</span>
+<span class="sd">        INPUT_DATA (`str`): The name of the input data (in his case ``data``)</span>
+<span class="sd">        INPUT_LABEL (`str`): The name of the input label (in his case ``label``)</span>
+<span class="sd">    </span>
+<span class="sd">    This node should not be used directly in the configuration.json file. Instead, it should be extended by other nodes</span>
+<span class="sd">    that implement the training logic. But every node that extends this node will have the following parameters in the</span>
+<span class="sd">    configuration.json file:</span>
+<span class="sd">        **module** (*str*): The name of the module (``node.processing``)\n</span>
+<span class="sd">        **training_set_size** (*int*): The size of the training set in samples.\n</span>
+<span class="sd">        **save_after_training** (*bool*): Whether to save the trained processor after training. This is a optional parameter.\n</span>
+<span class="sd">        **save_file_path** (*str*): The path to save the trained processor if ``save_after_training`` is True. Only mandatory if ``save_after_training`` is True.\n</span>
+<span class="sd">        **load_trained** (*bool*): Whether to load a trained processor.\n</span>
+<span class="sd">        **load_file_path** (*str*): The path to load the trained processor if ``load_trained`` is True. Only mandatory if ``load_trained`` is True.\n</span>
+<span class="sd">        **buffer_options** (*dict*): Buffer options.\n</span>
+<span class="sd">            **clear_input_buffer_after_training** (*bool*): Whether to clear the input buffer after training.\n</span>
+<span class="sd">            **process_input_buffer_after_training** (*bool*): Whether to process the input buffer after training.\n</span>
+<span class="sd">            **clear_output_buffer_on_data_input** (*bool*): Whether to clear the output buffer when new data is inserted in the input buffer.\n</span>
+<span class="sd">            **clear_input_buffer_after_process** (*bool*): Whether to clear the input buffer after processing.\n</span>
+<span class="sd">            **clear_output_buffer_after_process** (*bool*): Whether to clear the output buffer after processing.\n</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;models.node.processing.trainable&#39;</span>
 
     <span class="n">INPUT_DATA</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;data&#39;</span>
@@ -234,6 +271,31 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validates the parameters passed to this node. In this case it checks if the parameters are present and if they</span>
+<span class="sd">        are of the correct type.</span>
+
+<span class="sd">        :param parameters: The parameters passed to this node.</span>
+<span class="sd">        :type parameters: dict</span>
+
+<span class="sd">        :raises MissingParameterError: the ``training_set_size`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``training_set_size`` parameter must be an int.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``training_set_size`` parameter must be greater than 0.</span>
+<span class="sd">        :raises MissingParameterError: the ``save_after_training`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``save_after_training`` parameter must be a bool.</span>
+<span class="sd">        :raises MissingParameterError: the ``save_file_path`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``save_file_path`` parameter must be a str.</span>
+<span class="sd">        :raises MissingParameterError: the ``load_trained`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``load_trained`` parameter must be a bool.</span>
+<span class="sd">        :raises MissingParameterError: the ``load_file_path`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``load_file_path`` parameter must be a str.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``load_file_path`` parameter must be a valid path.</span>
+<span class="sd">        :raises MissingParameterError: the ``clear_input_buffer_after_training`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``clear_input_buffer_after_training`` parameter must be a bool.</span>
+<span class="sd">        :raises MissingParameterError: the ``process_input_buffer_after_training`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``process_input_buffer_after_training`` parameter must be a bool.</span>
+
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_validate_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;training_set_size&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -299,6 +361,12 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_initialize_parameter_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; TrainableProcessingNode node implementation of buffer behaviour options initialization and custom parameter</span>
+<span class="sd">        fields initialization.</span>
+
+<span class="sd">        :param parameters: The parameters passed to this node.</span>
+<span class="sd">        :type parameters: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_initialize_parameter_fields</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_input_buffer_after_training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;buffer_options&#39;</span><span class="p">][</span>
             <span class="s1">&#39;clear_input_buffer_after_training&#39;</span><span class="p">]</span>
@@ -321,13 +389,37 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_load_trained_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loaded_processor</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Loads a trained processor. This method must be implemented by the subclasses.</span>
+
+<span class="sd">        :param loaded_processor: The loaded processor.</span>
+<span class="sd">        :type loaded_processor: Any</span>
+
+<span class="sd">        :raises NotImplementedError: This method must be implemented by the subclasses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_save_trained_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Saves a trained processor. This method must be implemented by the subclasses.</span>
+
+<span class="sd">        :param save_path: The path to save the trained processor.</span>
+<span class="sd">        :type save_path: str</span>
+
+<span class="sd">        :raises NotImplementedError: This method must be implemented by the subclasses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_process_input_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; TrainableProcessingNode node implementation of the processing logic. This method is called when the</span>
+<span class="sd">        processing condition is satisfied. In this case, the processing condition is satisfied when the input buffer</span>
+<span class="sd">        has at least ``training_set_size`` samples. This method will call the ``_train`` method to train the processor</span>
+<span class="sd">        and then it will save the trained processor if ``save_after_training`` is True and clear the input buffer if</span>
+<span class="sd">        ``clear_input_buffer_after_training`` is True. If ``clear_input_buffer_after_training`` is False, it will</span>
+<span class="sd">        process the input buffer if ``process_input_buffer_after_training`` is True.</span>
+<span class="sd">        The self._train method must be implemented by the subclasses. But normally it is a library method that trains</span>
+<span class="sd">        the processor. For example, in the case of the sklearn compatible nodes, the ``_train`` method is the</span>
+<span class="sd">        ``fit`` method of the sklearn processor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_trained</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_process_input_buffer</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_should_retrain</span><span class="p">():</span>
@@ -358,20 +450,51 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Trains the processor. This method must be implemented by the subclasses.</span>
+
+<span class="sd">        :param data: The data to train the processor.</span>
+<span class="sd">        :type data: FrameworkData</span>
+<span class="sd">        :param label: The label to train the processor.</span>
+<span class="sd">        :type label: FrameworkData</span>
+
+<span class="sd">        :raises NotImplementedError: This method must be implemented by the subclasses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_is_training_condition_satisfied</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the training condition is satisfied. In this case it returns True if the input buffer has</span>
+<span class="sd">        at least ``training_set_size`` samples.</span>
+
+<span class="sd">        :return: Whether the training condition is satisfied.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_DATA</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_set_size</span> \
                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_LABEL</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">training_set_size</span>
 
     <span class="k">def</span> <span class="nf">_is_processing_condition_satisfied</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the processing condition is satisfied. In this case it returns True if the input buffer</span>
+<span class="sd">        has at least one sample.</span>
+
+<span class="sd">        :return: Whether the processing condition is satisfied.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_DATA</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_should_retrain</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the processor should be retrained. This method must be implemented by the subclasses.</span>
+
+<span class="sd">        :raises NotImplementedError: This method must be implemented by the subclasses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the inputs of this node. In this case it returns the ``INPUT_DATA`` and ``INPUT_LABEL``.</span>
+
+<span class="sd">        :return: The inputs of this node.</span>
+<span class="sd">        :rtype: List[str]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">INPUT_DATA</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">INPUT_LABEL</span>

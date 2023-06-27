@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../models.utils.html">models.utils package</a></li>
@@ -223,9 +234,43 @@
 
 
 <div class="viewcode-block" id="Trial"><a class="viewcode-back" href="../../../models.utils.html#models.utils.trial.Trial">[docs]</a><span class="k">class</span> <span class="nc">Trial</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class represents a trial. A trial is a specific event that you want to generate data for (e.g. Hand Grasp,</span>
+<span class="sd">    Feet Movement, etc.). </span>
+
+<span class="sd">    :param name: The trial name defined by the user in the configuration file.</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :param code: The code defined by the user in the configuration file.</span>
+<span class="sd">    :type code: int</span>
+<span class="sd">    :param duration: The trial duration defined by the user in the configuration file.</span>
+<span class="sd">    :type duration: Duration</span>
+<span class="sd">    :param cue: The trial cue defined by the user in the configuration file.</span>
+<span class="sd">    :type cue: Cue</span>
+
+<span class="sd">    The data generated is random, but it is restricted to the statistical parameters that you</span>
+<span class="sd">    define. For example, if you define a mean of 5 seconds and a standard deviation of 1 second, the data generated</span>
+<span class="sd">    will be random, but it will be restricted to the range of 4 to 6 seconds.</span>
+
+<span class="sd">    ``configuration.json`` usage:</span>
+
+<span class="sd">        **name** (*str*): Trial name.\n</span>
+<span class="sd">        **code** (*int*): Trial code. Just a number that identifies the trial.\n</span>
+<span class="sd">        **duration** (*Duration*): Trial duration. This class generates a random numbers based on the parameters</span>
+<span class="sd">        that you define. It is defined by a dictionary containing the following parameters: \n</span>
+<span class="sd">            **mean** (*float*): Mean value for the trial duration.\n</span>
+<span class="sd">            **standard_deviation** (*float*): Standard deviation value for the trial duration.\n</span>
+<span class="sd">            **maximum** (*float*): Maximum value for the trial duration.\n</span>
+<span class="sd">            **minimum** (*float*): Minimum value for the trial duration.\n</span>
+<span class="sd">        **cue** (*Cue*): Trial cue. This class executes a specific cue defined by the user in a different python file</span>
+<span class="sd">        (e.g. Print a value, Save a velue in a file, etc.). It is defined by a dictionary containing the following parameters: \n</span>
+<span class="sd">            **file** (*str*): Cue file path.\n</span>
+<span class="sd">            **parameters** (*dict*): The parameters that will be passed to the cue function defined in **file** when it is executed.\n</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;utils.trial&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="n">Duration</span><span class="p">,</span> <span class="n">cue</span><span class="p">:</span> <span class="n">Cue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor method. Initializes and validates the parameters of the class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -250,6 +295,8 @@
 
 <div class="viewcode-block" id="Trial.from_config_json"><a class="viewcode-back" href="../../../models.utils.html#models.utils.trial.Trial.from_config_json">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_config_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a new instance of this class and initializes it with the parameters that were passed to it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span>
                                         <span class="n">parameter</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
@@ -270,6 +317,9 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Trial.start"><a class="viewcode-back" href="../../../models.utils.html#models.utils.trial.Trial.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the trial execution by executing the cue and starting a timer that will call the ``on_stop`` method</span>
+<span class="sd">        when the trial duration is reached using the ``duration`` parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cue</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
         <span class="n">timer</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="o">.</span><span class="n">get_duration</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_stop</span><span class="p">)</span>
         <span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>

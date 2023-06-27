@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../models.utils.html">models.utils package</a></li>
@@ -224,6 +235,28 @@
 
 
 <div class="viewcode-block" id="FixedWindowSegmenter"><a class="viewcode-back" href="../../../../../models.node.processing.segmenter.html#models.node.processing.segmenter.fixedwindowsegmenter.FixedWindowSegmenter">[docs]</a><span class="k">class</span> <span class="nc">FixedWindowSegmenter</span><span class="p">(</span><span class="n">Segmenter</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Segments the input data into fixed size windows. Each window is a list of samples, normally called epoch.</span>
+<span class="sd">    This is important because the other nodes in the pipeline expect the data to be segmented in this way. For exemple,</span>
+<span class="sd">    the trainable feature extractor node expects the input data to be segmented in epochs, so if you segment the data in epochs of </span>
+<span class="sd">    200 samples and configure the feature extractor training_set_size to be 10, the feature extractor will use 2000 samples</span>
+<span class="sd">    to train the model. If you segment the data in epochs of 100 samples and configure the feature extractor training_set_size</span>
+<span class="sd">    to be 10, the feature extractor will use 1000 samples to train the model. </span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _MODULE_NAME (str): The name of the module (in his case ``node.processing.segmenter.fixedwindowsegmenter``)</span>
+<span class="sd">    </span>
+<span class="sd">    configuration.json usage:</span>
+<span class="sd">        **module** (*str*): The name of the module (``node.processing.segmenter``)\n</span>
+<span class="sd">        **type** (*str*): The type of the node (``FixedWindowSegmenter``)\n</span>
+<span class="sd">        **window_size** (*int*): The size of the window (epoch) in samples.\n</span>
+<span class="sd">        **filling_value** (*str*): The value to fill the last window if it&#39;s not complete. Can be ``zero`` or ``latest``.\n</span>
+<span class="sd">        **buffer_options** (*dict*): Buffer options.\n</span>
+<span class="sd">            **clear_output_buffer_on_data_input** (*bool*): Whether to clear the output buffer when new data is inserted in the input buffer.\n</span>
+<span class="sd">            **clear_input_buffer_after_process** (*bool*): Whether to clear the input buffer after processing.\n</span>
+<span class="sd">            **clear_output_buffer_after_process** (*bool*): Whether to clear the output buffer after processing.\n</span>
+<span class="sd">        </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_MODULE_NAME</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;node.processing.segmenter.fixedwindowsegmenter&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
@@ -232,9 +265,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filling_value</span> <span class="o">=</span> <span class="n">parameters</span><span class="p">[</span><span class="s1">&#39;filling_value&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_is_processing_condition_satisfied</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns whether the processing condition is satisfied. In this case it returns True if there is data in the</span>
+<span class="sd">        input buffer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_buffer</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">INPUT_MAIN</span><span class="p">]</span><span class="o">.</span><span class="n">get_data_count</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span>
 
     <span class="k">def</span> <span class="nf">_validate_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validates the parameters passed to this node. n this case it checks if the parameters are present and if they</span>
+<span class="sd">        are of the correct type.</span>
+
+<span class="sd">        :param parameters: The parameters passed to this node.</span>
+<span class="sd">        :type parameters: dict</span>
+
+<span class="sd">        :raises MissingParameterError: the ``window_size`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``window_size`` parameter must be an int.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``window_size`` parameter must be greater than 0.</span>
+<span class="sd">        :raises MissingParameterError: the ``filling_value`` parameter is required.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``filling_value`` parameter must be a str.</span>
+<span class="sd">        :raises InvalidParameterValue: the ``filling_value`` parameter must be in [``zero``, ``latest``].</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s1">&#39;window_size&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">MissingParameterError</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_MODULE_NAME</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                         <span class="n">parameter</span><span class="o">=</span><span class="s1">&#39;window_size&#39;</span><span class="p">)</span>
@@ -259,6 +311,16 @@
                                         <span class="n">cause</span><span class="o">=</span><span class="s1">&#39;must_be_in.[zero, latest]&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FixedWindowSegmenter.segment_data"><a class="viewcode-back" href="../../../../../models.node.processing.segmenter.html#models.node.processing.segmenter.fixedwindowsegmenter.FixedWindowSegmenter.segment_data">[docs]</a>    <span class="k">def</span> <span class="nf">segment_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FrameworkData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FrameworkData</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method that segments the data into fixed size windows. It just segments the data on the main input channel, </span>
+<span class="sd">        and if the last window is not complete, it fills it with zeros or with the last sample of the window, depending on</span>
+<span class="sd">        the ``filling_value`` parameter.</span>
+
+<span class="sd">        :param data: The data to segment.</span>
+<span class="sd">        :type data: FrameworkData</span>
+
+<span class="sd">        :return: The segmented data.</span>
+<span class="sd">        :rtype: FrameworkData</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">segmented_data</span><span class="p">:</span> <span class="n">FrameworkData</span> <span class="o">=</span> <span class="n">FrameworkData</span><span class="p">(</span><span class="n">sampling_frequency_hz</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">sampling_frequency</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">channels</span><span class="p">:</span>
             <span class="n">raw_signal</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_data_on_channel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>

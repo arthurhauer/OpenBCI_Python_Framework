@@ -236,6 +236,28 @@
 <dt class="sig sig-object py" id="models.node.processing.encoder.onehottosingle.OneHotToSingle">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.encoder.onehottosingle.</span></span><span class="sig-name descname"><span class="pre">OneHotToSingle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/encoder/onehottosingle.html#OneHotToSingle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.encoder.onehottosingle.OneHotToSingle" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.processing.html#models.node.processing.processing_node.ProcessingNode" title="models.node.processing.processing_node.ProcessingNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingNode</span></code></a></p>
+<p>Converts a one-hot encoded signal to a single channel signal. 
+One-hot encoded signals are signals where each label is represented by a vector of the same length as the number 
+of labels, where the label is represented by a 1 at the index of the label and 0 everywhere else. 
+A Single channel signal is a signal where each label is represented by a single channel, where the label is
+represented by the index.
+This node converts a one-hot encoded labels to a single channel label. The single label count starts at 1, so the
+label 1 is represented by the channel 1, the label 2 by the channel 2, etc. There is no label 0.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (<cite>str</cite>): The name of the module (in his case <code class="docutils literal notranslate"><span class="pre">node.processing.encoder.onehottosingle</span></code>)
+INPUT_MAIN (<cite>str</cite>): The name of the main input signal (in this case <code class="docutils literal notranslate"><span class="pre">main</span></code>)
+OUTPUT_MAIN (<cite>str</cite>): The name of the main output signal (in this case <code class="docutils literal notranslate"><span class="pre">main</span></code>)</p>
+</dd>
+<dt>configuration.json usage:</dt><dd><p><strong>module</strong> (<em>str</em>): The name of the module (<code class="docutils literal notranslate"><span class="pre">node.processing.encoder</span></code>)</p>
+<p><strong>type</strong> (<em>str</em>): The type of the node (<code class="docutils literal notranslate"><span class="pre">OneHotToSingle</span></code>)</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): Whether to clear the output buffer when new data is inserted in the input buffer.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): Whether to clear the input buffer after processing.</p>
+<p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): Whether to clear the output buffer after processing.</p>
+</div></blockquote>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.processing.encoder.onehottosingle.OneHotToSingle.INPUT_MAIN">
 <span class="sig-name descname"><span class="pre">INPUT_MAIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'main'</span></em><a class="headerlink" href="#models.node.processing.encoder.onehottosingle.OneHotToSingle.INPUT_MAIN" title="Permalink to this definition">#</a></dt>
@@ -255,6 +277,28 @@
 <dt class="sig sig-object py" id="models.node.processing.encoder.singletoonehot.SingleToOneHot">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.node.processing.encoder.singletoonehot.</span></span><span class="sig-name descname"><span class="pre">SingleToOneHot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/node/processing/encoder/singletoonehot.html#SingleToOneHot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.node.processing.encoder.singletoonehot.SingleToOneHot" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="models.node.processing.html#models.node.processing.processing_node.ProcessingNode" title="models.node.processing.processing_node.ProcessingNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingNode</span></code></a></p>
+<p>Converts a single channel encoding (Ordinal encoding) signal to a one-hot encoding.
+One-hot encoded signals are signals where each label is represented by a vector of the same length as the number 
+of labels, where the label is represented by a 1 at the index of the label and 0 everywhere else. 
+A Single channel encoded (Ordinal encoding) signal is a type of signal where each label is represented by a number,
+where the label is represented by the index of the label.
+This node converts a single channel labels to a one-hot encoded label. The single label count starts at 1, so the
+label 1 is represented by the channel 1, the label 2 by the channel 2, etc. There is no label 0.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>_MODULE_NAME (<cite>str</cite>): The name of the module (in his case <code class="docutils literal notranslate"><span class="pre">node.processing.encoder.singletoonehot</span></code>)
+INPUT_MAIN (<cite>str</cite>): The name of the main input signal (in this case <code class="docutils literal notranslate"><span class="pre">main</span></code>)
+OUTPUT_MAIN (<cite>str</cite>): The name of the main output signal (in this case <code class="docutils literal notranslate"><span class="pre">main</span></code>)</p>
+</dd>
+<dt>configuration.json usage:</dt><dd><p><strong>module</strong> (<em>str</em>): The name of the module (<code class="docutils literal notranslate"><span class="pre">node.processing.encoder</span></code>)</p>
+<p><strong>type</strong> (<em>str</em>): The type of the node (<code class="docutils literal notranslate"><span class="pre">SingleToOneHot</span></code>)</p>
+<p><strong>buffer_options</strong> (<em>dict</em>): Buffer options.</p>
+<blockquote>
+<div><p><strong>clear_output_buffer_on_data_input</strong> (<em>bool</em>): Whether to clear the output buffer when new data is inserted in the input buffer.</p>
+<p><strong>clear_input_buffer_after_process</strong> (<em>bool</em>): Whether to clear the input buffer after processing.</p>
+<p><strong>clear_output_buffer_after_process</strong> (<em>bool</em>): Whether to clear the output buffer after processing.</p>
+</div></blockquote>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="models.node.processing.encoder.singletoonehot.SingleToOneHot.INPUT_MAIN">
 <span class="sig-name descname"><span class="pre">INPUT_MAIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Final</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'main'</span></em><a class="headerlink" href="#models.node.processing.encoder.singletoonehot.SingleToOneHot.INPUT_MAIN" title="Permalink to this definition">#</a></dt>

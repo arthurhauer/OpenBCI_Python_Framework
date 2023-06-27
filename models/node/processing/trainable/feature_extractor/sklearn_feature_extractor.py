@@ -9,6 +9,12 @@ from models.node.processing.trainable.sklearn_compatible_trainable_node import S
 
 
 class SKLearnFeatureExtractor(SKLearnCompatibleTrainableNode):
+    """ Base class for all sklearn feature extractors. This node is just a serie of methods that need to be implemented
+    by the child classes.
+
+    Attributes:
+        _MODULE_NAME (str): The name of the module(in this case ``node.processing.trainable.feature_extractor``)
+    """
     _MODULE_NAME: Final[str] = 'node.processing.trainable.feature_extractor.sklearn_feature_extractor'
 
     @abc.abstractmethod

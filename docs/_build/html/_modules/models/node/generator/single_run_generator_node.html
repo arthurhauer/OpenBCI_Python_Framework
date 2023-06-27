@@ -171,7 +171,18 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../models.node.output.file.html">models.node.output.file package</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../models.node.processing.html">models.node.processing package</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../../models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../../models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../../models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="../../../../models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../models.utils.html">models.utils package</a></li>
@@ -220,12 +231,33 @@
 
 
 <div class="viewcode-block" id="SingleRunGeneratorNode"><a class="viewcode-back" href="../../../../models.node.generator.html#models.node.generator.single_run_generator_node.SingleRunGeneratorNode">[docs]</a><span class="k">class</span> <span class="nc">SingleRunGeneratorNode</span><span class="p">(</span><span class="n">GeneratorNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This node generates data for a single run. It is used to get the data from a non real-time source, such as a</span>
+<span class="sd">    CSV file, and feed it to the framework. It is not meant to be used in a real-time scenario, as it is not</span>
+<span class="sd">    thread-safe. It is meant to be used in a single run scenario, such as a batch processing scenario.</span>
+
+<span class="sd">    This node is not meant to be used directly, but to be inherited by other nodes that implement the</span>
+<span class="sd">    ``_generate_data`` method. This method is responsible for generating the data for a single run. The node will</span>
+<span class="sd">    generate the data for all the trials in the run, and then stop executing.</span>
+
+<span class="sd">    :param parameters: The parameters of the node(default: None).</span>
+<span class="sd">    :type parameters: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_first_execution</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SingleRunGeneratorNode.run"><a class="viewcode-back" href="../../../../models.node.generator.html#models.node.generator.single_run_generator_node.SingleRunGeneratorNode.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">FrameworkData</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">input_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method runs the node. It is called by the framework when the node is executed. If this is the first</span>
+<span class="sd">        execution, it will run. If it is not the first execution, it will raise an exception.</span>
+
+<span class="sd">        :param data: The data that will be passed to the node. This comes from the previous node in the pipeline(default: None).</span>
+<span class="sd">        :type data: FrameworkData</span>
+<span class="sd">        :param input_name: The name of the input that the data comes from(default: None).</span>
+<span class="sd">        :type input_name: str</span>
+
+<span class="sd">        :raises Exception: If this is not the first execution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_execution</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_first_execution</span> <span class="o">=</span> <span class="kc">False</span>
