@@ -37,14 +37,9 @@ class Node:
 
         self._child_input_relation: Dict[Node, List[str]] = {}
 
-    def build_graphviz_representation(self):
+    def _build_graph_inputs(self):
         return f"""
-        {self.name} [
-      shape=plaintext
-      tooltip="{self.parameters}"
-      label=<
-            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
-               <TR>
+                <TR>
                   <TD BORDER="0">
                      <TABLE BORDER="0" CELLBORDER="" CELLSPACING="0" CELLPADDING="0">
                         <TR>
@@ -55,10 +50,11 @@ class Node:
                      </TABLE>
                   </TD>
                </TR>
-               <TR>
-                  <TD BORDER="1" STYLE="ROUNDED" CELLPADDING="4" COLOR="black">{self.name}<BR/><FONT POINT-SIZE="5">{self._MODULE_NAME}</FONT></TD>
-               </TR>
-               <TR>
+        """
+
+    def _build_graph_outputs(self):
+        return f"""
+                <TR>
                   <TD BORDER="0">
                      <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
                         <TR>
@@ -69,6 +65,20 @@ class Node:
                      </TABLE>
                   </TD>
                </TR>
+        """
+
+    def build_graphviz_representation(self):
+        return f"""
+        {self.name} [
+      shape=plaintext
+      tooltip="{self.parameters}"
+      label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
+               {self._build_graph_inputs()}
+               <TR>
+                  <TD BORDER="1" STYLE="ROUNDED" CELLPADDING="4" COLOR="black">{self.name}<BR/><FONT POINT-SIZE="5">{self._MODULE_NAME}</FONT></TD>
+               </TR>
+               {self._build_graph_outputs()}
             </TABLE>
         >
       ];
