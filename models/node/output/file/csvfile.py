@@ -76,8 +76,8 @@ class CSVFile(OutputNode):
         """ Initializes the CSV writer.
         """
         if self._csv_file is None:
-            if not os.path.exists('\\'.join(self.file_path.split('\\')[0:-1])):
-                os.makedirs('\\'.join(self.file_path.split('\\')[0:-1]))
+            if not os.path.exists(os.sep.join(self.file_path.split(os.sep)[0:-1])):
+                os.makedirs(os.sep.join(self.file_path.split(os.sep)[0:-1]))
             self.print('Creating csv file')
             self._csv_file = open(self.file_path, "w", newline='')
             self._csv_writer = csv.writer(self._csv_file)
