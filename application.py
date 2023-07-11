@@ -1,3 +1,4 @@
+import os
 import signal
 from typing import Dict
 
@@ -8,7 +9,7 @@ from config.configuration import Configuration
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.node.generator.generator_node import GeneratorNode
 from models.node.node import Node
-
+from graphviz import Source
 
 class Application:
 
@@ -18,6 +19,7 @@ class Application:
         self._stop_execution = False
         signal.signal(signal.SIGINT, lambda x, y: self.dispose())
         signal.signal(signal.SIGTERM, lambda x, y: self.dispose())
+        self.graphviz_representation = 'digraph G {'
         self._initialize_nodes()
         for key in Configuration.get_root_nodes():
             node_config = Configuration.get_root_nodes()[key]
@@ -27,20 +29,30 @@ class Application:
             )
             node_config['name'] = key
             root_node: GeneratorNode = node.from_config_json(node_config)
+            self.graphviz_representation += f'\n{root_node.build_graphviz_representation()}'
             for output_name in node_config['outputs']:
                 root_node.check_output(output_name)
                 for output_config in node_config['outputs'][output_name]:
-                    child_node = self._get_node(output_config['node'])
+                    child_node_key = output_config['node']
+                    child_node = self._get_node(child_node_key)
                     input = output_config['input']
+                    self.graphviz_representation += f'\n{key}:out_{output_name} -> {child_node_key}:in_{input}'
                     try:
                         child_node.check_input(output_config['input'])
                     except Exception as e:
-                        print(f'error in {key} output {output_name} config: {child_node.name} doesnt have configured input {input}')
+                        print(
+                            f'error in {key} output {output_name} config: {child_node.name} doesnt have configured input {input}')
                         raise e
                     root_node.add_child(output_name, child_node, output_config['input'])
             self._add_root_node(
                 key,
                 root_node)
+
+        self.graphviz_representation += '\n}'
+        os.environ["PATH"] += os.pathsep + f'.{os.sep}lib{os.sep}Graphviz'
+        src = Source(self.graphviz_representation,format='svg')
+        src.render(filename='graph',directory=f'output{os.sep}')
+        src.view()
         while not self._stop_execution:
             self.run()
             time.sleep(1)
@@ -66,6 +78,7 @@ class Application:
             )
             node_config['name'] = node_name
             node: Node = node_type.from_config_json(node_config)
+            self.graphviz_representation += f'\n{node.build_graphviz_representation()}'
             for output_name in node_config['outputs']:
                 if type(node_config['outputs'][output_name]) is not list:
                     raise InvalidParameterValue(module=node.module_name,
@@ -73,12 +86,15 @@ class Application:
                                                 parameter=f'outputs.{output_name}',
                                                 cause='must_be_list')
                 for output_config in node_config['outputs'][output_name]:
-                    child_node = self._get_node(output_config['node'])
+                    child_node_key = output_config['node']
+                    child_node = self._get_node(child_node_key)
                     input = output_config['input']
+                    self.graphviz_representation += f'\n{node_name}:out_{output_name} -> {child_node_key}:in_{input}'
                     try:
                         child_node.check_input(output_config['input'])
                     except Exception as e:
-                        print(f'error in {node_name} output {output_name} config: {child_node.name} doesnt have configured input {input}')
+                        print(
+                            f'error in {node_name} output {output_name} config: {child_node.name} doesnt have configured input {input}')
                         raise e
                     node.add_child(output_name, child_node, input)
             self._nodes[node_name] = node

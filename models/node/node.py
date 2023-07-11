@@ -37,6 +37,43 @@ class Node:
 
         self._child_input_relation: Dict[Node, List[str]] = {}
 
+    def build_graphviz_representation(self):
+        return f"""
+        {self.name} [
+      shape=plaintext
+      tooltip="{self.parameters}"
+      label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
+               <TR>
+                  <TD BORDER="0">
+                     <TABLE BORDER="0" CELLBORDER="" CELLSPACING="0" CELLPADDING="0">
+                        <TR>
+                           <TD WIDTH="20"></TD>
+                           {[f'<TD PORT="in_{input_name}" BORDER="1" CELLPADDING="1"><FONT POINT-SIZE="8">{input_name}</FONT></TD><TD WIDTH="10"></TD>' for input_name in self._get_inputs()]}
+                           <TD WIDTH="10"></TD>
+                        </TR>
+                     </TABLE>
+                  </TD>
+               </TR>
+               <TR>
+                  <TD BORDER="1" STYLE="ROUNDED" CELLPADDING="4" COLOR="black">{self.name}<BR/><FONT POINT-SIZE="5">{self._MODULE_NAME}</FONT></TD>
+               </TR>
+               <TR>
+                  <TD BORDER="0">
+                     <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
+                        <TR>
+                           <TD WIDTH="20"></TD>
+                           {[f'<TD PORT="out_{output_name}" BORDER="1" CELLPADDING="1"><FONT POINT-SIZE="8">{output_name}</FONT></TD><TD WIDTH="10"></TD>' for output_name in self._get_outputs()]}
+                           <TD WIDTH="10"></TD>
+                        </TR>
+                     </TABLE>
+                  </TD>
+               </TR>
+            </TABLE>
+        >
+      ];
+        """
+
     @abc.abstractmethod
     def _validate_parameters(self, parameters: dict):
         """
