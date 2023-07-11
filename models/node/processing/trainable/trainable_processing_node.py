@@ -202,12 +202,12 @@ class TrainableProcessingNode(ProcessingNode):
                 return
         if not self._is_training_condition_satisfied():
             return
-        print(f'Starting training of {self._MODULE_NAME}')
+        self.print(f'Starting training of {self._MODULE_NAME}')
         self._train(self._input_buffer[self.INPUT_DATA], self._input_buffer[self.INPUT_LABEL])
-        print(f'Finished training of {self._MODULE_NAME}')
+        self.print(f'Finished training of {self._MODULE_NAME}')
         self._is_trained = True
         if self._save_after_training:
-            print(f'Saving trained {self._MODULE_NAME}')
+            self.print(f'Saving trained {self._MODULE_NAME}')
             save_path = self._save_file_path
 
             if not os.path.exists('\\'.join(save_path.split('\\')[0:-1])):
@@ -218,7 +218,7 @@ class TrainableProcessingNode(ProcessingNode):
             super()._clear_input_buffer()
             return
         if self._process_input_buffer_after_training:
-            print(f'Processing data on {self._MODULE_NAME}')
+            self.print(f'Processing data on {self._MODULE_NAME}')
             super()._process_input_buffer()
             return
 
