@@ -32,11 +32,12 @@ class Application:
             self.graphviz_representation += f'\n{root_node.build_graphviz_representation()}'
             for output_name in node_config['outputs']:
                 root_node.check_output(output_name)
+                edge_color:str = 'red' if len(node_config['outputs'][output_name])>1 else 'blue'
                 for output_config in node_config['outputs'][output_name]:
                     child_node_key = output_config['node']
                     child_node = self._get_node(child_node_key)
                     input = output_config['input']
-                    self.graphviz_representation += f'\n{key}:out_{output_name} -> {child_node_key}:in_{input}'
+                    self.graphviz_representation += f'\n{key}:out_{output_name} -> {child_node_key}:in_{input} [color={edge_color}]'
                     try:
                         child_node.check_input(output_config['input'])
                     except Exception as e:
@@ -85,11 +86,12 @@ class Application:
                                                 name=node.name,
                                                 parameter=f'outputs.{output_name}',
                                                 cause='must_be_list')
+                edge_color:str = 'red' if len(node_config['outputs'][output_name])>1 else 'blue'
                 for output_config in node_config['outputs'][output_name]:
                     child_node_key = output_config['node']
                     child_node = self._get_node(child_node_key)
                     input = output_config['input']
-                    self.graphviz_representation += f'\n{node_name}:out_{output_name} -> {child_node_key}:in_{input}'
+                    self.graphviz_representation += f'\n{node_name}:out_{output_name} -> {child_node_key}:in_{input} [color={edge_color}]'
                     try:
                         child_node.check_input(output_config['input'])
                     except Exception as e:
