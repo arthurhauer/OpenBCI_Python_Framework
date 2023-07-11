@@ -116,7 +116,11 @@ class Split(ProcessingNode):
         condition: bool = True
         for key in self._split:
             for channel in self._split[key]:
+                condition = condition and  channel in self._input_buffer[self.INPUT_MAIN].channels
+                if not condition:
+                    break
                 condition = condition and len(self._input_buffer[self.INPUT_MAIN].get_data_on_channel(channel)) > 0
+
         return condition
 
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
