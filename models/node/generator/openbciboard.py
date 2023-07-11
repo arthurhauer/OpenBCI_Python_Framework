@@ -310,3 +310,20 @@ class OpenBCIBoard(GeneratorNode):
             self._insert_new_input_data(timestamp_data, self.OUTPUT_TIMESTAMP)
 
             time.sleep(1)
+
+    def build_graphviz_representation(self):
+        return f"""
+        {self.name} [
+      shape=plaintext
+      tooltip="{self.parameters}"
+      label=<
+            <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
+               {self._build_graph_inputs()}
+               <TR>
+                  <TD BORDER="1" STYLE="ROUNDED" CELLPADDING="4" COLOR="black">{self.name}<BR/><FONT POINT-SIZE="5">{self._MODULE_NAME}</FONT><BR/><FONT POINT-SIZE="5">{self._get_eeg_channel_names()}</FONT></TD>
+               </TR>
+               {self._build_graph_outputs()}
+            </TABLE>
+        >
+      ];
+        """
