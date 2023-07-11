@@ -60,6 +60,9 @@ class GeneratorNode(Node):
         for output_name in self._get_outputs():
             self._insert_new_output_data(data[output_name], output_name)
 
+    def _build_graph_inputs(self):
+        return ''
+
     @abc.abstractmethod
     def _is_next_node_call_enabled(self) -> bool:
         raise NotImplementedError()

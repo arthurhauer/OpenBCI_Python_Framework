@@ -50,6 +50,9 @@ class OutputNode(Node):
         """
         return []
 
+    def _build_graph_outputs(self):
+        return ''
+
     def dispose(self) -> None:
         """ Node self disposal  of disposal of allocated resources.
         """
