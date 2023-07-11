@@ -173,7 +173,7 @@ class FrameworkData:
             self.sampling_frequency = data.sampling_frequency
             self._init_data_dictionary()
 
-        elif self.sampling_frequency != data.sampling_frequency:
+        elif self.sampling_frequency is not None and data.sampling_frequency is not None and self.sampling_frequency != data.sampling_frequency:
             raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data')
         elif self.get_channels_as_set() != data.get_channels_as_set():
             raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data')
