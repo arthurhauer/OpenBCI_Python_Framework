@@ -56,39 +56,39 @@ class Duration:
 
         super().__init__()
         if mean is None:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='mean')
         if standard_deviation is None:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='standard_deviation')
         if maximum is None:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='maximum')
         if minimum is None:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='minimum')
         if mean <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='mean',
                                         cause='<=0')
         if standard_deviation <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='standard_deviation',
                                         cause='<=0')
         if maximum <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='maximum',
                                         cause='<=0')
         if maximum < mean:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='maximum',
                                         cause='<mean')
         if minimum <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='minimum',
                                         cause='<=0')
         if minimum > mean:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='minimum',
                                         cause='>mean')
         self.mean = mean
@@ -133,3 +133,6 @@ class Duration:
         """Returns a random number based on the parameters that you defined when you created the instance of this class.
         """
         return self._distribution.rvs(1)[0]
+
+    def __str__(self):
+        return '{' + f'"mean":{self.mean},"standard_deviation":{self.standard_deviation},"maximum":{self.maximum},"minimum":{self.minimum}' + '}'

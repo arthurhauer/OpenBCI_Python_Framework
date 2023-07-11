@@ -25,15 +25,17 @@ class Cue:
     """
     _MODULE_NAME: Final[str] = 'utils.cue'
 
-    def __init__(self, function: Any, parameters: dict) -> None:
+    def __init__(self, filename: str, function: Any, parameters: dict) -> None:
         """Constructor method. Initializes and validates the parameters of the class.
         """
         super().__init__()
         if function is None:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME,
+                                        name='cue',
                                         parameter='function')
         if parameters is None:
             parameters = {}
+        self._filename = filename
         self._function = function
         self._function_parameters = parameters
 
@@ -43,6 +45,7 @@ class Cue:
         """
         if 'file' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
+                                        name='cue',
                                         parameter='file')
         if 'parameters' not in parameters:
             cue_parameters = {}
@@ -54,6 +57,7 @@ class Cue:
             raise ValueError(
                 'session.trial.cue.custom_cue.not.defined.in.script.%s' % cue_function_path)
         return cls(
+            filename=parameters['file'],
             function=_locals['custom_cue'],
             parameters=cue_parameters
         )
@@ -62,3 +66,6 @@ class Cue:
         """Executes the cue function with the parameters that were passed to it.
         """
         self._function(self._function_parameters)
+
+    def __str__(self):
+        return '{' + f'"file":{self._filename},"parameters":{self._function_parameters}' + '}'

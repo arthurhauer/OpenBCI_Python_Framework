@@ -47,20 +47,20 @@ class Trial:
         """
         super().__init__()
         if name is None:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='name')
         if code is None:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='code')
         if len(name) == 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='name',
                                         cause='len==0')
         if duration is None:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='duration')
         if cue is None:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='cue')
         self.name = name
         self.code = code
@@ -100,3 +100,6 @@ class Trial:
 
     def on_stop(self):
         pass
+
+    def __str__(self):
+        return '{' + f'"name":"{self.name}","code":{self.code},"duration":{self.duration},"cue":{self.cue}' + '}'
