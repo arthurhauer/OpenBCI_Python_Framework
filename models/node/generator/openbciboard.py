@@ -272,7 +272,7 @@ class OpenBCIBoard(GeneratorNode):
         if not self._get_board().is_prepared():
             self._get_board().prepare_session()
         self._get_board().start_stream()
-        time.sleep(2)
+        time.sleep(5)
         self._is_board_streaming = True
 
     def _get_data(self):

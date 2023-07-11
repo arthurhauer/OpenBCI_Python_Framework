@@ -3,6 +3,7 @@ import time
 from threading import Thread
 from typing import List, Dict, Final
 
+from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 from models.node.generator.generator_node import GeneratorNode
@@ -54,11 +55,20 @@ class MotorImagery(GeneratorNode):
         """
         super()._validate_parameters(parameters)
         if 'trials' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='trials')
         if 'shuffle_when_sequence_is_finished' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='shuffle_when_sequence_is_finished')
+        if 'max_sequence_runs' in parameters:
+            if type(parameters['max_sequence_runs']) is not int:
+                raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
+                                            parameter='max_sequence_runs',
+                                            cause='must_be_int')
+            if parameters['max_sequence_runs'] <= 0:
+                raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
+                                            parameter='max_sequence_runs',
+                                            cause='must_be_greater_than_0')
 
     def _initialize_parameter_fields(self, parameters: dict):
         """Initializes the parameter fields of the node.
@@ -69,6 +79,10 @@ class MotorImagery(GeneratorNode):
         self._trial_to_call = 0
         self.shuffle_when_sequence_is_finished = parameters['shuffle_when_sequence_is_finished']
         self._thread = Thread(target=self._execute_trial)
+        self._has_max_sequence_runs = 'max_sequence_runs' in parameters
+        if self._has_max_sequence_runs:
+            self._max_sequence_runs = parameters['max_sequence_runs']
+            self._sequence_runs_counter = 0
         self._stop_execution = False
         self._thread_started = False
 
@@ -142,6 +156,11 @@ class MotorImagery(GeneratorNode):
     def _on_change_sequence(self):
         """Shuffle the generated data if necessary when the node finishes generating data for all the trials.
         """
+        if self._has_max_sequence_runs:
+            self._sequence_runs_counter += 1
+            if self._sequence_runs_counter >= self._max_sequence_runs:
+                raise Exception(f'{self._MODULE_NAME}.{self.name} Max sequence runs reached. Stopping Execution.')
+
         if self.shuffle_when_sequence_is_finished:
             random.shuffle(self.trials)
 
