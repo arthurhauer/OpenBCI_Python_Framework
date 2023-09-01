@@ -5,47 +5,48 @@ from typing import List, Dict, Final
 from models.framework_data import FrameworkData
 from models.node.processing.synchronize import Synchronize
 
+
 # {
-        # "nodes": {
-        #     "root": {
-        #         "node_a": {
-        #             ...,
-        #             "output": {
-        #                 "data_a": [
-        #                     {"node": "merge",
-        #                     "input": "master_main"}
-        #                 ],
-        #                 "timestamp": [
-        #                     {"node": "merge",
-        #                     "input": "master_timestamp"}
-        #                 ]
-        #             },
-        #         }, 
-        #         "node_b": {
-        #             ...,
-        #             "output": {
-        #                 "data_b": [
-        #                     {
-        #                         "node": "merge",
-        #                         "input": "slave_main"
-        #                     }
-        #                 ],
-        #                 "timestamp": [
-        #                     {"node": "merge",
-        #                     "input": "slave_timestamp"}
-        #                 ]
-        #             },
-        #         }
-        #     },
-        #     "common": {
-        #         "merge": {
-        #             "module": "models.node.processing",
-        #             "type": "Merge",
-        #             ...
-        #         }
-        #     },
-        #     ...
-        # }
+# "nodes": {
+#     "root": {
+#         "node_a": {
+#             ...,
+#             "output": {
+#                 "data_a": [
+#                     {"node": "merge",
+#                     "input": "master_main"}
+#                 ],
+#                 "timestamp": [
+#                     {"node": "merge",
+#                     "input": "master_timestamp"}
+#                 ]
+#             },
+#         },
+#         "node_b": {
+#             ...,
+#             "output": {
+#                 "data_b": [
+#                     {
+#                         "node": "merge",
+#                         "input": "slave_main"
+#                     }
+#                 ],
+#                 "timestamp": [
+#                     {"node": "merge",
+#                     "input": "slave_timestamp"}
+#                 ]
+#             },
+#         }
+#     },
+#     "common": {
+#         "merge": {
+#             "module": "models.node.processing",
+#             "type": "Merge",
+#             ...
+#         }
+#     },
+#     ...
+# }
 #     }
 
 
@@ -160,6 +161,9 @@ class Merge(Synchronize):
                 super()._fill(new_slave_data.get_data_count() - 1, master_main.get_data_count() - 1, new_slave_data,
                               new_slave_data.get_data_count() - 1, new_slave_data.sampling_frequency)
             )
+        else:
+            new_slave_data.splice(master_main.get_data_count(),
+                                  new_slave_data.get_data_count() - master_main.get_data_count())
         merged_data = FrameworkData()
         merged_data.extend(master_main)
         for channel in new_slave_data.channels:
