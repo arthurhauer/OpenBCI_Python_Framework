@@ -103,7 +103,7 @@ class FixedWindowSegmenter(Segmenter):
             if data.get_data_count() > self.window_size:
                 window = data.splice(0, self.window_size)
                 for channel in window.channels:
-                    segmented_data.input_data_on_channel([window.get_data_on_channel(channel)],channel)
+                    segmented_data.input_data_on_channel([window.get_data_on_channel(channel)], channel)
             else:
                 break
 

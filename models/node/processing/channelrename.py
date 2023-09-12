@@ -5,6 +5,7 @@ from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 from models.node.processing.processing_node import ProcessingNode
 
+
 class ChannelRename(ProcessingNode):
     """ This node simply renames channels from ``FrameworkData``, using a user-provided dictionary for conversion.
         In the example below, the node is named 'rename', and it renames the input channel 'main' to 'marker'.
@@ -33,6 +34,11 @@ class ChannelRename(ProcessingNode):
             }
         }
 
+    Attributes:
+        _MODULE_NAME (str): The name of the module(in this case ``node.processing.channelrename``)
+        INPUT_MAIN (str): The name of the main input(in this case ``main``)
+        OUTPUT_MAIN (str): The name of the main output(in this case ``main``)
+
     ``configuration.json`` usage:
         **module** (*str*): Current module name (in this case ``models.node.processing``).\n
         **type** (*str*): Current node type (in this case ``Merge``).\n
@@ -42,7 +48,7 @@ class ChannelRename(ProcessingNode):
             **clear_input_buffer_after_process** (*bool*): If ``True``, the input buffer will be cleared after the node is executed.\n
             **clear_output_buffer_after_process** (*bool*): If ``True``, the output buffer will be cleared after the node is executed.\n
     """
-    _MODULE_NAME: Final[str] = 'node.processing.channel_rename'
+    _MODULE_NAME: Final[str] = 'node.processing.channelrename'
 
     INPUT_MAIN: Final[str] = 'main'
     OUTPUT_MAIN: Final[str] = 'main'

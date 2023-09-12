@@ -134,7 +134,7 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
         return formatted_data
 
     def _format_raw_label(self, raw_label: FrameworkData) -> Any:
-        """ This method add to each raw data epoch the according label. This is done by getting the maximum value of each epoch
+        """ This method add to each raw data epoch the according label. This is done by getting the most common value of each epoch
         and adding it to the label list. Then the label list is converted to a numpy array and stored in the class variable
         ``_format_raw_label``.
 

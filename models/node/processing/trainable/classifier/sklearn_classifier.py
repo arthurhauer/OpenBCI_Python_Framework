@@ -1,7 +1,6 @@
 import abc
-from typing import Final, Any
+from typing import Final, Any, List, Dict
 
-import numpy as np
 from sklearn.base import TransformerMixin, BaseEstimator
 
 from models.framework_data import FrameworkData
@@ -41,5 +40,27 @@ class SKLearnClassifier(SKLearnCompatibleTrainableNode):
     def _format_processed_data(self, processed_data: Any, sampling_frequency: float) -> FrameworkData:
         raise NotImplementedError()
 
+    def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
+        """ This method formats the raw data and then processes it. This is just a generic pipeline that should be used by all
+        nodes that extend this node. The developer must implement the ``_inner_process_data`` and ``_format_processed_data`` methods,
+        so that the data is processed and formatted according to the node needs.
+
+        :param data: The data to process.
+        :type data: dict(str, FrameworkData)
+
+        :return: The processed data.
+        :rtype: defined by the developer in the ``_format_processed_data`` method.
+        """
+        raw_data: Any = self._format_raw_data(data[self.INPUT_DATA])
+        processed_data: Any = self._inner_process_data(raw_data)
+        return {
+            self.OUTPUT_MAIN: self._format_processed_data(processed_data, data[self.INPUT_DATA].sampling_frequency),
+        }
+
     def _inner_process_data(self, data: Any) -> Any:
         return self.sklearn_processor.predict(data)
+
+    def _get_outputs(self) -> List[str]:
+        return [
+            self.OUTPUT_MAIN
+        ]

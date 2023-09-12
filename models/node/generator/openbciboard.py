@@ -320,7 +320,7 @@ class OpenBCIBoard(GeneratorNode):
             <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="0">
                {self._build_graph_inputs()}
                <TR>
-                  <TD BORDER="1" STYLE="ROUNDED" CELLPADDING="4" COLOR="black">{self.name}<BR/><FONT POINT-SIZE="5">{self._MODULE_NAME}</FONT><BR/><FONT POINT-SIZE="5">{self._get_eeg_channel_names()}</FONT></TD>
+                  <TD BORDER="1" STYLE="ROUNDED" CELLPADDING="4" COLOR="black">{self.name}<BR/><FONT POINT-SIZE="5">{self._MODULE_NAME}</FONT><BR/><FONT POINT-SIZE="5">Channels:{self._get_eeg_channel_names()}</FONT><BR/><FONT POINT-SIZE="5">Sampling rate: {self._get_sampling_rate()}Hz</FONT></TD>
                </TR>
                {self._build_graph_outputs()}
             </TABLE>
