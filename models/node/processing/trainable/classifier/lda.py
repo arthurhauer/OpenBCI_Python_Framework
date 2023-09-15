@@ -44,13 +44,6 @@ class LDA(SKLearnClassifier):
         :type parameters: dict
         """
         super()._validate_parameters(parameters)
-        if 'discard_count' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME,name=self.name,
-                                        parameter='discard_count')
-        if type(parameters['discard_count']) is not int:
-            raise InvalidParameterValue(module=self._MODULE_NAME,name=self.name,
-                                        parameter='discard_count',
-                                        cause='must_be_int')
 
     def _initialize_parameter_fields(self, parameters: dict):
         """ Initializes the parameters of this node. In this case it initializes the parameters from its superclass and
@@ -60,15 +53,6 @@ class LDA(SKLearnClassifier):
         :type parameters: dict
         """
         super()._initialize_parameter_fields(parameters)
-        self.discard_count = parameters['discard_count']
-        self.discarded = 0
-
-    def _process_input_buffer(self):
-        if self.discard_count > self.discarded:
-            discarded_data = self._input_buffer[self.INPUT_LABEL]
-            self.discarded += discarded_data.get_data_count()
-        else:
-            super()._process_input_buffer()
 
     def _initialize_trainable_processor(self) -> (TransformerMixin, BaseEstimator):
         """ Initializes the trainable processor. In this case it initializes the ``LinearDiscriminantAnalysis`` classifier
