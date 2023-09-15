@@ -21,7 +21,7 @@ class Metric(ProcessingNode):
         "metric": {
             "module": "models.node.processing",
             "type": "Metric",
-            "metric": "accuracy"
+            "metric": "accuracy",
             "buffer_options": {
                 "clear_output_buffer_on_data_input": true,
                 "clear_input_buffer_after_process": true,
@@ -103,7 +103,8 @@ class Metric(ProcessingNode):
         :return: ``True`` if the input buffer has data, ``False`` otherwise.
         :rtype: bool
         """
-        return self._input_buffer[self.INPUT_MAIN].get_data_count() > 0
+        return self._input_buffer[self.INPUT_ACTUAL].get_data_count() > 0 \
+               and self._input_buffer[self.INPUT_ACTUAL].get_data_count() == self._input_buffer[self.INPUT_PREDICTED].get_data_count()
 
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
         """ This method processes the data that was inputted to the node. It calculates classification performance
@@ -120,7 +121,7 @@ class Metric(ProcessingNode):
         unformatted_metric = self._metric_function(actual_labels, predicted_labels)
 
         calculated_metric = FrameworkData()
-        calculated_metric.extend(unformatted_metric)
+        calculated_metric.input_data_on_channel([unformatted_metric])
 
         return {
             self.OUTPUT_MAIN: calculated_metric
