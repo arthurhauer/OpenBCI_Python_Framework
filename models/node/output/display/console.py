@@ -1,6 +1,6 @@
 import csv
 import os
-from typing import List, Final
+from typing import List, Final, Dict
 
 import sys
 import time
@@ -36,6 +36,8 @@ class Console(OutputNode):
             **clear_input_buffer_after_process** (bool): Whether to clear the input buffer after the process method is called.\n
             **clear_output_buffer_after_process** (bool): Whether to clear the output buffer after the process method is called.\n
     """
+
+
     _MODULE_NAME: Final[str] = 'node.output.file.console'
 
     INPUT_MAIN: Final[str] = 'main'
@@ -81,12 +83,16 @@ class Console(OutputNode):
             self.INPUT_MAIN
         ]
 
-    def _run(self, data: FrameworkData, input_name: str) -> None:
+    def _is_processing_condition_satisfied(self) -> bool:
+        return True
+
+    def _process(self, data: Dict[str, FrameworkData]) -> None:
         """ Runs the node.
         """
         output = ''
-        for channel in data.channels:
-            output += f'{time.time()} - {self._MODULE_NAME}.{self.name} - {channel}: {self._prefix}{data.get_data_on_channel(channel)}'
+        input_data= data[self.INPUT_MAIN]
+        for channel in input_data.channels:
+            output += f'{time.time()} - {self._MODULE_NAME}.{self.name} - {channel}: {self._prefix}{input_data.get_data_on_channel(channel)}'
         print(output, end='\r' if self._inplace else '\n')
         sys.stdout.flush()
         self._clear_input_buffer()

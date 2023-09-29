@@ -16,6 +16,8 @@ class SKLearnClassifier(SKLearnCompatibleTrainableNode):
     """
     _MODULE_NAME: Final[str] = 'node.processing.trainable.classifier.sklearn_classifier'
 
+    OUTPUT_PROBABILITY: Final[str] = 'probability'
+
     @abc.abstractmethod
     def _initialize_parameter_fields(self, parameters: dict):
         super()._initialize_parameter_fields(parameters)
@@ -53,14 +55,23 @@ class SKLearnClassifier(SKLearnCompatibleTrainableNode):
         """
         raw_data: Any = self._format_raw_data(data[self.INPUT_DATA])
         processed_data: Any = self._inner_process_data(raw_data)
+        class_probabilities: Any = self._get_probability(raw_data)
+        sampling_frequency: float = data[self.INPUT_DATA].sampling_frequency
         return {
-            self.OUTPUT_MAIN: self._format_processed_data(processed_data, data[self.INPUT_DATA].sampling_frequency),
+            self.OUTPUT_MAIN: self._format_processed_data(processed_data, sampling_frequency),
+            self.OUTPUT_PROBABILITY: self._format_processed_data(class_probabilities, sampling_frequency)
         }
 
     def _inner_process_data(self, data: Any) -> Any:
         return self.sklearn_processor.predict(data)
 
+    def _get_probability(self, data: Any) -> Any:
+        if not (hasattr(self.sklearn_processor, 'predict_proba') and callable(self.sklearn_processor.predict_proba)):
+            return [[]]
+        return self.sklearn_processor.predict_proba(data)
+
     def _get_outputs(self) -> List[str]:
         return [
-            self.OUTPUT_MAIN
+            self.OUTPUT_MAIN,
+            self.OUTPUT_PROBABILITY
         ]

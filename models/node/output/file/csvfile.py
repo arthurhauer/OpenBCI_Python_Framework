@@ -1,6 +1,6 @@
 import csv
 import os
-from typing import List, Final
+from typing import List, Final, Dict
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
@@ -25,6 +25,10 @@ class CSVFile(OutputNode):
             **clear_input_buffer_after_process** (bool): Whether to clear the input buffer after the process method is called.\n
             **clear_output_buffer_after_process** (bool): Whether to clear the output buffer after the process method is called.\n
     """
+
+    def _is_processing_condition_satisfied(self) -> bool:
+        return True
+
     _MODULE_NAME: Final[str] = 'node.output.file.csvfile'
 
     INPUT_MAIN: Final[str] = 'main'
@@ -110,12 +114,13 @@ class CSVFile(OutputNode):
         self._csv_writer.writerows(formatted_data)
         self.print(f'Done')
 
-    def _run(self, data: FrameworkData, input_name: str) -> None:
+    def _process(self, data: Dict[str, FrameworkData]) -> None:
         """ Runs the node.
         """
-        self._init_csv_writer(data)
-        self._write_csv_columns(data.channels)
-        self._write_data(data)
+        input_data = data[self.INPUT_MAIN]
+        self._init_csv_writer(input_data)
+        self._write_csv_columns(input_data.channels)
+        self._write_data(input_data)
         self._csv_file.flush()
 
     def dispose(self) -> None:

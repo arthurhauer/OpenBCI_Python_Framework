@@ -39,3 +39,4 @@ threadpoolctl==3.1.0
 typish==1.9.3
 urllib3==1.26.15
 zipp==3.15.0
+pyserial~=3.5
