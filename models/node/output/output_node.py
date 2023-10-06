@@ -21,6 +21,7 @@ class OutputNode(Node):
     def _validate_parameters(self, parameters: dict) -> None:
         """ Validates the parameters that were passed to the node.
         """
+        parameters['outputs']={}
         super()._validate_parameters(parameters)
 
     def _run(self, data: FrameworkData, input_name: str) -> None:

@@ -49,7 +49,7 @@ class EletroEstimuladorESP32(SerialOutputNode):
                     "byte_size": 8,
                     "parity": "N",
                     "stop_bits": 1
-                }
+                },
                 "buffer_options": {
                   "clear_output_buffer_on_data_input": true,
                   "clear_input_buffer_after_process": true,

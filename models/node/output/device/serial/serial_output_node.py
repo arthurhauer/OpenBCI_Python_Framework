@@ -71,7 +71,7 @@ class SerialOutputNode(OutputNode):
             raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='communication.encoding',
                                         cause='must_be_str')
-        if type(parameters['communication']['termination_char']) is not str:
+        if type(parameters['communication']['termination']) is not str:
             raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='communication.termination_char',
                                         cause='must_be_str')
@@ -95,7 +95,7 @@ class SerialOutputNode(OutputNode):
             raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='communication.byte_size',
                                         cause=f'must_be_between_one_of_[{SerialBase.PARITIES}]')
-        if type(parameters['communication']['stop_bits']) is not float:
+        if type(parameters['communication']['stop_bits']) is not float and type(parameters['communication']['stop_bits']) is not int:
             raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='communication.stop_bits',
                                         cause='must_be_float')
