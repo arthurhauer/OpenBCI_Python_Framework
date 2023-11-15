@@ -1,28 +1,28 @@
 import os
-import signal
 from typing import Dict
 
 import time
 import importlib
-
 from config.configuration import Configuration
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.node.generator.generator_node import GeneratorNode
 from models.node.node import Node
 from graphviz import Source
 
+
 class Application:
 
-    def __init__(self) -> None:
+    def __init__(self, configuration: dict) -> None:
         print('Starting application')
+        print('Loading configuration')
+        self.configuration = Configuration(configuration)
         super().__init__()
         self._stop_execution = False
-        signal.signal(signal.SIGINT, lambda x, y: self.dispose())
-        signal.signal(signal.SIGTERM, lambda x, y: self.dispose())
         self.graphviz_representation = 'digraph G {'
         self._initialize_nodes()
-        for key in Configuration.get_root_nodes():
-            node_config = Configuration.get_root_nodes()[key]
+        print('Initializing nodes')
+        for key in self.configuration.get_root_nodes():
+            node_config = self.configuration.get_root_nodes()[key]
             node = self.get_generator_node_from_module_and_type(
                 node_config['module'],
                 node_config['type']
@@ -32,7 +32,7 @@ class Application:
             self.graphviz_representation += f'\n{root_node.build_graphviz_representation()}'
             for output_name in node_config['outputs']:
                 root_node.check_output(output_name)
-                edge_color:str = 'red' if len(node_config['outputs'][output_name])>1 else 'blue'
+                edge_color: str = 'red' if len(node_config['outputs'][output_name]) > 1 else 'blue'
                 for output_config in node_config['outputs'][output_name]:
                     child_node_key = output_config['node']
                     child_node = self._get_node(child_node_key)
@@ -51,9 +51,10 @@ class Application:
 
         self.graphviz_representation += '\n}'
         os.environ["PATH"] += os.pathsep + f'.{os.sep}lib{os.sep}Graphviz'
-        src = Source(self.graphviz_representation,format='svg')
-        src.render(filename='graph',directory=f'output{os.sep}')
+        src = Source(self.graphviz_representation, format='svg')
+        src.render(filename='graph', directory=f'output{os.sep}')
         src.view()
+        print('Starting pipeline execution')
         while not self._stop_execution:
             self.run()
             time.sleep(1)
@@ -72,7 +73,7 @@ class Application:
 
     def _get_node(self, node_name: str) -> Node:
         if node_name not in self._nodes:
-            node_config = Configuration.get_common_nodes()[node_name]
+            node_config = self.configuration.get_common_nodes()[node_name]
             node_type = self.get_node_from_module_and_type(
                 node_config['module'],
                 node_config['type']
@@ -86,7 +87,8 @@ class Application:
                                                 name=node.name,
                                                 parameter=f'outputs.{output_name}',
                                                 cause='must_be_list')
-                edge_color:str = 'red' if len(node_config['outputs'][output_name])>1 else 'blue'
+                edge_color: str = 'red' if len(node_config['outputs'][output_name]) > 1 else 'blue'
+
                 for output_config in node_config['outputs'][output_name]:
                     child_node_key = output_config['node']
                     child_node = self._get_node(child_node_key)
