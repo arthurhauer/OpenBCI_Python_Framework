@@ -1,7 +1,6 @@
 import abc
 from typing import Final, Any
 
-import numpy as np
 from sklearn.base import TransformerMixin, BaseEstimator
 
 from models.framework_data import FrameworkData

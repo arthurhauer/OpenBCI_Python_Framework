@@ -1,10 +1,7 @@
+import json
 import signal
 from threading import Thread
-
-import json
-
 from flask import Flask, request
-
 from application import Application
 
 app = Flask(__name__)

@@ -104,7 +104,9 @@ class Metric(ProcessingNode):
         :rtype: bool
         """
         return self._input_buffer[self.INPUT_ACTUAL].get_data_count() > 0 \
-               and self._input_buffer[self.INPUT_ACTUAL].get_data_count() == self._input_buffer[self.INPUT_PREDICTED].get_data_count()
+               and self._input_buffer[self.INPUT_ACTUAL].get_data_count() >= self._input_buffer[
+                   self.INPUT_PREDICTED].get_data_count() \
+               and self._input_buffer[self.INPUT_PREDICTED].get_data_count() > 0
 
     def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
         """ This method processes the data that was inputted to the node. It calculates classification performance
@@ -116,8 +118,8 @@ class Metric(ProcessingNode):
         :return: The calculated performance metric.
         :rtype: Dict[str, FrameworkData]
         """
-        actual_labels = data[self.INPUT_ACTUAL].get_data_single_channel()
         predicted_labels = data[self.INPUT_PREDICTED].get_data_single_channel()
+        actual_labels = data[self.INPUT_ACTUAL].get_data_single_channel()[0:data[self.INPUT_PREDICTED].get_data_count()]
         unformatted_metric = self._metric_function(actual_labels, predicted_labels)
 
         calculated_metric = FrameworkData()
@@ -126,6 +128,13 @@ class Metric(ProcessingNode):
         return {
             self.OUTPUT_MAIN: calculated_metric
         }
+
+    def _clear_input_buffer(self):
+        if not hasattr(self, '_input_buffer'):
+            super()._clear_input_buffer()
+            return
+        self._input_buffer[self.INPUT_ACTUAL].splice(0, self._input_buffer[self.INPUT_PREDICTED].get_data_count())
+        self._input_buffer[self.INPUT_PREDICTED] = FrameworkData()
 
     def _get_inputs(self) -> List[str]:
         """ This method returns the inputs of the node. In this case it returns a single 'main' input.

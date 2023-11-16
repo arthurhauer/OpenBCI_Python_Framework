@@ -106,24 +106,4 @@ class FixedWindowSegmenter(Segmenter):
                     segmented_data.input_data_on_channel([window.get_data_on_channel(channel)], channel)
             else:
                 break
-
-        # for channel in data.channels:
-        #     raw_signal = data.get_data_on_channel(channel)
-        #     segmented_channel = []
-        #     total_count = len(raw_signal)
-        #     window_count = math.floor(total_count / self.window_size)
-        #     remaining_samples = total_count % self.window_size
-        #     for i in range(1, window_count + 1):
-        #         window_start = (i - 1) * self.window_size
-        #         window_end = i * self.window_size
-        #         current_window = raw_signal[window_start:window_end]
-        #         segmented_channel.append(current_window)
-        #     if remaining_samples > 0:
-        #         window_start = window_count * self.window_size
-        #         window_end = total_count
-        #         fill_value = 0 if self.filling_value == 'zero' else raw_signal[total_count - 1]
-        #         fill_count = self.window_size - remaining_samples
-        #         current_window = raw_signal[window_start:window_end] + [fill_value] * fill_count
-        #         segmented_channel.append(current_window)
-        #     segmented_data.input_data_on_channel(segmented_channel, channel)
         return segmented_data

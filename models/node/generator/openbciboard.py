@@ -198,12 +198,12 @@ class OpenBCIBoard(GeneratorNode):
     def dispose(self) -> None:
         """ Node self implementation of disposal of allocated resources.
         """
+        self.stop()
         self._get_board().stop_stream()
         self._get_board().release_session()
         self._is_board_streaming = False
         self._clear_output_buffer()
         self._clear_input_buffer()
-        self.stop()
 
     @staticmethod
     def _set_log_level(log_level: str = "OFF"):
