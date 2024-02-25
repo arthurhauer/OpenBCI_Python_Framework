@@ -69,20 +69,21 @@ class MatFile(SingleRunGeneratorNode):
     def _generate_data(self) -> Dict[str, FrameworkData]:
         raw_data = scipy.io.loadmat(self.file_path)
         converted_data: Dict[str, FrameworkData] = {}
-        for key in raw_data.keys():
+        for key in self._get_outputs():
             converted_data[key] = self._convert_to_framework_data(raw_data[key])
         return converted_data
 
     def _get_outputs(self) -> List[str]:
         mat_data = scipy.io.loadmat(self.file_path)
-        return list(mat_data.keys())
+        outputs = list(mat_data.keys())
+        condition = lambda x: not x.startswith('__') and not x.startswith('_')
+        return list(filter(condition, outputs))
 
     def _convert_to_framework_data(self, data: Any) -> FrameworkData:
-        wrapper = FrameworkData()
-        if type(data) is numpy.ndarray and np.issubdtype(data[0][0].dtype, np.number):
+        if type(data) is numpy.ndarray and np.issubdtype(data.dtype, np.number):
             return FrameworkData.from_multi_channel(self.sampling_frequency, [f'channel_{i}' for i in range(data.shape[1])],
                                                     data.transpose(1, 0))
-        return wrapper
+        return FrameworkData()
 
     def dispose(self) -> None:
         self._clear_output_buffer()
