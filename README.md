@@ -1,3 +1,5 @@
+Produto Tecnológico desenvolvido durante projeto de Mestrado "Novo framework baseado em Python para processamento de biossinais" do Programa em Engenharia Elétrica e Informática Industrial (CPGEI) da UTFPR - Campus Curitiba, sob orientação dos professores Dr. José Jair Alves Mendes Júnior e Dr. Daniel Prado de Campos.
+
 # Como Gerar Uma Nova Documentação
 
 1.  Pelo terminal entre na pasta onde está localizado o projeto OpenBCI_Python_Framework
