@@ -56,6 +56,7 @@ class Application:
         src.view()
         print('Starting pipeline execution')
         while not self._stop_execution:
+            print('ta aqui')
             self.run()
             time.sleep(1)
 

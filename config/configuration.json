@@ -1,25 +1,30 @@
 {
   "nodes": {
     "root": {
-      "open_bci": {
-        "module": "models.node.generator",
-        "type": "OpenBCIBoard",
-        "log_level": "TRACE",
-        "board": "SYNTHETIC_BOARD",
-        "communication": {
-          "serial_port": "COM4"
-        },
+      "data": {
+        "name": "csv_data",
+        "module": "models.node.generator.file",
+        "type": "CSVFileArray",
+        "enable_log": true,
+        "file_path": [
+          "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Dataset\\train\\train\\subj1_series1_data.csv",
+          "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Dataset\\train\\train\\subj1_series2_data.csv"
+        ],
+        "sampling_frequency": 500,
+        "channel_column_names": [
+          "Fp1"
+        ],
         "buffer_options": {
-          "clear_output_buffer_on_generate": true
+          "clear_output_buffer_on_generate": true,
+          "print_buffer_size": false
         },
         "outputs": {
-          "eeg": [
+          "main": [
             {
               "node": "merge",
               "input": "master_main"
             }
           ],
-          "accelerometer": [],
           "timestamp": [
             {
               "node": "merge",
@@ -28,84 +33,28 @@
           ]
         }
       },
-      "motor_imagery_session": {
-        "module": "models.node.generator",
-        "type": "MotorImagery",
-        "buffer_options": {
-          "clear_output_buffer_on_generate": true
-        },
-        "shuffle_when_sequence_is_finished": true,
-        "trials": [
-          {
-            "name": "Rest",
-            "code": 1,
-            "duration": {
-              "mean": 0.5,
-              "standard_deviation": 1,
-              "maximum": 1,
-              "minimum": 0.2
-            },
-            "cue": {
-              "file": "cues\\console_print.py",
-              "parameters": {
-                "message": "REST"
-              }
-            }
-          },
-          {
-            "name": "Close right fist",
-            "code": 3,
-            "duration": {
-              "mean": 0.5,
-              "standard_deviation": 1,
-              "maximum": 1,
-              "minimum": 0.2
-            },
-            "cue": {
-              "file": "cues\\console_print.py",
-              "parameters": {
-                "message": "CLOSE RIGHT FIST"
-              }
-            }
-          },
-          {
-            "name": "Rest",
-            "code": 1,
-            "duration": {
-              "mean": 0.5,
-              "standard_deviation": 1,
-              "maximum": 1,
-              "minimum": 0.2
-            },
-            "cue": {
-              "file": "cues\\console_print.py",
-              "parameters": {
-                "message": "REST"
-              }
-            }
-          },
-          {
-            "name": "Close left fist",
-            "code": 2,
-            "duration": {
-              "mean": 0.5,
-              "standard_deviation": 1,
-              "maximum": 1,
-              "minimum": 0.2
-            },
-            "cue": {
-              "file": "cues\\console_print.py",
-              "parameters": {
-                "message": "CLOSE LEFT FIST"
-              }
-            }
-          }
+      "events": {
+        "name": "csv_events",
+        "module": "models.node.generator.file",
+        "type": "CSVFileArray",
+        "enable_log": true,
+        "file_path": [
+          "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Dataset\\train\\train\\subj1_series1_events.csv",
+          "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Dataset\\train\\train\\subj1_series2_events.csv"
         ],
+        "sampling_frequency": 500,
+        "channel_column_names": [
+          "HandStart"
+        ],
+        "buffer_options": {
+          "clear_output_buffer_on_generate": true,
+          "print_buffer_size": false
+        },
         "outputs": {
-          "marker": [
+          "main": [
             {
-              "node": "rename",
-              "input": "main"
+              "node": "merge",
+              "input": "slave_main"
             }
           ],
           "timestamp": [
@@ -118,26 +67,6 @@
       }
     },
     "common": {
-      "rename": {
-        "module": "models.node.processing",
-        "type": "ChannelRename",
-        "dictionary": {
-          "main": "marker"
-        },
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": true,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true
-        },
-        "outputs": {
-          "main": [
-            {
-              "node": "merge",
-              "input": "slave_main"
-            }
-          ]
-        }
-      },
       "merge": {
         "module": "models.node.processing",
         "type": "Merge",
@@ -181,10 +110,10 @@
         "type": "Split",
         "split": {
           "data": [
-            "Fz"
+            "Fp1"
           ],
           "label": [
-            "marker"
+            "HandStart"
           ]
         },
         "buffer_options": {
@@ -213,7 +142,7 @@
         "number_of_components": 4,
         "training_set_size": 5,
         "save_after_training": true,
-        "save_file_path": "D:\\Desktop\\A\\csp",
+        "save_file_path": "savefile\\file",
         "load_trained": false,
         "enable_log": true,
         "buffer_options": {
