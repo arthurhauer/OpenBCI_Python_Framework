@@ -46,7 +46,7 @@
               "minimum": 0.2
             },
             "cue": {
-              "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "file": "cues\\console_print.py",
               "parameters": {
                 "message": "REST"
               }
@@ -62,7 +62,7 @@
               "minimum": 0.2
             },
             "cue": {
-              "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "file": "cues\\console_print.py",
               "parameters": {
                 "message": "CLOSE RIGHT FIST"
               }
@@ -78,7 +78,7 @@
               "minimum": 0.2
             },
             "cue": {
-              "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "file": "cues\\console_print.py",
               "parameters": {
                 "message": "REST"
               }
@@ -94,7 +94,7 @@
               "minimum": 0.2
             },
             "cue": {
-              "file": "D:\\Desktop\\Projetos\\Pessoal\\Mestrado\\OpenBCI_Python_Framework\\cues\\console_print.py",
+              "file": "cues\\console_print.py",
               "parameters": {
                 "message": "CLOSE LEFT FIST"
               }
