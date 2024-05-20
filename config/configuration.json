@@ -3,7 +3,7 @@
     "root": {
       "data": {
         "name": "csv_data",
-        "module": "models.node.generator.file",
+        "module": "models.node.generator.file", 
         "type": "CSVFileArray",
         "enable_log": true,
         "file_path": [
