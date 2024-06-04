@@ -3,7 +3,7 @@
     "root": {
       "data": {
         "name": "csv_data",
-        "module": "models.node.generator.file", 
+        "module": "models.node.generator.file",
         "type": "CSVFileArray",
         "enable_log": true,
         "file_path": [
@@ -12,7 +12,9 @@
         ],
         "sampling_frequency": 500,
         "channel_column_names": [
-          "Fp1"
+          "Fp1",
+          "Fp2",
+          "F7"
         ],
         "buffer_options": {
           "clear_output_buffer_on_generate": true,
@@ -70,6 +72,7 @@
       "merge": {
         "module": "models.node.processing",
         "type": "Merge",
+        "enable_log": true,
         "slave_filling": "sample_and_hold",
         "buffer_options": {
           "clear_output_buffer_on_data_input": true,
@@ -89,7 +92,8 @@
       "segmenter": {
         "module": "models.node.processing.segmenter",
         "type": "FixedWindowSegmenter",
-        "window_size": 1000,
+        "enable_log": true,
+        "window_size": 20,
         "filling_value": "latest",
         "buffer_options": {
           "clear_output_buffer_on_data_input": true,
@@ -108,9 +112,12 @@
       "split": {
         "module": "models.node.processing",
         "type": "Split",
+        "enable_log": true,
         "split": {
           "data": [
-            "Fp1"
+            "Fp1",
+            "Fp2",
+            "F7"
           ],
           "label": [
             "HandStart"
@@ -124,40 +131,14 @@
         "outputs": {
           "data": [
             {
-              "node": "csp",
+              "node": "lda",
               "input": "data"
             }
           ],
           "label": [
             {
-              "node": "csp",
-              "input": "label"
-            }
-          ]
-        }
-      },
-      "csp": {
-        "module": "models.node.processing.trainable.feature_extractor",
-        "type": "CSP",
-        "number_of_components": 4,
-        "training_set_size": 5,
-        "save_after_training": true,
-        "save_file_path": "savefile\\file",
-        "load_trained": false,
-        "enable_log": true,
-        "buffer_options": {
-          "print_buffer_size": true,
-          "clear_output_buffer_on_data_input": true,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true,
-          "clear_input_buffer_after_training": true,
-          "process_input_buffer_after_training": true
-        },
-        "outputs": {
-          "main": [
-            {
               "node": "lda",
-              "input": "data"
+              "input": "label"
             }
           ]
         }
@@ -165,7 +146,8 @@
       "lda": {
         "module": "models.node.processing.trainable.classifier",
         "type": "LDA",
-        "training_set_size": 25,
+        "enable_log": true,
+        "training_set_size": 20,
         "save_after_training": false,
         "load_trained": false,
         "buffer_options": {
