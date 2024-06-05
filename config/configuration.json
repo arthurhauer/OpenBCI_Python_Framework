@@ -4,12 +4,9 @@
       "data": {
         "name": "csv_data",
         "module": "models.node.generator.file",
-        "type": "CSVFileArray",
+        "type": "CSVFile",
         "enable_log": true,
-        "file_path": [
-          "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Dataset\\train\\train\\subj1_series1_data.csv",
-          "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Dataset\\train\\train\\subj1_series2_data.csv"
-        ],
+        "file_path": "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Dataset\\train\\train\\subj1_series1_data.csv",
         "sampling_frequency": 500,
         "channel_column_names": [
           "Fp1",
@@ -23,142 +20,27 @@
         "outputs": {
           "main": [
             {
-              "node": "merge",
-              "input": "master_main"
-            }
-          ],
-          "timestamp": [
-            {
-              "node": "merge",
-              "input": "master_timestamp"
-            }
-          ]
-        }
-      },
-      "events": {
-        "name": "csv_events",
-        "module": "models.node.generator.file",
-        "type": "CSVFileArray",
-        "enable_log": true,
-        "file_path": [
-          "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Dataset\\train\\train\\subj1_series1_events.csv",
-          "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Dataset\\train\\train\\subj1_series2_events.csv"
-        ],
-        "sampling_frequency": 500,
-        "channel_column_names": [
-          "HandStart"
-        ],
-        "buffer_options": {
-          "clear_output_buffer_on_generate": true,
-          "print_buffer_size": false
-        },
-        "outputs": {
-          "main": [
-            {
-              "node": "merge",
-              "input": "slave_main"
-            }
-          ],
-          "timestamp": [
-            {
-              "node": "merge",
-              "input": "slave_timestamp"
+              "node": "saida",
+              "input": "main"
             }
           ]
         }
       }
     },
     "common": {
-      "merge": {
-        "module": "models.node.processing",
-        "type": "Merge",
+      "saida": {
+        "name": "CSVFile",
+        "module": "models.node.output.file",
+        "type": "CSVFile",
         "enable_log": true,
-        "slave_filling": "sample_and_hold",
+        "file_path": "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Outputs\\Teste.csv",
         "buffer_options": {
-          "clear_output_buffer_on_data_input": true,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true
-        },
-        "outputs": {
-          "merged_main": [
-            {
-              "node": "segmenter",
-              "input": "main"
-            }
-          ],
-          "merged_timestamp": []
-        }
-      },
-      "segmenter": {
-        "module": "models.node.processing.segmenter",
-        "type": "FixedWindowSegmenter",
-        "enable_log": true,
-        "window_size": 20,
-        "filling_value": "latest",
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": true,
-          "clear_input_buffer_after_process": false,
-          "clear_output_buffer_after_process": true
-        },
-        "outputs": {
-          "main": [
-            {
-              "node": "split",
-              "input": "main"
-            }
-          ]
-        }
-      },
-      "split": {
-        "module": "models.node.processing",
-        "type": "Split",
-        "enable_log": true,
-        "split": {
-          "data": [
-            "Fp1",
-            "Fp2",
-            "F7"
-          ],
-          "label": [
-            "HandStart"
-          ]
-        },
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": true,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true
-        },
-        "outputs": {
-          "data": [
-            {
-              "node": "lda",
-              "input": "data"
-            }
-          ],
-          "label": [
-            {
-              "node": "lda",
-              "input": "label"
-            }
-          ]
-        }
-      },
-      "lda": {
-        "module": "models.node.processing.trainable.classifier",
-        "type": "LDA",
-        "enable_log": true,
-        "training_set_size": 20,
-        "save_after_training": false,
-        "load_trained": false,
-        "buffer_options": {
-          "print_buffer_size": true,
           "clear_output_buffer_on_data_input": true,
           "clear_input_buffer_after_process": true,
           "clear_output_buffer_after_process": true,
-          "clear_input_buffer_after_training": true,
-          "process_input_buffer_after_training": true
+          "print_buffer_size": false
         },
-        "outputs": {
+        "outputs":{
           "main": []
         }
       }
