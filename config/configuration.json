@@ -131,34 +131,47 @@
         "outputs": {
           "data": [
             {
-              "node": "lda",
-              "input": "data"
+              "node": "saida_data",
+              "input": "main"
             }
           ],
           "label": [
             {
-              "node": "lda",
-              "input": "label"
+              "node": "saida_label",
+              "input": "main"
             }
           ]
         }
       },
-      "lda": {
-        "module": "models.node.processing.trainable.classifier",
-        "type": "LDA",
+      "saida_data": {
+        "name": "CSVFile",
+        "module": "models.node.output.file",
+        "type": "CSVFile",
         "enable_log": true,
-        "training_set_size": 20,
-        "save_after_training": false,
-        "load_trained": false,
+        "file_path": "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Outputs\\Teste1.csv",
         "buffer_options": {
-          "print_buffer_size": true,
           "clear_output_buffer_on_data_input": true,
           "clear_input_buffer_after_process": true,
           "clear_output_buffer_after_process": true,
-          "clear_input_buffer_after_training": true,
-          "process_input_buffer_after_training": true
+          "print_buffer_size": false
         },
-        "outputs": {
+        "outputs":{
+          "main": []
+        }
+      },
+      "saida_label": {
+        "name": "CSVFile",
+        "module": "models.node.output.file",
+        "type": "CSVFile",
+        "enable_log": true,
+        "file_path": "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Outputs\\Teste2.csv",
+        "buffer_options": {
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true,
+          "print_buffer_size": false
+        },
+        "outputs":{
           "main": []
         }
       }
