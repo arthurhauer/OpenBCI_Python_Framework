@@ -43,9 +43,11 @@ class Synchronize(ProcessingNode):
 
     def _is_next_node_call_enabled(self) -> bool:
         return True
-
+    # TODO FIX THIS!
+    # this data count is a 'band-aid' fix for data breakup.
+    # final solution should break input_buffer data in the last slave timestamp, process everything before it, and leave everything after it
     def _is_processing_condition_satisfied(self) -> bool:
-        return self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_count() > 0 \
+        return self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_count() > 4 \
                and self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_count() > 0 \
                and (
                        self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()[-1]
@@ -58,6 +60,7 @@ class Synchronize(ProcessingNode):
         master_timestamp_data = data[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()
         slave_main = data[self.INPUT_SLAVE_MAIN]
         slave_timestamp = data[self.INPUT_SLAVE_TIMESTAMP]
+        slave_timestamp_data = slave_timestamp.get_data_single_channel()
 
         master_sampling_frequency = data[self.INPUT_MASTER_TIMESTAMP].sampling_frequency
         # Check if input data from master and slave have channels with the same name
@@ -66,26 +69,33 @@ class Synchronize(ProcessingNode):
 
         new_slave_data = FrameworkData(sampling_frequency_hz=master_sampling_frequency,
                                        channels=slave_main.channels)
+        max_slave_index = len(slave_timestamp_data) - 1
 
-        for slave_timestamp_index, slave_timestamp_value in enumerate(slave_timestamp.get_data_single_channel()):
-            closest_point = self._get_closest_timestamp_index_in_master(
+        for slave_timestamp_index, slave_timestamp_value in enumerate(slave_timestamp_data):
+            closest_point_start = self._get_closest_timestamp_index_in_master(
                 master_timestamp_data,
                 slave_timestamp_value,
                 lookup_start_index
             )
+            value_index = slave_timestamp_index
+            if slave_timestamp_index - 1 >= 0:
+                value_index = slave_timestamp_index - 1
             new_slave_data.extend(
                 self._fill(
                     lookup_start_index,
-                    closest_point,
+                    closest_point_start,
                     slave_main,
-                    slave_timestamp_index,
+                    value_index,
                     master_sampling_frequency
                 )
             )
-            self._statistics(abs(master_timestamp_data[closest_point] - slave_timestamp_value) * 1000000)
+            self._statistics(abs(master_timestamp_data[closest_point_start] - slave_timestamp_value) * 1000000)
 
-            lookup_start_index = closest_point
-
+            lookup_start_index = closest_point_start
+        last_data_point = slave_main.get_data_at_index(max_slave_index)
+        if not list(last_data_point.values())[0] == list(new_slave_data.get_data_at_index(new_slave_data.get_data_count()-1).values())[0]:
+            for channel in last_data_point:
+                new_slave_data.input_data_on_channel([last_data_point[channel]],channel)
         return {
             self.OUTPUT_SYNCHRONIZED_MAIN: new_slave_data
         }
@@ -117,7 +127,8 @@ class Synchronize(ProcessingNode):
                                                lookup_start_index: int = 0,
                                                ) -> int:
         filtered: List[float] = master_timestamp[lookup_start_index::]
-        closest_point: int = min(range(len(filtered)), key=lambda i: abs(filtered[i] - slave_timestamp))
+        closest_point: int = min(range(len(filtered)),
+                                 key=lambda i: abs(filtered[i] - slave_timestamp)) + lookup_start_index
         return closest_point
 
     def _fill(self,
@@ -128,19 +139,25 @@ class Synchronize(ProcessingNode):
               master_sampling_frequency: float) -> FrameworkData:
         fill_data = FrameworkData(master_sampling_frequency, slave_main.channels)
         fill_size = (end_index - start_index)
-        if self._zero_fill:
-            channel_data = [0] * fill_size
-            input_data = [channel_data] * len(slave_main.channels)
-            fill_data.input_2d_data(input_data)
-        elif self._sample_and_hold:
-            input_data = slave_main.get_data_at_index(slave_main_value_index)
-            for channel in input_data:
-                channel_data = [input_data[channel]] * fill_size
-                fill_data.input_data_on_channel(channel_data, channel)
-        else:
-            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
-                                        parameter='slave_filling',
-                                        cause='not_set')
+        if fill_size > 0:
+            if self._zero_fill:
+                channel_data = [0] * fill_size
+                input_data = slave_main.get_data_at_index(slave_main_value_index)
+                for channel in input_data:
+                    channel_data = [0] * fill_size
+                    channel_data[0] = input_data[channel]
+                    fill_data.input_data_on_channel(channel_data, channel)
+                input_data = [channel_data] * len(slave_main.channels)
+                fill_data.input_2d_data(input_data)
+            elif self._sample_and_hold:
+                input_data = slave_main.get_data_at_index(slave_main_value_index)
+                for channel in input_data:
+                    channel_data = [input_data[channel]] * fill_size
+                    fill_data.input_data_on_channel(channel_data, channel)
+            else:
+                raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
+                                            parameter='slave_filling',
+                                            cause='not_set')
         if fill_data.get_data_count() == 0 and start_index == end_index:
             for channel in fill_data.channels:
                 fill_data.input_data_on_channel([slave_main.get_data_on_channel(channel)[0]], channel)
