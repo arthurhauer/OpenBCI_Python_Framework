@@ -1,6 +1,7 @@
 import abc
 from typing import List, Dict
 
+from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 from models.node.node import Node
 
@@ -23,10 +24,21 @@ class OutputNode(Node):
         """
         parameters['outputs']={}
         super()._validate_parameters(parameters)
+        if 'clear_output_buffer_on_data_input' not in parameters['buffer_options']:
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
+                                        parameter='buffer_options.clear_output_buffer_on_data_input')
+        if 'clear_input_buffer_after_process' not in parameters['buffer_options']:
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
+                                        parameter='buffer_options.clear_input_buffer_after_process')
+        if 'clear_output_buffer_after_process' not in parameters['buffer_options']:
+            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
+                                        parameter='buffer_options.clear_output_buffer_after_process')
 
     def _run(self, data: FrameworkData, input_name: str) -> None:
         self.print(f'Inserting data in input buffer {input_name}')
         self._insert_new_input_data(data, input_name)
+        if self._clear_output_buffer_on_data_input:
+            self._clear_output_buffer()
         self._process_input_buffer()
 
     def _process_input_buffer(self) -> None:
@@ -34,6 +46,11 @@ class OutputNode(Node):
             return
         self.print('Starting processing of input buffer')
         self._process(self._input_buffer)
+        if self._clear_input_buffer_after_process:
+            self._clear_input_buffer()
+        if self._clear_output_buffer_after_process:
+            self._clear_output_buffer()
+
 
     @abc.abstractmethod
     def _process(self, data: Dict[str, FrameworkData]) -> None:
@@ -58,7 +75,10 @@ class OutputNode(Node):
     def _initialize_buffer_options(self, buffer_options: dict) -> None:
         """ Initializes the buffer options based on the parameters that were passed to the node.
         """
-        pass
+        self._clear_output_buffer_on_data_input = buffer_options['clear_output_buffer_on_data_input']
+        self._clear_input_buffer_after_process = buffer_options['clear_input_buffer_after_process']
+        self._clear_output_buffer_after_process = buffer_options['clear_output_buffer_after_process']
+
 
     @abc.abstractmethod
     def _get_inputs(self) -> List[str]:
