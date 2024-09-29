@@ -1,6 +1,6 @@
 import statistics
+import copy
 from typing import List, Dict, Final
-
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
@@ -14,12 +14,15 @@ class Synchronize(ProcessingNode):
     INPUT_MASTER_TIMESTAMP: Final[str] = 'master_timestamp'
     INPUT_SLAVE_MAIN: Final[str] = 'slave_main'
     INPUT_SLAVE_TIMESTAMP: Final[str] = 'slave_timestamp'
-    OUTPUT_SYNCHRONIZED_MAIN: Final[str] = 'synchronized_main'
+    OUTPUT_SYNCHRONIZED_SLAVE: Final[str] = 'synchronized_slave'
+    OUTPUT_SYNCHRONIZED_MASTER: Final[str] = 'synchronized_master'
+    OUTPUT_SYNCHRONIZED_TIMESTAMP: Final[str] = 'synchronized_timestamp'
 
     FILL_TYPE_ZEROFILL: Final[str] = 'zero_fill'
     FILL_TYPE_SAMPLE_AND_HOLD: Final[str] = 'sample_and_hold'
 
     def _validate_parameters(self, parameters: dict):
+        parameters['buffer_options']['clear_input_buffer_after_process'] = False
         super()._validate_parameters(parameters)
         if 'slave_filling' not in parameters:
             raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
@@ -43,46 +46,55 @@ class Synchronize(ProcessingNode):
 
     def _is_next_node_call_enabled(self) -> bool:
         return True
-    # TODO FIX THIS!
-    # this data count is a 'band-aid' fix for data breakup.
-    # final solution should break input_buffer data in the last slave timestamp, process everything before it, and leave everything after it
-    def _is_processing_condition_satisfied(self) -> bool:
-        return self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_count() > 4 \
-               and self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_count() > 0 \
-               and (
-                       self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()[-1]
-                       >= self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_single_channel()[-1]
-               )
 
-    def _process(self, data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
-        lookup_start_index = 0
-        # master_main = data[self.INPUT_MASTER_MAIN]
+    def _is_processing_condition_satisfied(self) -> bool:
+        return self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_count() > 1 \
+            and self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_count() > 0 \
+            and (
+                    self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()[-1]
+                    >= self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_single_channel()[-1]
+            )
+
+    def _process(self, input_data: Dict[str, FrameworkData]) -> Dict[str, FrameworkData]:
+        data = copy.deepcopy(input_data)
         master_timestamp_data = data[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()
         slave_main = data[self.INPUT_SLAVE_MAIN]
         slave_timestamp = data[self.INPUT_SLAVE_TIMESTAMP]
         slave_timestamp_data = slave_timestamp.get_data_single_channel()
 
         master_sampling_frequency = data[self.INPUT_MASTER_TIMESTAMP].sampling_frequency
-        # Check if input data from master and slave have channels with the same name
-        # if not slave_main.get_channels_as_set().isdisjoint(master_main.channels):
-        #     raise NonCompatibleData(self._MODULE_NAME, 'channels_with_same_name')
+        master_max_index = len(master_timestamp_data) - 1
+        master_timestamp_avg_increment = (master_timestamp_data[-1] - master_timestamp_data[0]) / master_max_index
 
         new_slave_data = FrameworkData(sampling_frequency_hz=master_sampling_frequency,
                                        channels=slave_main.channels)
         max_slave_index = len(slave_timestamp_data) - 1
-
+        last_closest_index = 0
+        last_slave_index = 0
         for slave_timestamp_index, slave_timestamp_value in enumerate(slave_timestamp_data):
+            # stop processing if slave timestamp is greater than master timestamp, as we can't be sure if there's more master data incoming to sync
+            if slave_timestamp_value > master_timestamp_data[master_max_index]:
+                break
+
+            # stop processing if it's the last slave timestamp, as we can't be sure if there's more slave data incoming to sync
+            if slave_timestamp_index == max_slave_index:
+                break
+
             closest_point_start = self._get_closest_timestamp_index_in_master(
                 master_timestamp_data,
                 slave_timestamp_value,
-                lookup_start_index
+                master_timestamp_avg_increment,
+                master_max_index
             )
+            if last_closest_index == closest_point_start and last_closest_index == 0:
+                new_slave_data.splice(0, 1)
+
             value_index = slave_timestamp_index
             if slave_timestamp_index - 1 >= 0:
                 value_index = slave_timestamp_index - 1
             new_slave_data.extend(
                 self._fill(
-                    lookup_start_index,
+                    last_closest_index,
                     closest_point_start,
                     slave_main,
                     value_index,
@@ -90,14 +102,25 @@ class Synchronize(ProcessingNode):
                 )
             )
             self._statistics(abs(master_timestamp_data[closest_point_start] - slave_timestamp_value) * 1000000)
+            last_closest_index = closest_point_start
+            last_slave_index = slave_timestamp_index
 
-            lookup_start_index = closest_point_start
-        last_data_point = slave_main.get_data_at_index(max_slave_index)
-        if not list(last_data_point.values())[0] == list(new_slave_data.get_data_at_index(new_slave_data.get_data_count()-1).values())[0]:
-            for channel in last_data_point:
-                new_slave_data.input_data_on_channel([last_data_point[channel]],channel)
+        self.print(f'------------------------------------------------------------------------------------------------------------------'+
+              f'\nOriginal MASTER {master_timestamp_data[0]} - {master_timestamp_data[master_max_index]}'
+              f'\nRemoving MASTER {master_timestamp_data[0]} - {master_timestamp_data[last_closest_index]}'
+              f'\nOriginal SLAVE  {slave_timestamp_data[0]} - {slave_timestamp_data[max_slave_index]}'
+              f'\nRemoving SLAVE  {slave_timestamp_data[0]} - {slave_timestamp_data[last_slave_index]}'
+        )
+
+        self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].splice(0, last_slave_index+1)
+        self._input_buffer[self.INPUT_SLAVE_MAIN].splice(0, last_slave_index+1)
+        output_timestamp = self._input_buffer[self.INPUT_MASTER_TIMESTAMP].splice(0, last_closest_index+1)
+        output_master = self._input_buffer[self.INPUT_MASTER_MAIN].splice(0, last_closest_index+1)
+
         return {
-            self.OUTPUT_SYNCHRONIZED_MAIN: new_slave_data
+            self.OUTPUT_SYNCHRONIZED_SLAVE: new_slave_data,
+            self.OUTPUT_SYNCHRONIZED_MASTER: output_master,
+            self.OUTPUT_SYNCHRONIZED_TIMESTAMP: output_timestamp
         }
 
     def _statistics(self, sync_error_microseconds: float):
@@ -118,17 +141,36 @@ class Synchronize(ProcessingNode):
 
     def _get_outputs(self) -> List[str]:
         return [
-            self.OUTPUT_SYNCHRONIZED_MAIN
+            self.OUTPUT_SYNCHRONIZED_SLAVE,
+            self.OUTPUT_SYNCHRONIZED_MASTER,
+            self.OUTPUT_SYNCHRONIZED_TIMESTAMP
         ]
 
     @staticmethod
-    def _get_closest_timestamp_index_in_master(master_timestamp: List[float],
-                                               slave_timestamp: float,
-                                               lookup_start_index: int = 0,
-                                               ) -> int:
-        filtered: List[float] = master_timestamp[lookup_start_index::]
-        closest_point: int = min(range(len(filtered)),
-                                 key=lambda i: abs(filtered[i] - slave_timestamp)) + lookup_start_index
+    def _get_closest_timestamp_index_in_master(
+            master_timestamp: List[float],
+            slave_timestamp: float,
+            master_timestamp_avg_increment: float,
+            master_max_index: int) -> int:
+
+        if slave_timestamp < master_timestamp[0]:
+            return 0
+
+        estimated_index = int((slave_timestamp - master_timestamp[0]) / master_timestamp_avg_increment)
+
+        if estimated_index < 0:
+            return 0
+
+        while 0 < estimated_index < master_max_index - 1:
+            if master_timestamp[estimated_index - 1] <= slave_timestamp <= master_timestamp[estimated_index + 1]:
+                return estimated_index
+            elif slave_timestamp < master_timestamp[estimated_index]:
+                estimated_index -= 1
+            elif slave_timestamp > master_timestamp[estimated_index]:
+                estimated_index += 1
+
+        closest_point: int = min(range(len(master_timestamp)),
+                                         key=lambda i: abs(master_timestamp[i] - slave_timestamp))
         return closest_point
 
     def _fill(self,
