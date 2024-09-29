@@ -1,9 +1,8 @@
 import abc
 import os
-from typing import Final, List, final, Any
+from typing import Final, List, Any
 
 import joblib
-import time
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
@@ -98,8 +97,8 @@ class TrainableProcessingNode(ProcessingNode):
                                             parameter='buffer_options.process_input_buffer_after_training',
                                             cause='must_be_bool')
         if 'save_after_training' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
-                                        parameter='save_after_training')
+            parameters['save_after_training'] = False
+
         if type(parameters['save_after_training']) is not bool:
             raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='save_after_training',
@@ -114,8 +113,8 @@ class TrainableProcessingNode(ProcessingNode):
                                             parameter='save_file_path',
                                             cause='must_be_str')
         if 'load_trained' not in parameters:
-            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
-                                        parameter='load_trained')
+            parameters['load_trained'] = False
+
         if type(parameters['load_trained']) is not bool:
             raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='load_trained',
