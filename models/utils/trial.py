@@ -46,6 +46,7 @@ class Trial:
         """Constructor method. Initializes and validates the parameters of the class.
         """
         super().__init__()
+        self.name = name
         if name is None:
             raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='name')
@@ -71,20 +72,27 @@ class Trial:
     def from_config_json(cls, parameters: dict):
         """Creates a new instance of this class and initializes it with the parameters that were passed to it.
         """
+        name = parameters['name']
         if 'name' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='name')
+                                        parameter='name',
+                                        name='undefined')
         if 'code' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='code')
+                                        parameter='code',
+                                        name=name)
         if 'duration' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='duration')
+                                        parameter='duration',
+                                        name=name)
         if 'cue' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='cue')
+                                        parameter='cue',
+                                        name=name)
+
+        parameters['duration']['name'] = name
         return cls(
-            name=parameters['name'],
+            name=name,
             code=parameters['code'],
             duration=Duration.from_config_json(parameters['duration']),
             cue=Cue.from_config_json(parameters['cue'])

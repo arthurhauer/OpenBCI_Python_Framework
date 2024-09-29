@@ -97,11 +97,18 @@ class MotorImagery(GeneratorNode):
 
         :return: A new instance of this class.
         """
+        if 'name' not in parameters:
+            raise MissingParameterError(module=cls._MODULE_NAME,
+                                        parameter='name',
+                                        name='undefined')
+        name = parameters['name']
         if 'trials' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='trials')
+                                        parameter='trials',
+                                        name=name)
         trials = []
         for trial_parameters in parameters['trials']:
+            trial_parameters['name'] = name
             trials.append(Trial.from_config_json(trial_parameters))
         parameters['trials'] = trials
         return cls(parameters=parameters)

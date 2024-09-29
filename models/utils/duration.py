@@ -31,7 +31,7 @@ class Duration:
     """
     _MODULE_NAME: Final[str] = 'utils.duration'
 
-    def __init__(self, mean: float, standard_deviation: float, maximum: float, minimum: float) -> None:
+    def __init__(self, name:str, mean: float, standard_deviation: float, maximum: float, minimum: float) -> None:
         """Constructor method. Initializes and validates the parameters of the class.
         The self._distribution variable is used to generate the random numbers. It uses the scypy.stats.truncnorm
         function to generate the random numbers in a truncated normal distribution. The truncated normal distribution
@@ -53,8 +53,8 @@ class Duration:
 
         :return: A new instance of ``Duration``.
         """
-
         super().__init__()
+        self.name = name
         if mean is None:
             raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='mean')
@@ -110,19 +110,29 @@ class Duration:
 
         :return: A new instance of this class.
         """
+        if 'name' not in parameters:
+            raise MissingParameterError(module=cls._MODULE_NAME,
+                                        parameter='name',
+                                        name='undefined')
+        name = parameters['name']
         if 'mean' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='mean')
+                                        parameter='mean',
+                                        name=name)
         if 'standard_deviation' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='standard_deviation')
+                                        parameter='standard_deviation',
+                                        name=name)
         if 'maximum' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='maximum')
+                                        parameter='maximum',
+                                        name=name)
         if 'minimum' not in parameters:
             raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='minimum')
+                                        parameter='minimum',
+                                        name=name)
         return cls(
+            name=name,
             mean=parameters['mean'],
             standard_deviation=parameters['standard_deviation'],
             maximum=parameters['maximum'],
