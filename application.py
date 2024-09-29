@@ -1,6 +1,6 @@
 import os
 from typing import Dict
-
+from threading import Thread
 import time
 import importlib
 from config.configuration import Configuration
@@ -20,41 +20,18 @@ class Application:
         self._stop_execution = False
         self.graphviz_representation = 'digraph G {'
         self._initialize_nodes()
-        print('Initializing nodes')
-        for key in self.configuration.get_root_nodes():
-            node_config = self.configuration.get_root_nodes()[key]
-            node = self.get_generator_node_from_module_and_type(
-                node_config['module'],
-                node_config['type']
-            )
-            node_config['name'] = key
-            root_node: GeneratorNode = node.from_config_json(node_config)
-            self.graphviz_representation += f'\n{root_node.build_graphviz_representation()}'
-            for output_name in node_config['outputs']:
-                root_node.check_output(output_name)
-                edge_color: str = 'red' if len(node_config['outputs'][output_name]) > 1 else 'blue'
-                for output_config in node_config['outputs'][output_name]:
-                    child_node_key = output_config['node']
-                    child_node = self._get_node(child_node_key)
-                    input = output_config['input']
-                    self.graphviz_representation += f'\n{key}:out_{output_name} -> {child_node_key}:in_{input} [color={edge_color}]'
-                    try:
-                        child_node.check_input(output_config['input'])
-                    except Exception as e:
-                        print(
-                            f'error in {key} output {output_name} config: {child_node.name} doesnt have configured input {input}')
-                        raise e
-                    root_node.add_child(output_name, child_node, output_config['input'])
-            self._add_root_node(
-                key,
-                root_node)
-
         self.graphviz_representation += '\n}'
         os.environ["PATH"] += os.pathsep + f'.{os.sep}lib{os.sep}Graphviz'
-        src = Source(self.graphviz_representation, format='svg')
-        src.render(filename='graph', directory=f'output{os.sep}')
-        src.view()
+        if self.configuration.show_diagram():
+            src = Source(self.graphviz_representation, format='svg')
+            src.render(filename='graph', directory=f'output{os.sep}')
+            src.view()
         print('Starting pipeline execution')
+
+        self._execution_thread = Thread(target=self._run_loop)
+        self._execution_thread.start()
+
+    def _run_loop(self):
         while not self._stop_execution:
             self.run()
             time.sleep(1)
@@ -105,8 +82,37 @@ class Application:
         return self._nodes[node_name]
 
     def _initialize_nodes(self):
+        print('Initializing nodes')
         self._nodes: Dict[str, Node] = {}
         self._root_nodes: Dict[str, GeneratorNode] = {}
+        for key in self.configuration.get_root_nodes():
+            node_config = self.configuration.get_root_nodes()[key]
+            node = self.get_generator_node_from_module_and_type(
+                node_config['module'],
+                node_config['type']
+            )
+            node_config['name'] = key
+            root_node: GeneratorNode = node.from_config_json(node_config)
+            self.graphviz_representation += f'\n{root_node.build_graphviz_representation()}'
+            for output_name in node_config['outputs']:
+                root_node.check_output(output_name)
+                edge_color: str = 'red' if len(node_config['outputs'][output_name]) > 1 else 'blue'
+                for output_config in node_config['outputs'][output_name]:
+                    child_node_key = output_config['node']
+                    child_node = self._get_node(child_node_key)
+                    input = output_config['input']
+                    self.graphviz_representation += f'\n{key}:out_{output_name} -> {child_node_key}:in_{input} [color={edge_color}]'
+                    try:
+                        child_node.check_input(output_config['input'])
+                    except Exception as e:
+                        print(
+                            f'error in {key} output {output_name} config: {child_node.name} doesnt have configured input {input}')
+                        raise e
+                    root_node.add_child(output_name, child_node, output_config['input'])
+            self._add_root_node(
+                key,
+                root_node)
+        print('Nodes initialized')
 
     def _add_root_node(self, name: str, node: GeneratorNode):
         self._root_nodes[name] = node
@@ -121,5 +127,6 @@ class Application:
 
     def dispose(self):
         self._stop_execution = True
+        self._execution_thread.join()
         for key in self._root_nodes:
             self._root_nodes[key].dispose_all()
