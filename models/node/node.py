@@ -1,9 +1,12 @@
 from __future__ import annotations
 import abc
 import copy
-from typing import List, Dict, Final, Any
-
+import threading
+import traceback
 import time
+from queue import Queue
+from threading import Thread
+from typing import List, Dict, Final, Any
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
@@ -36,6 +39,13 @@ class Node:
         self._initialize_children()
 
         self._child_input_relation: Dict[Node, List[str]] = {}
+
+        # Threading attributes
+        self.local_storage = Queue()
+        self.running = False
+        self.thread = None
+        self.new_data_available = False
+        self.condition = threading.Condition()
 
     def _build_graph_inputs(self):
         return f"""
@@ -216,7 +226,8 @@ class Node:
         if node not in self._child_input_relation:
             self._child_input_relation[node] = []
         if input_name in self._child_input_relation[node]:
-            raise InvalidParameterValue(module='node', parameter=f'outputs.{output_name}', cause='already_added')
+            raise InvalidParameterValue(module='node', parameter=f'outputs.{output_name}', cause='already_added',
+                                        name=self.name)
         self._children[output_name].append(
             {
                 'node': node,
@@ -241,22 +252,34 @@ class Node:
             for child in output_children:
                 child['run'](output)
 
-    def run(self, data: FrameworkData = None, input_name: str = None) -> None:
-        """Run node main function
+    def _thread_runner(self):
+        while self.running:
+            with self.condition:
+                while not self.new_data_available and self.running:
+                    self.condition.wait()
+                if not self.running:
+                    break
+                while not self.local_storage.empty():
+                    input_name, data = self.local_storage.get()
+                    try:
+                        self._run(data, input_name)
+                    except Exception as e:
+                        self.print(f'Error: {e}', exception=e)
+                        raise e
+                    if self._is_next_node_call_enabled():
+                        self._call_children()
+                self.new_data_available = False
 
-        :param data: Node input data (channel X sample). Can be None if node takes no input data.
-        :type data: FrameworkData
-        :param input_name: Node input name. Can be None if node takes no input data.
-        :type input_name: str
-        """
-        try:
-            self._run(data, input_name)
-        except Exception as e:
-            self.print(f'Error:{e}')
-            raise e
-        if not self._is_next_node_call_enabled():
-            return
-        self._call_children()
+    def run(self, data: FrameworkData = None, input_name: str = None) -> None:
+        self.local_storage.put((input_name, data))
+        with self.condition:
+            self.new_data_available = True
+            self.condition.notify()
+
+        if not self.running:
+            self.running = True
+            self.thread = Thread(target=self._thread_runner, name=self.name)
+            self.thread.start()
 
     def check_input(self, input_name: str) -> None:
         if input_name not in self._get_inputs():
@@ -332,11 +355,19 @@ class Node:
         """Node self implementation of disposal of allocated resources.
         """
         self.print('Disposing...')
+        self.running = False
+        with self.condition:
+            self.condition.notify()
+        if self.thread:
+            self.thread.join()
         return
 
-    def print(self, message: str) -> None:
-        if self._enable_log:
+    def print(self, message: str, exception: Exception = None) -> None:
+        if self._enable_log or not exception is None:
             print(f'{time.time()} - {self._MODULE_NAME}.{self.name} - {message}')
+            if exception:
+                print('Stack trace:')
+                traceback.print_exc()
 
     @property
     def module_name(self):
