@@ -31,7 +31,7 @@ class Duration:
     """
     _MODULE_NAME: Final[str] = 'utils.duration'
 
-    def __init__(self, name:str, mean: float, standard_deviation: float, maximum: float, minimum: float) -> None:
+    def __init__(self, name:str, mean: float, standard_deviation: float, maximum: float = None, minimum: float= None) -> None:
         """Constructor method. Initializes and validates the parameters of the class.
         The self._distribution variable is used to generate the random numbers. It uses the scypy.stats.truncnorm
         function to generate the random numbers in a truncated normal distribution. The truncated normal distribution
@@ -46,7 +46,7 @@ class Duration:
         :param minimum: Minimum value for the trial duration.
         :type minimum: float
 
-        :raises MissingParameterError: The ``mean``, ``standard_deviation``, ``maximum`` and ``minimum`` parameters are required.
+        :raises MissingParameterError: The ``mean`` and ``standard_deviation`` parameters are required. The `maximum`` and ``minimum`` parameters are required only when ``standard_deviation`` > 0.
         :raises InvalidParameterValue: The ``mean``, ``standard_deviation``, ``maximum`` and ``minimum`` parameters must be greater than 0.
         :raises InvalidParameterValue: The ``maximum`` parameter must be greater than the ``mean`` parameter.
         :raises InvalidParameterValue: The ``minimum`` parameter must be less than the ``mean`` parameter.
@@ -61,43 +61,49 @@ class Duration:
         if standard_deviation is None:
             raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
                                         parameter='standard_deviation')
-        if maximum is None:
-            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
-                                        parameter='maximum')
-        if minimum is None:
-            raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
-                                        parameter='minimum')
+
         if mean <= 0:
             raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='mean',
                                         cause='<=0')
-        if standard_deviation <= 0:
+        if standard_deviation < 0:
             raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
                                         parameter='standard_deviation',
-                                        cause='<=0')
-        if maximum <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
-                                        parameter='maximum',
-                                        cause='<=0')
-        if maximum < mean:
-            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
-                                        parameter='maximum',
-                                        cause='<mean')
-        if minimum <= 0:
-            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
-                                        parameter='minimum',
-                                        cause='<=0')
-        if minimum > mean:
-            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
-                                        parameter='minimum',
-                                        cause='>mean')
+                                        cause='<0')
+
         self.mean = mean
         self.standard_deviation = standard_deviation
-        self.maximum = maximum
-        self.minimum = minimum
-        self._distribution = stats.truncnorm((self.minimum - self.mean) / self.standard_deviation,
-                                             (self.maximum - self.mean) / self.standard_deviation, loc=self.mean,
-                                             scale=self.standard_deviation)
+
+        if standard_deviation > 0:
+
+            if maximum is None:
+                raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
+                                            parameter='maximum')
+            if minimum is None:
+                raise MissingParameterError(module=self._MODULE_NAME, name=self.name,
+                                            parameter='minimum')
+            if maximum <= 0:
+                raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
+                                            parameter='maximum',
+                                            cause='<=0')
+            if maximum < mean:
+                raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
+                                            parameter='maximum',
+                                            cause='<mean')
+            if minimum <= 0:
+                raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
+                                            parameter='minimum',
+                                            cause='<=0')
+            if minimum > mean:
+                raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
+                                            parameter='minimum',
+                                            cause='>mean')
+
+            self.maximum = maximum
+            self.minimum = minimum
+            self._distribution = stats.truncnorm((self.minimum - self.mean) / self.standard_deviation,
+                                                 (self.maximum - self.mean) / self.standard_deviation, loc=self.mean,
+                                                 scale=self.standard_deviation)
 
     @classmethod
     def from_config_json(cls, parameters: dict):
@@ -106,7 +112,7 @@ class Duration:
         :param parameters: The parameters that will be passed to the node. This comes from the configuration file.
         :type parameters: dict
 
-        :raises MissingParameterError: The ``mean``, ``standard_deviation``, ``maximum`` and ``minimum`` parameters are required.
+        :raises MissingParameterError: The ``mean`` and ``standard_deviation`` parameters are required. The `maximum`` and ``minimum`` parameters are required only when ``standard_deviation`` > 0.
 
         :return: A new instance of this class.
         """
@@ -123,25 +129,32 @@ class Duration:
             raise MissingParameterError(module=cls._MODULE_NAME,
                                         parameter='standard_deviation',
                                         name=name)
-        if 'maximum' not in parameters:
-            raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='maximum',
-                                        name=name)
-        if 'minimum' not in parameters:
-            raise MissingParameterError(module=cls._MODULE_NAME,
-                                        parameter='minimum',
-                                        name=name)
+        maximum_parameter = None
+        minimum_parameter = None
+        if parameters['standard_deviation'] > 0:
+            if 'maximum' not in parameters:
+                raise MissingParameterError(module=cls._MODULE_NAME,
+                                            parameter='maximum',
+                                            name=name)
+            if 'minimum' not in parameters:
+                raise MissingParameterError(module=cls._MODULE_NAME,
+                                            parameter='minimum',
+                                            name=name)
+            maximum_parameter = parameters['maximum']
+            minimum_parameter = parameters['minimum']
         return cls(
             name=name,
             mean=parameters['mean'],
             standard_deviation=parameters['standard_deviation'],
-            maximum=parameters['maximum'],
-            minimum=parameters['minimum']
+            maximum=maximum_parameter,
+            minimum=minimum_parameter
         )
 
     def get_duration(self) -> float:
         """Returns a random number based on the parameters that you defined when you created the instance of this class.
         """
+        if self.standard_deviation == 0:
+            return self.mean
         return self._distribution.rvs(1)[0]
 
     def __str__(self):
