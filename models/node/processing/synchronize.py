@@ -50,6 +50,8 @@ class Synchronize(ProcessingNode):
     def _is_processing_condition_satisfied(self) -> bool:
         return self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_count() > 1 \
             and self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_count() > 0 \
+            and self._input_buffer[self.INPUT_SLAVE_MAIN].get_data_count() > 0 \
+            and self._input_buffer[self.INPUT_MASTER_MAIN].get_data_count() > 0 \
             and (
                     self._input_buffer[self.INPUT_MASTER_TIMESTAMP].get_data_single_channel()[-1]
                     >= self._input_buffer[self.INPUT_SLAVE_TIMESTAMP].get_data_single_channel()[-1]
