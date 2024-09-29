@@ -130,8 +130,8 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
         """
         formatted_data = np.asarray(raw_data.get_data_as_2d_array())
         formatted_data = np.moveaxis(formatted_data, 1, 0)
-        if len(formatted_data.shape) > 2:
-            formatted_data = formatted_data.reshape(formatted_data.shape[0], formatted_data.shape[1]*formatted_data.shape[2])
+        # if len(formatted_data.shape) > 2:
+        #     formatted_data = formatted_data.reshape(formatted_data.shape[0], formatted_data.shape[1]*formatted_data.shape[2])
         return formatted_data
 
     def _format_raw_label(self, raw_label: FrameworkData) -> Any:
