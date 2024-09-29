@@ -12,9 +12,10 @@ from models.node.processing.processing_node import ProcessingNode
 class EpochStatistics(ProcessingNode):
     _MODULE_NAME: Final[str] = 'node.processing.epochstatistics'
 
-    _ALLOWED_METHODS: Final[List[str]] = ['fmean', 'geometric_mean', 'harmonic_mean', 'mean', 'median',
-                                          'median_grouped', 'median_high', 'median_low', 'mode',
-                                          'pstdev', 'pvariance', 'stdev', 'variance']
+    _ALLOWED_METHODS_FROM_STATISTICS_MODULE: Final[List[str]] = ['fmean', 'geometric_mean', 'harmonic_mean', 'mean', 'median',
+                                                                 'median_grouped', 'median_high', 'median_low', 'mode',
+                                                                 'pstdev', 'pvariance', 'stdev', 'variance']
+    _ALLOWED_METHODS: Final[List[str]] = [*_ALLOWED_METHODS_FROM_STATISTICS_MODULE, 'first_value', 'last_value']
     INPUT_MAIN: Final[str] = 'main'
     OUTPUT_MAIN: Final[str] = 'main'
 
@@ -34,7 +35,17 @@ class EpochStatistics(ProcessingNode):
 
     def _initialize_parameter_fields(self, parameters: dict):
         super()._initialize_parameter_fields(parameters)
-        self._statistic_func = getattr(statistics, parameters['statistic'])
+        statistic = parameters['statistic']
+        if statistic in self._ALLOWED_METHODS_FROM_STATISTICS_MODULE:
+            self._statistic_func = getattr(statistics, statistic)
+        elif statistic == 'first_value':
+            self._statistic_func = lambda x: x[0]
+        elif statistic == 'last_value':
+            self._statistic_func = lambda x: x[-1]
+        else:
+            raise InvalidParameterValue(module=self._MODULE_NAME, name=self.name,
+                                        parameter='statistic',
+                                        cause=f'must_be_one_of_{self._ALLOWED_METHODS}')
 
     def _is_next_node_call_enabled(self) -> bool:
         return self._output_buffer[self.OUTPUT_MAIN].get_data_count() > 0
