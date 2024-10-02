@@ -1,0 +1,183 @@
+{
+  "nodes": {
+    "root": {
+      "open_bci": {
+        "module": "models.node.generator",
+        "type": "OpenBCIBoard",
+        "enable_log": false,
+        "log_level": "TRACE",
+        "board": "CYTON_BOARD",
+        "communication": {
+          "serial_port": "COM3"
+        },
+        "buffer_options": {
+          "print_buffer_size":true,
+          "clear_output_buffer_on_generate": true
+        },
+        "outputs": {
+          "eeg": [
+            {
+              "node": "merge",
+              "input": "master_main"
+            }
+          ],
+          "accelerometer": [],
+          "timestamp": [
+            {
+              "node": "merge",
+              "input": "master_timestamp"
+            }
+          ]
+        }
+      },
+      "motor_imagery_session": {
+        "module": "models.node.generator",
+        "type": "MotorImagery",
+        "enable_log": false,
+        "buffer_options": {
+          "print_buffer_size":false,
+          "clear_output_buffer_on_generate": true
+        },
+        "shuffle_when_sequence_is_finished": false,
+        "trials": [
+          {
+            "name": "Descanso",
+            "code": 1000,
+            "duration": {
+              "mean": 5,
+              "standard_deviation": 0.0001,
+              "maximum": 5.0001,
+              "minimum": 4.9999
+            },
+            "cue": {
+              "file": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\console_print.py",
+              "parameters": {
+                "message": "DESCANSO"
+              }
+            }
+          },
+          {
+            "name": "Mindinho",
+            "code": 2000,
+            "duration": {
+              "mean": 5,
+              "standard_deviation": 0.0001,
+              "maximum": 5.0001,
+              "minimum": 4.9999
+            },
+            "cue": {
+              "file": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\console_print.py",
+              "parameters": {
+                "message": "MINDINHO"
+              }
+            }
+          },
+          {
+            "name": "DESCANSO",
+            "code": 1000,
+            "duration": {
+              "mean": 5,
+              "standard_deviation": 0.0001,
+              "maximum": 5.0001,
+              "minimum": 4.9999
+            },
+            "cue": {
+              "file": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\console_print.py",
+              "parameters": {
+                "message": "DESCANSO"
+              }
+            }
+          },
+          {
+            "name": "INDICADOR",
+            "code": 3000,
+            "duration": {
+              "mean": 5,
+              "standard_deviation": 0.0001,
+              "maximum": 5.0001,
+              "minimum": 4.9999
+            },
+            "cue": {
+              "file": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\console_print.py",
+              "parameters": {
+                "message": "INDICADOR"
+              }
+            }
+          }
+        ],
+        "outputs": {
+          "marker": [
+            {
+              "node": "rename",
+              "input": "main"
+            }
+          ],
+          "timestamp": [
+            {
+              "node": "merge",
+              "input": "slave_timestamp"
+            }
+          ]
+        }
+      }
+    },
+    "common": {
+      "rename": {
+        "module": "models.node.processing",
+        "type": "ChannelRename",
+        "enable_log": false,
+        "dictionary": {
+          "main": "marker"
+        },
+        "buffer_options": {
+          "print_buffer_size":true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs": {
+          "main": [
+            {
+              "node": "merge",
+              "input": "slave_main"
+            }
+          ]
+        }
+      },
+      "merge": {
+        "module": "models.node.processing",
+        "type": "Merge",
+        "enable_log": false,
+        "slave_filling": "sample_and_hold",
+        "buffer_options": {
+          "print_buffer_size":true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs": {
+          "merged_main": [
+            {
+              "node": "out",
+              "input": "main"
+            }
+          ],
+          "merged_timestamp": []
+        }
+      },
+      "out": {
+        "module": "models.node.output.file",
+        "enable_log": false,
+        "type": "CSVFile",
+        "file_path": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\out.csv",
+        "buffer_options": {
+          "print_buffer_size":true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs":{}
+      }
+    }
+  }
+}

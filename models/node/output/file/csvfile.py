@@ -122,7 +122,9 @@ class CSVFile(OutputNode):
         self._write_csv_columns(input_data.channels)
         self._write_data(input_data)
         self._csv_file.flush()
-
+        self._clear_output_buffer()
+        self._clear_input_buffer()
+        
     def dispose(self) -> None:
         """ Node self implementation of disposal of allocated resources.
         """

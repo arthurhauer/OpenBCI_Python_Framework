@@ -85,6 +85,7 @@ class MotorImagery(GeneratorNode):
             self._sequence_runs_counter = 0
         self._stop_execution = False
         self._thread_started = False
+        self._time = None
 
     @classmethod
     def from_config_json(cls, parameters: dict):
@@ -165,6 +166,13 @@ class MotorImagery(GeneratorNode):
             random.shuffle(self.trials)
 
     def _next_trial(self):
+        if self._time is None:
+            self._time = time.time()
+        else:
+            new_time = time.time()
+            period = new_time - self._time
+            print(f'Elapsed time: {period} seconds')
+            self._time = new_time
         self._trial_to_call += 1
         if self._trial_to_call > self._trial_limit:
             self._trial_to_call = 0

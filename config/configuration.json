@@ -1,278 +1,233 @@
 {
   "nodes": {
     "root": {
-      "gal_trial_eeg": {
-        "module": "models.node.generator.file",
-        "type": "CSVFile",
-        "enable_log": true,
-        "buffer_options": {
-          "clear_output_buffer_on_generate": true,
-          "print_buffer_size": false
+      "open_bci": {
+        "module": "models.node.generator",
+        "type": "OpenBCIBoard",
+        "enable_log": false,
+        "log_level": "TRACE",
+        "board": "CYTON_BOARD",
+        "communication": {
+          "serial_port": "COM3"
         },
-        "file_path": "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\train\\subj1_series1_data.csv",
-        "data_type": "float",
-        "sampling_frequency": 500,
-        "channel_column_names": [
-          "Fp1",
-          "Fp2",
-          "F7",
-          "F3",
-          "Fz",
-          "F4",
-          "F8",
-          "FC5",
-          "FC1",
-          "FC2",
-          "FC6",
-          "T7",
-          "C3",
-          "Cz",
-          "C4",
-          "T8",
-          "TP9",
-          "CP5",
-          "CP1",
-          "CP2",
-          "CP6",
-          "TP10",
-          "P7",
-          "P3",
-          "Pz",
-          "P4",
-          "P8",
-          "PO9",
-          "O1",
-          "Oz",
-          "O2",
-          "PO10"
-        ],
+        "buffer_options": {
+          "print_buffer_size":true,
+          "clear_output_buffer_on_generate": true
+        },
         "outputs": {
-          "main": [
+          "eeg": [
             {
-              "node": "bandpass",
+              "node": "merge",
+              "input": "master_main"
+            },
+            {
+              "node": "out_board",
               "input": "main"
             }
           ],
-          "timestamp": []
+          "accelerometer": [],
+          "timestamp": [
+            {
+              "node": "merge",
+              "input": "master_timestamp"
+            }
+          ]
         }
       },
-      "labels": {
-        "module": "models.node.generator.file",
-        "type": "CSVFile",
-        "enable_log": true,
+      "motor_imagery_session": {
+        "module": "models.node.generator",
+        "type": "MotorImagery",
+        "enable_log": false,
         "buffer_options": {
-          "clear_output_buffer_on_generate": true,
-          "print_buffer_size": false
+          "print_buffer_size":false,
+          "clear_output_buffer_on_generate": true
         },
-        "file_path": "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\train\\subj1_series1_events.csv",
-        "data_type": "float",
-        "sampling_frequency": 500,
-        "channel_column_names": [
-          "HandStart",
-          "FirstDigitTouch",
-          "BothStartLoadPhase",
-          "LiftOff",
-          "Replace",
-          "BothReleased"
+        "shuffle_when_sequence_is_finished": false,
+        "trials": [
+          {
+            "name": "Descanso",
+            "code": 1000,
+            "duration": {
+              "mean": 5,
+              "standard_deviation": 0.0001,
+              "maximum": 5.0001,
+              "minimum": 4.9999
+            },
+            "cue": {
+              "file": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\console_print.py",
+              "parameters": {
+                "message": "DESCANSO"
+              }
+            }
+          },
+          {
+            "name": "Mindinho",
+            "code": 2000,
+            "duration": {
+              "mean": 5,
+              "standard_deviation": 0.0001,
+              "maximum": 5.0001,
+              "minimum": 4.9999
+            },
+            "cue": {
+              "file": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\console_print.py",
+              "parameters": {
+                "message": "MINDINHO"
+              }
+            }
+          },
+          {
+            "name": "DESCANSO",
+            "code": 1000,
+            "duration": {
+              "mean": 5,
+              "standard_deviation": 0.0001,
+              "maximum": 5.0001,
+              "minimum": 4.9999
+            },
+            "cue": {
+              "file": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\console_print.py",
+              "parameters": {
+                "message": "DESCANSO"
+              }
+            }
+          },
+          {
+            "name": "INDICADOR",
+            "code": 3000,
+            "duration": {
+              "mean": 5,
+              "standard_deviation": 0.0001,
+              "maximum": 5.0001,
+              "minimum": 4.9999
+            },
+            "cue": {
+              "file": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\console_print.py",
+              "parameters": {
+                "message": "INDICADOR"
+              }
+            }
+          }
         ],
         "outputs": {
-          "main": [
+          "marker": [
             {
-              "node": "label_encoder",
+              "node": "rename",
+              "input": "main"
+            },
+            {
+              "node": "out_motor_imagery",
               "input": "main"
             }
           ],
-          "timestamp": []
+          "timestamp": [
+            {
+              "node": "merge",
+              "input": "slave_timestamp"
+            }
+          ]
         }
       }
     },
     "common": {
-      "label_encoder": {
-        "module": "models.node.processing.encoder",
-        "type": "OneHotToSingle",
-        "enable_log": true,
+      "out_board": {
+        "module": "models.node.output.file",
+        "enable_log": false,
+        "type": "CSVFile",
+        "file_path": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\out_board.csv",
         "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true,
-          "print_buffer_size": false
-        },
-        "outputs": {
-          "main": [
-            {
-              "node": "segmentation_labels",
-              "input": "main"
-            }
-          ]
-        }
-      },
-      "bandpass": {
-        "module": "models.node.processing.filter",
-        "type": "BandPass",
-        "enable_log": true,
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true,
-          "print_buffer_size": false
-        },
-        "low_cut_frequency_hz": 8.0,
-        "high_cut_frequency_hz": 30.0,
-        "order": 6,
-        "outputs": {
-          "main": [
-            {
-              "node": "segmentation",
-              "input": "main"
-            }
-          ]
-        }
-      },
-      "segmentation": {
-        "module": "models.node.processing.segmenter",
-        "type": "FixedWindowSegmenter",
-        "enable_log": true,
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true,
-          "print_buffer_size": false
-        },
-        "window_size": 200,
-        "filling_value": "zero",
-        "outputs": {
-          "main": [
-            {
-              "node": "csp",
-              "input": "data"
-            }
-          ]
-        }
-      },
-      "segmentation_labels": {
-        "module": "models.node.processing.segmenter",
-        "type": "FixedWindowSegmenter",
-        "enable_log": true,
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true,
-          "print_buffer_size": false
-        },
-        "window_size": 200,
-        "filling_value": "zero",
-        "outputs": {
-          "main": [
-            {
-              "node": "csp",
-              "input": "label"
-            },
-            {
-              "node": "lda",
-              "input": "label"
-            }
-          ]
-        }
-      },
-      "csp": {
-        "module": "models.node.processing.trainable.feature_extractor",
-        "type": "CSP",
-        "enable_log": true,
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true,
-          "clear_input_buffer_after_training": false,
-          "process_input_buffer_after_training": true,
-          "print_buffer_size": false
-        },
-        "training_set_size": 25,
-        "number_of_components": 4,
-        "save_after_training": false,
-        "load_trained": false,
-        "outputs": {
-          "main": [
-            {
-              "node": "lda",
-              "input": "data"
-            }
-          ]
-        }
-      },
-      "lda": {
-        "module": "models.node.processing.trainable.classifier",
-        "type": "LDA",
-        "enable_log": true,
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true,
-          "clear_input_buffer_after_training": false,
-          "process_input_buffer_after_training": true,
-          "print_buffer_size": false
-        },
-        "training_set_size": 25,
-        "save_after_training": false,
-        "load_trained": false,
-        "outputs": {
-          "main": [
-            {
-              "node": "label_decoder",
-              "input": "main"
-            }
-          ]
-        }
-      },
-      "test": {
-        "module": "models.node.processing",
-        "type": "SignalCheck",
-        "enable_log": true,
-        "buffer_options": {
-          "clear_output_buffer_on_data_input": false,
-          "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true,
-          "print_buffer_size": false
-        },
-        "outputs": {
-          "main": []
-        }
-      },
-      "label_decoder": {
-        "module": "models.node.processing.encoder",
-        "type": "SingleToOneHot",
-        "enable_log": true,
-        "labels": [
-          "HandStart",
-          "FirstDigitTouch",
-          "BothStartLoadPhase",
-          "LiftOff",
-          "Replace",
-          "BothReleased"
-        ],
-        "buffer_options": {
+          "print_buffer_size":true,
           "clear_output_buffer_on_data_input": true,
           "clear_input_buffer_after_process": true,
-          "clear_output_buffer_after_process": true,
-          "print_buffer_size": false
+          "clear_output_buffer_after_process": true
+        },
+        "outputs":{}
+      },
+      "out_motor_imagery": {
+        "module": "models.node.output.file",
+        "enable_log": false,
+        "type": "CSVFile",
+        "file_path": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\out_motor_imagery.csv",
+        "buffer_options": {
+          "print_buffer_size":true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs":{}
+      },
+      "rename": {
+        "module": "models.node.processing",
+        "type": "ChannelRename",
+        "enable_log": false,
+        "dictionary": {
+          "main": "marker"
+        },
+        "buffer_options": {
+          "print_buffer_size":true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
         },
         "outputs": {
           "main": [
             {
-              "node": "csv_out",
+              "node": "merge",
+              "input": "slave_main"
+            },
+            {
+              "node": "out_rename",
               "input": "main"
             }
           ]
         }
       },
-      "csv_out": {
+      "out_rename": {
         "module": "models.node.output.file",
+        "enable_log": false,
         "type": "CSVFile",
-        "enable_log": true,
-        "file_path": "G:\\Meu Drive\\PDI\\UTFPR\\TCC\\Outputs\\subj1_series1_events_generated.csv",
+        "file_path": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\out_rename.csv",
         "buffer_options": {
-          "print_buffer_size": false
+          "print_buffer_size":true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
         },
-        "outputs": {}
+        "outputs":{}
+      },
+      "merge": {
+        "module": "models.node.processing",
+        "type": "Merge",
+        "enable_log": false,
+        "slave_filling": "sample_and_hold",
+        "buffer_options": {
+          "print_buffer_size":true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs": {
+          "merged_main": [
+            {
+              "node": "out_final",
+              "input": "main"
+            }
+          ],
+          "merged_timestamp": []
+        }
+      },
+      "out_final": {
+        "module": "models.node.output.file",
+        "enable_log": false,
+        "type": "CSVFile",
+        "file_path": "C:\\Users\\italo\\OneDrive\\Documentos\\GitHub\\OpenBCI_Python_Frameworkork\\cues\\out_final.csv",
+        "buffer_options": {
+          "print_buffer_size":true,
+          "clear_output_buffer_on_data_input": true,
+          "clear_input_buffer_after_process": true,
+          "clear_output_buffer_after_process": true
+        },
+        "outputs":{}
       }
     }
   }

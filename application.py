@@ -53,10 +53,9 @@ class Application:
         os.environ["PATH"] += os.pathsep + f'.{os.sep}lib{os.sep}Graphviz'
         src = Source(self.graphviz_representation, format='svg')
         src.render(filename='graph', directory=f'output{os.sep}')
-        src.view()
+        # src.view()
         print('Starting pipeline execution')
         while not self._stop_execution:
-            print('ta aqui')
             self.run()
             time.sleep(1)
 
