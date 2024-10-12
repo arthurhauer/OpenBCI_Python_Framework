@@ -1,5 +1,3 @@
-from abc import ABC
-
 from models.framework_data import FrameworkData
 from models.node.generator.generator_node import GeneratorNode
 
@@ -35,5 +33,3 @@ class SingleRunGeneratorNode(GeneratorNode):
         if self._first_execution:
             super().run()
             self._first_execution = False
-        else:
-            raise Exception("Stop Executing!")

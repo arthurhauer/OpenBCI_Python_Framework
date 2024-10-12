@@ -1,5 +1,6 @@
 from typing import Final, List, Any, Dict
 
+import numpy
 from sklearn.metrics import *
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
@@ -118,8 +119,8 @@ class Metric(ProcessingNode):
         :return: The calculated performance metric.
         :rtype: Dict[str, FrameworkData]
         """
-        predicted_labels = data[self.INPUT_PREDICTED].get_data_single_channel()
-        actual_labels = data[self.INPUT_ACTUAL].get_data_single_channel()[0:data[self.INPUT_PREDICTED].get_data_count()]
+        predicted_labels = numpy.array(data[self.INPUT_PREDICTED].get_data_single_channel()).repeat(150)
+        actual_labels = data[self.INPUT_ACTUAL].get_data_single_channel()[0:len(predicted_labels)]
         unformatted_metric = self._metric_function(actual_labels, predicted_labels)
 
         calculated_metric = FrameworkData()

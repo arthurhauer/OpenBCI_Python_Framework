@@ -1,12 +1,9 @@
-import csv
-import os
 from typing import List, Final, Dict
 
 import sys
 import time
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
-from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 from models.node.output.output_node import OutputNode
 
@@ -14,7 +11,7 @@ from models.node.output.output_node import OutputNode
 class Console(OutputNode):
     """ This node displays it's input in the console.
     {
-         "module": "models.node.output.file",
+         "module": "models.node.output.display",
          "type": "Console",
          "prefix": "Acuracia = ",
          "buffer_options": {

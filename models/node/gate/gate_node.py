@@ -1,5 +1,5 @@
 import abc
-from typing import List, Dict, Final
+from typing import List, Final
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
@@ -56,13 +56,14 @@ class Gate(Node):
     def _run(self, data: FrameworkData, input_name: str) -> None:
         self.print(f'Inserting data in input buffer {input_name}')
         self._insert_new_input_data(data, input_name)
-        # self._clear_output_buffer()
         gate_bypass_condition_met = self._check_gate_condition()
         if not gate_bypass_condition_met:
             if self.clear_input_buffer_if_condition_not_met:
+                self.print('Clearing input buffer because condition was not met')
                 self._clear_input_buffer()
             return
         if self.clear_output_buffer_if_condition_met:
+            self.print('Clearing output buffer because condition was met')
             self._clear_output_buffer()
         self._insert_new_output_data(self._input_buffer[self.INPUT_SIGNAL], self.OUTPUT_MAIN)
 
