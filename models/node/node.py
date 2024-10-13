@@ -13,7 +13,6 @@ from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 
 
-# TODO Isolamento de nodes em threads separadas. Cada nó deve ser executado em uma thread
 class Node:
     _MODULE_NAME: Final[str] = 'models.node'
     """Abstract base class for processing pipeline execution on this framework.
@@ -46,6 +45,7 @@ class Node:
         self.thread = None
         self.new_data_available = False
         self.condition = threading.Condition()
+        self.is_running_main_process = False
 
     def _build_graph_inputs(self):
         return f"""
@@ -255,19 +255,25 @@ class Node:
     def _thread_runner(self):
         while self.running:
             with self.condition:
-                while not self.new_data_available and self.running:
+                while (not self.new_data_available) and self.running:
                     self.condition.wait()
+
                 if not self.running:
                     break
+
                 while not self.local_storage.empty():
                     input_name, data = self.local_storage.get()
                     try:
+                        self.is_running_main_process = True
                         self._run(data, input_name)
                     except Exception as e:
                         self.print(f'Error: {e}', exception=e)
                         raise e
+                    finally:
+                        self.is_running_main_process = False
                     if self._is_next_node_call_enabled():
                         self._call_children()
+
                 self.new_data_available = False
 
     def run(self, data: FrameworkData = None, input_name: str = None) -> None:

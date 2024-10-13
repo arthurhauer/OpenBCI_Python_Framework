@@ -1,4 +1,5 @@
 import abc
+import copy
 from typing import List, Dict, Final
 
 from models.exception.missing_parameter import MissingParameterError
@@ -102,7 +103,7 @@ class ProcessingNode(Node):
         if not self._is_processing_condition_satisfied():
             return
         self.print('Starting processing of input buffer')
-        processed_data = self._process(self._input_buffer)
+        processed_data = self._process(copy.deepcopy(self._input_buffer))
         if self._clear_input_buffer_after_process:
             self._clear_input_buffer()
         if self._clear_output_buffer_after_process:
