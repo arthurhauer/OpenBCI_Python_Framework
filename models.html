@@ -1,0 +1,767 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="models.exception package" href="models.exception.html" /><link rel="prev" title="main module" href="main.html" />
+
+    <!-- Generated with Sphinx 6.1.3 and Furo 2023.03.27 -->
+        <title>models package - Open_BCI_Framework 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Open_BCI_Framework 0.0.1 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">Open_BCI_Framework 0.0.1 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">OpenBCI_Python_Framework</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="application.html">application module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">models package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.exception.html">models.exception package</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="models.node.html">models.node package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="models.node.generator.html">models.node.generator package</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.node.generator.file.html">models.node.generator.file package</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="models.node.output.html">models.node.output package</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.node.output.device.html">models.node.output.device package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.output.display.html">models.node.output.display package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.output.file.html">models.node.output.file package</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="models.node.processing.html">models.node.processing package</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.encoder.html">models.node.processing.encoder package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.feature_extractor.html">models.node.processing.feature_extractor package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.filter.html">models.node.processing.filter package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="models.node.processing.segmenter.html">models.node.processing.segmenter package</a></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="models.node.processing.trainable.html">models.node.processing.trainable package</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l6"><a class="reference internal" href="models.node.processing.trainable.classifier.html">models.node.processing.trainable.classifier package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="models.node.processing.trainable.feature_extractor.html">models.node.processing.trainable.feature_extractor package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="models.utils.html">models.utils package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="models-package">
+<h1>models package<a class="headerlink" href="#models-package" title="Permalink to this heading">#</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="models.exception.html">models.exception package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="models.exception.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.exception.html#module-models.exception.framework_base_exception">framework_base_exception module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.exception.html#models.exception.framework_base_exception.FrameworkBaseException"><code class="docutils literal notranslate"><span class="pre">FrameworkBaseException</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.exception.html#module-models.exception.invalid_parameter_value">invalid_parameter_value module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.exception.html#models.exception.invalid_parameter_value.InvalidParameterValue"><code class="docutils literal notranslate"><span class="pre">InvalidParameterValue</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.exception.html#module-models.exception.missing_parameter">missing_parameter module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.exception.html#models.exception.missing_parameter.MissingParameterError"><code class="docutils literal notranslate"><span class="pre">MissingParameterError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.exception.html#module-models.exception.non_compatible_data">non_compatible_data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.exception.html#models.exception.non_compatible_data.NonCompatibleData"><code class="docutils literal notranslate"><span class="pre">NonCompatibleData</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.exception.html#module-models.exception">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.node.html">models.node package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="models.node.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.node.generator.html">models.node.generator package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="models.node.generator.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.generator.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.generator.html#module-models.node.generator.generator_node">models.node.generator.generator_node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.generator.html#models-node-generator-motorimagery-module">models.node.generator.motorimagery module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.generator.html#models-node-generator-openbciboard-module">models.node.generator.openbciboard module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.generator.html#module-models.node.generator.single_run_generator_node">models.node.generator.single_run_generator_node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.generator.html#module-models.node.generator">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="models.node.output.html">models.node.output package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="models.node.output.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.output.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.output.html#module-models.node.output.output_node">models.node.output.output_node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.output.html#module-models.node.output">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="models.node.processing.html">models.node.processing package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="models.node.processing.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.processing.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.fill">models.node.processing.fill module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.merge">models.node.processing.merge module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.processing_node">models.node.processing.processing_node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.signalcheck">models.node.processing.signalcheck module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.processing.html#module-models.node.processing.synchronize">models.node.processing.synchronize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.processing.html#module-models.node.processing">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.node.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.node.html#module-models.node.node">models.node.node module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.node.html#models.node.node.Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.add_child"><code class="docutils literal notranslate"><span class="pre">Node.add_child()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.build_graphviz_representation"><code class="docutils literal notranslate"><span class="pre">Node.build_graphviz_representation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.check_input"><code class="docutils literal notranslate"><span class="pre">Node.check_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.check_output"><code class="docutils literal notranslate"><span class="pre">Node.check_output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.dispose"><code class="docutils literal notranslate"><span class="pre">Node.dispose()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.dispose_all"><code class="docutils literal notranslate"><span class="pre">Node.dispose_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.from_config_json"><code class="docutils literal notranslate"><span class="pre">Node.from_config_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.module_name"><code class="docutils literal notranslate"><span class="pre">Node.module_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.print"><code class="docutils literal notranslate"><span class="pre">Node.print()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.node.html#models.node.node.Node.run"><code class="docutils literal notranslate"><span class="pre">Node.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.node.html#module-models.node">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="models.utils.html">models.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="models.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.utils.html#module-models.utils.cue">models.utils.cue module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.utils.html#models.utils.cue.Cue"><code class="docutils literal notranslate"><span class="pre">Cue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="models.utils.html#models.utils.cue.Cue.execute"><code class="docutils literal notranslate"><span class="pre">Cue.execute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="models.utils.html#models.utils.cue.Cue.from_config_json"><code class="docutils literal notranslate"><span class="pre">Cue.from_config_json()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.utils.html#models-utils-duration-module">models.utils.duration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.utils.html#module-models.utils.script_execution">models.utils.script_execution module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="models.utils.html#models.utils.script_execution.script_execute"><code class="docutils literal notranslate"><span class="pre">script_execute()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="models.utils.html#models-utils-trial-module">models.utils.trial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.utils.html#module-models.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
+</section>
+<section id="module-models.framework_data">
+<span id="framework-data-module"></span><h2>framework_data module<a class="headerlink" href="#module-models.framework_data" title="Permalink to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">models.framework_data.</span></span><span class="sig-name descname"><span class="pre">FrameworkData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampling_frequency_hz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is used to store data in a format that is compatible with the framework.
+It is used to store data that is used by the framework, such as the data that is
+used to train the model, or the data that is used to test the model. It is also
+used to store the data that is output by the model, such as the predictions that
+the model makes, or the data that is used to evaluate the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sampling_frequency_hz</strong> (<em>float</em><em>, </em><em>optional</em>) – The sampling frequency of the data. Defaults to None.</p></li>
+<li><p><strong>channels</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The names of the channels that the data is stored on. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="models.exception.html#models.exception.non_compatible_data.NonCompatibleData" title="models.exception.non_compatible_data.NonCompatibleData"><strong>NonCompatibleData</strong></a> – Raised when the data that is being input is not compatible with the data that is already stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.extend">
+<span class="sig-name descname"><span class="pre">extend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><span class="pre">FrameworkData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.extend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.extend" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to extend the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object with the data that is input.
+The data that is input is checked to ensure that it is compatible with the data that
+is already stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object. If the data is compatible, then the
+data is extended. If the data is not compatible, then an exception is raised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code>) – The data that is to be extended.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="models.exception.html#models.exception.non_compatible_data.NonCompatibleData" title="models.exception.non_compatible_data.NonCompatibleData"><strong>NonCompatibleData</strong></a> – Raised when the data that is being input is not compatible with the data that is already stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.from_multi_channel">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_multi_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampling_frequency_hz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.from_multi_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.from_multi_channel" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to create a <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object from multiple channels of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sampling_frequency_hz</strong> (<em>float</em>) – The sampling frequency of the data.</p></li>
+<li><p><strong>channels</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – The names of the channels that the data is stored on.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object that contains the data that was input.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData">FrameworkData</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.from_single_channel">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_single_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampling_frequency_hz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.from_single_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.from_single_channel" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to create a <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object from a single channel of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sampling_frequency_hz</strong> (<em>float</em>) – The sampling frequency of the data.</p></li>
+<li><p><strong>data</strong> (<em>list</em>) – The data that is to be stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object that contains the data that was input.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData">FrameworkData</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.get_channels_as_set">
+<span class="sig-name descname"><span class="pre">get_channels_as_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.get_channels_as_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.get_channels_as_set" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to get the channels that the data is stored on as a set. If the
+channels have not been set, then the channels are set to the default channel name,
+and the channels are returned as a set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The channels that the data is stored on as a set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.get_data" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to get the all data that is stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>All the data that is stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.get_data_as_2d_array">
+<span class="sig-name descname"><span class="pre">get_data_as_2d_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.get_data_as_2d_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.get_data_as_2d_array" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to get the data that is stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object as a
+2D array. The data is returned as a list of lists. Each list in the list of lists is a
+channel of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The data that is stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object as a 2D array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[list]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.get_data_at_index">
+<span class="sig-name descname"><span class="pre">get_data_at_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.get_data_at_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.get_data_at_index" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to get the data that is stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object at a
+specific index. It basically returns the data at the specified index for each channel in the
+<code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object. This is used to get the data at a specific time step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – The index that you want the data from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The data that is stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object at the specified index.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, list]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.get_data_count">
+<span class="sig-name descname"><span class="pre">get_data_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.get_data_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.get_data_count" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to get the number of data points that are stored in the
+<code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object. This is normally used to check that the data that is input is
+compatible with the data that is already stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+<p>We only return the first channel length because we have already checked that all 
+channels have the same length. When there is no channels, we return 0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The number of data points that are stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.get_data_on_channel">
+<span class="sig-name descname"><span class="pre">get_data_on_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.get_data_on_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.get_data_on_channel" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to get the data that is stored on a specific channel in the
+<code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>channel</strong> (<em>str</em>) – The channel that the data is to be retrieved from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The data that is stored on the specified channel in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.get_data_single_channel">
+<span class="sig-name descname"><span class="pre">get_data_single_channel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.get_data_single_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.get_data_single_channel" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to get the data that is stored on the first channel in the
+<code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object. Since no channel is specified, the first channel is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="models.exception.html#models.exception.non_compatible_data.NonCompatibleData" title="models.exception.non_compatible_data.NonCompatibleData"><strong>NonCompatibleData</strong></a> – Raised when the data that is being input is not compatible with the data that is already stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The data that is stored on the first channel in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.has_data">
+<span class="sig-name descname"><span class="pre">has_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.has_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.has_data" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to check if the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object has any data stored in it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object has data stored in it, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.input_2d_data">
+<span class="sig-name descname"><span class="pre">input_2d_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.input_2d_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.input_2d_data" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to input 2D data into the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object. A 2D data is a
+list of lists. Each list in the list of lists is a channel of data. The data is
+checked to ensure that it is compatible with the data that is already stored in the
+<code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object. If the data is compatible, then the data is input. If the data
+is not compatible, then an exception is raised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>List</em><em>[</em><em>list</em><em>]</em>) – The data that is to be input.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="models.exception.html#models.exception.non_compatible_data.NonCompatibleData" title="models.exception.non_compatible_data.NonCompatibleData"><strong>NonCompatibleData</strong></a> – Raised when the data that is being input is not compatible with the data that is already stored in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.input_data_on_channel">
+<span class="sig-name descname"><span class="pre">input_data_on_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.input_data_on_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.input_data_on_channel" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to input data onto a specific channel in the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code>
+object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em><em>, </em><em>optional</em>) – The data that is to be input. Defaults to [].</p></li>
+<li><p><strong>channel</strong> (<em>str</em><em>, </em><em>optional</em>) – The channel that the data is to be input on. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.is_1d">
+<span class="sig-name descname"><span class="pre">is_1d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.is_1d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.is_1d" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to check if the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object has data stored in it on only
+one channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> object has data stored in it on only one channel, otherwise <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.rename_channel">
+<span class="sig-name descname"><span class="pre">rename_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.rename_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.rename_channel" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used to rename a given channel stored in <code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_name</strong> – Existing channel key</p></li>
+<li><p><strong>new_name</strong> – Key to replace existing channel key</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="models.framework_data.FrameworkData.splice">
+<span class="sig-name descname"><span class="pre">splice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData"><span class="pre">FrameworkData</span></a></span></span><a class="reference internal" href="_modules/models/framework_data.html#FrameworkData.splice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#models.framework_data.FrameworkData.splice" title="Permalink to this definition">#</a></dt>
+<dd><p>This method is used remove a given number of data points from a starting index and returns the removed items.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_index</strong> – index of removal start</p></li>
+<li><p><strong>count</strong> – number of data points to be removed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code> with all original channels, and removed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#models.framework_data.FrameworkData" title="models.framework_data.FrameworkData">FrameworkData</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-models">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-models" title="Permalink to this heading">#</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="models.exception.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">models.exception package</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="main.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">main module</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Arthur Hauer
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">models package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-models.framework_data">framework_data module</a><ul>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData"><code class="docutils literal notranslate"><span class="pre">FrameworkData</span></code></a><ul>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.extend"><code class="docutils literal notranslate"><span class="pre">FrameworkData.extend()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.from_multi_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.from_multi_channel()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.from_single_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.from_single_channel()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.get_channels_as_set"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_channels_as_set()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.get_data"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.get_data_as_2d_array"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_as_2d_array()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.get_data_at_index"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_at_index()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.get_data_count"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_count()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.get_data_on_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_on_channel()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.get_data_single_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.get_data_single_channel()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.has_data"><code class="docutils literal notranslate"><span class="pre">FrameworkData.has_data()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.input_2d_data"><code class="docutils literal notranslate"><span class="pre">FrameworkData.input_2d_data()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.input_data_on_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.input_data_on_channel()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.is_1d"><code class="docutils literal notranslate"><span class="pre">FrameworkData.is_1d()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.rename_channel"><code class="docutils literal notranslate"><span class="pre">FrameworkData.rename_channel()</span></code></a></li>
+<li><a class="reference internal" href="#models.framework_data.FrameworkData.splice"><code class="docutils literal notranslate"><span class="pre">FrameworkData.splice()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-models">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>
