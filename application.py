@@ -1,6 +1,6 @@
 import os
 from typing import Dict
-from threading import Thread
+from threading import Thread, Event
 import time
 import importlib
 from config.configuration import Configuration
@@ -27,12 +27,12 @@ class Application:
             src.render(filename='graph', directory=f'output{os.sep}')
             src.view()
         print('Starting pipeline execution')
-
+        self._terminate_event = Event()
         self._execution_thread = Thread(target=self._run_loop)
         self._execution_thread.start()
 
     def _run_loop(self):
-        while not self._stop_execution:
+        while not self._terminate_event.is_set():
             self.run()
             time.sleep(1)
 
@@ -126,7 +126,10 @@ class Application:
                 raise e
 
     def dispose(self):
+        print('Disposing application')
+        self._terminate_event.set()
         self._stop_execution = True
         self._execution_thread.join()
         for key in self._root_nodes:
             self._root_nodes[key].dispose_all()
+        print('Application disposed')

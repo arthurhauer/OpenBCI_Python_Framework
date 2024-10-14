@@ -1,15 +1,14 @@
+import abc
+from typing import List, Dict
+
 from models.framework_data import FrameworkData
 from models.node.generator.generator_node import GeneratorNode
 
 
 class SingleRunGeneratorNode(GeneratorNode):
-    """This node generates data for a single run. It is used to get the data from a non real-time source, such as a
-    CSV file, and feed it to the framework. It is not meant to be used in a real-time scenario, as it is not
-    thread-safe. It is meant to be used in a single run scenario, such as a batch processing scenario.
-
-    This node is not meant to be used directly, but to be inherited by other nodes that implement the
+    """This node generates data for a single run. This node is not meant to be used directly, but to be inherited by other nodes that implement the
     ``_generate_data`` method. This method is responsible for generating the data for a single run. The node will
-    generate the data for all the trials in the run, and then stop executing.
+    generate the data, and then stop executing.
 
     :param parameters: The parameters of the node(default: None).
     :type parameters: dict
@@ -33,3 +32,23 @@ class SingleRunGeneratorNode(GeneratorNode):
         if self._first_execution:
             super().run()
             self._first_execution = False
+
+    @abc.abstractmethod
+    def _is_next_node_call_enabled(self) -> bool:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def _is_generate_data_condition_satisfied(self) -> bool:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def _generate_data(self) -> Dict[str, FrameworkData]:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def _get_outputs(self) -> List[str]:
+        raise NotImplementedError()
+
+    @abc.abstractmethod
+    def dispose(self) -> None:
+        raise NotImplementedError()

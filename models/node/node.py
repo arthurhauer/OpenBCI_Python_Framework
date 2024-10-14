@@ -5,7 +5,7 @@ import threading
 import traceback
 import time
 from queue import Queue
-from threading import Thread
+from threading import Thread, Event
 from typing import List, Dict, Final, Any
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
@@ -45,7 +45,10 @@ class Node:
         self.thread = None
         self.new_data_available = False
         self.condition = threading.Condition()
+        self._stop_event = Event()
         self.is_running_main_process = False
+        self.thread = Thread(target=self._thread_runner, name=self.name)
+        self.thread.start()
 
     def _build_graph_inputs(self):
         return f"""
@@ -233,7 +236,7 @@ class Node:
                 'node': node,
                 'run': lambda data: node.run(data, input_name),
                 'run_': lambda data: node.run(),
-                'dispose': lambda x: node.dispose()
+                'dispose': lambda x: node.dispose_all()
             }
         )
 
@@ -253,27 +256,22 @@ class Node:
                 child['run'](output)
 
     def _thread_runner(self):
-        while self.running:
+        while not self._stop_event.is_set():
             with self.condition:
-                while (not self.new_data_available) and self.running:
-                    self.condition.wait()
+                self.condition.wait()
 
-                if not self.running:
-                    break
-
-                while not self.local_storage.empty():
-                    input_name, data = self.local_storage.get()
-                    try:
-                        self.is_running_main_process = True
-                        self._run(data, input_name)
-                    except Exception as e:
-                        self.print(f'Error: {e}', exception=e)
-                        raise e
-                    finally:
-                        self.is_running_main_process = False
-                    if self._is_next_node_call_enabled():
-                        self._call_children()
-
+            while not self.local_storage.empty():
+                input_name, data = self.local_storage.get()
+                try:
+                    self.is_running_main_process = True
+                    self._run(data, input_name)
+                except Exception as e:
+                    self.print(f'Error: {e}', exception=e)
+                    raise e
+                finally:
+                    self.is_running_main_process = False
+                if self._is_next_node_call_enabled():
+                    self._call_children()
                 self.new_data_available = False
 
     def run(self, data: FrameworkData = None, input_name: str = None) -> None:
@@ -281,11 +279,6 @@ class Node:
         with self.condition:
             self.new_data_available = True
             self.condition.notify()
-
-        if not self.running:
-            self.running = True
-            self.thread = Thread(target=self._thread_runner, name=self.name)
-            self.thread.start()
 
     def check_input(self, input_name: str) -> None:
         if input_name not in self._get_inputs():
@@ -355,18 +348,23 @@ class Node:
         """
         self._dispose_all_children()
         self.dispose()
+        self._dispose()
+
+    def _dispose(self) -> None:
+        self.print('Disposing...')
+        self._stop_event.set()
+        with self.condition:
+            self.condition.notify()
+        if self.thread:
+            self.thread.join()
+        self.running = False
+        return
 
     @abc.abstractmethod
     def dispose(self) -> None:
         """Node self implementation of disposal of allocated resources.
         """
-        self.print('Disposing...')
-        self.running = False
-        with self.condition:
-            self.condition.notify()
-        if self.thread:
-            self.thread.join()
-        return
+        raise NotImplementedError()
 
     def print(self, message: str, exception: Exception = None) -> None:
         if self._enable_log or not exception is None:

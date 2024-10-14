@@ -1,4 +1,5 @@
 import os
+from threading import Thread
 from typing import Any, Final
 
 from models.exception.missing_parameter import MissingParameterError
@@ -62,10 +63,17 @@ class Cue:
             parameters=cue_parameters
         )
 
+    def _run_function(self):
+        """Runs the cue function.
+        """
+        self._function(self._function_parameters)
+
     def execute(self):
         """Executes the cue function with the parameters that were passed to it.
         """
-        self._function(self._function_parameters)
+        thread = Thread(target=self._run_function)
+        thread.start()
+        # thread.join()
 
     def __str__(self):
         return '{' + f'"file":{self._filename},"parameters":{self._function_parameters}' + '}'
