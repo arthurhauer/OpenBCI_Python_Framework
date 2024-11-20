@@ -155,8 +155,8 @@ class FrameworkData:
         is already stored in the ``FrameworkData`` object. If the data is compatible, then the
         data is extended. If the data is not compatible, then an exception is raised.
 
-        :param data: The data that is to be extended.
-        :type data: ``FrameworkData``
+        :param input_data: The data that is to be extended.
+        :type input_data: ``FrameworkData``
 
         :raises NonCompatibleData: Raised when the data that is being input is not compatible with the data that is already stored in the ``FrameworkData`` object.
 
@@ -257,7 +257,7 @@ class FrameworkData:
 
         if not self.is_1d():
             raise NonCompatibleData(module=self._MODULE_NAME, name='framework_data',
-                                    cause='operation_allowed_on_single_channel_only')
+                                    cause=f'operation_allowed_on_single_channel_only. data dimension is {len(self._data)} != 1')
         return self.get_data_on_channel(self.channels[0])
 
     def get_data_on_channel(self, channel: str) -> list:

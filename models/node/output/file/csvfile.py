@@ -117,6 +117,7 @@ class CSVFile(OutputNode):
     def _process(self, data: Dict[str, FrameworkData]) -> None:
         """ Runs the node.
         """
+        self.print(f'Writing {data[self.INPUT_MAIN].get_data_count()} samples to file')
         input_data = data[self.INPUT_MAIN]
         self._init_csv_writer(input_data)
         self._write_csv_columns(input_data.channels)
