@@ -247,7 +247,8 @@ class TrainableProcessingNode(ProcessingNode):
         :rtype: bool
         """
         return self._input_buffer[self.INPUT_DATA].get_data_count() >= self.training_set_size \
-               and self._input_buffer[self.INPUT_LABEL].get_data_count() >= self.training_set_size
+               and self._input_buffer[self.INPUT_LABEL].get_data_count() >= self.training_set_size \
+               and self._input_buffer[self.INPUT_DATA].get_data_count() == self._input_buffer[self.INPUT_LABEL].get_data_count()
 
     def _is_processing_condition_satisfied(self) -> bool:
         """ Returns whether the processing condition is satisfied. In this case it returns True if the input buffer
