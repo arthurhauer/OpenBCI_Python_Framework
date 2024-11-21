@@ -232,6 +232,7 @@ class Node:
                                         name=self.name)
         self._children[output_name].append(
             {
+                'input_name': input_name,
                 'node': node,
                 'run': lambda data: node.run(data, input_name),
                 'run_': lambda data: node.run(),
@@ -254,6 +255,7 @@ class Node:
                 continue
             output_children = self._children[output_name]
             for child in output_children:
+                self.print(f'Output {output_name} calling child {child["node"].name} input {child["input_name"]} ({output.get_data_count()} samples)')
                 child['run'](output)
 
     def _thread_runner(self):
@@ -372,7 +374,7 @@ class Node:
 
     def print(self, message: str, exception: Exception = None) -> None:
         if self._enable_log or not exception is None:
-            print(f'{time.time()} - {self._MODULE_NAME}.{self.name} - {message}')
+            print(f'{time.time()} - {self._MODULE_NAME}.{self.name} - {message}\n')
             if exception:
                 print('Stack trace:')
                 traceback.print_exc()
