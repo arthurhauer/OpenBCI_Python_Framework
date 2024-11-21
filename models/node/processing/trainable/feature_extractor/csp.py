@@ -75,7 +75,7 @@ class CSP(SKLearnFeatureExtractor):
         :return: The initialized sklearn CSP processor.
         :rtype: (TransformerMixin, BaseEstimator)
         """
-        return mne.decoding.CSP(n_components=self.number_of_components)
+        return mne.decoding.CSP(n_components=self.number_of_components, reg="ledoit_wolf")
 
     @abc.abstractmethod
     def _should_retrain(self) -> bool:
@@ -94,7 +94,11 @@ class CSP(SKLearnFeatureExtractor):
         :return: Whether the next node call is enabled.
         :rtype: bool
         """
-        return self._is_trained and self._output_buffer[self.OUTPUT_MAIN].has_data()
+        return self._is_trained
+
+    def _inner_process_data(self, data: Any) -> Any:
+        extracted_data = np.dot(self.sklearn_processor.filters_[0:self.number_of_components], np.transpose(data)) ** 2
+        return np.transpose(extracted_data)
 
     def _format_processed_data(self, processed_data: Any, sampling_frequency: float) -> FrameworkData:
         """ Formats the processed data so that it can be passed to the next node. In this case it moves the channels axis

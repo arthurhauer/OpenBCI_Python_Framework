@@ -99,4 +99,3 @@ class Console(OutputNode):
         """
         self._clear_output_buffer()
         self._clear_input_buffer()
-        super().dispose()

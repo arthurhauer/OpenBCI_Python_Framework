@@ -1,11 +1,9 @@
 import abc
-from typing import List, Dict, Final
+from typing import Final
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
-from models.framework_data import FrameworkData
 from models.node.gate.gate_node import Gate
-from models.node.node import Node
 
 
 class DynamicGate(Gate):
@@ -32,8 +30,8 @@ class DynamicGate(Gate):
     @abc.abstractmethod
     def _initialize_parameter_fields(self, parameters: dict):
         super()._initialize_parameter_fields(parameters)
-        self._condition_script = parameters['condition']
-        self._condition = compile(f'condition_result={self._condition_script}', '', 'exec')
+        condition = parameters['condition']
+        self._condition_script = f'condition_result={condition}'
 
     def _initialize_buffer_options(self, buffer_options: dict) -> None:
         super()._initialize_buffer_options(buffer_options)
@@ -41,7 +39,7 @@ class DynamicGate(Gate):
     @abc.abstractmethod
     def _check_gate_condition(self) -> bool:
         local_variables = {"condition_data": self._input_buffer[self.INPUT_CONDITION]}
-        exec(self._condition, globals(), local_variables)
+        exec(self._condition_script, globals(), local_variables)
         condition_result = local_variables['condition_result']
         if type(condition_result) is not bool:
             raise InvalidParameterValue(

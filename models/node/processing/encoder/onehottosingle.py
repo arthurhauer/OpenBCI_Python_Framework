@@ -1,6 +1,8 @@
 import abc
 from typing import Final, Dict
 
+import numpy as np
+
 from models.framework_data import FrameworkData
 from models.node.processing.processing_node import ProcessingNode
 from typing import List
@@ -67,16 +69,8 @@ class OneHotToSingle(ProcessingNode):
         self.print('encoding...')
         raw_data = data[self.INPUT_MAIN]
         encoded_data: FrameworkData = FrameworkData(sampling_frequency_hz=raw_data.sampling_frequency)
-        for data_index in range(0, raw_data.get_data_count()):
-            found_for_index = False
-            for channel_index, channel in enumerate(raw_data.channels):
-                if raw_data.get_data_at_index(data_index)[channel] > 0:
-                    encoded_data.input_data_on_channel([channel_index+1])
-                    found_for_index = True
-                    break
-            if not found_for_index:
-                encoded_data.input_data_on_channel([0])
-
+        encoded = np.argmax(raw_data.get_data_as_2d_array(), axis=0)
+        encoded_data.input_data_on_channel(encoded)
         self.print('encoded!')
         return {
             self.OUTPUT_MAIN: encoded_data

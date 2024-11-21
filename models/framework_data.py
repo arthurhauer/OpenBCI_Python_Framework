@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import copy
 from typing import Final, List, Dict
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.non_compatible_data import NonCompatibleData
@@ -149,20 +148,19 @@ class FrameworkData:
             self._channels_set = set(self.channels)
         return self._channels_set
 
-    def extend(self, input_data: FrameworkData):
+    def extend(self, data: FrameworkData):
         """This method is used to extend the ``FrameworkData`` object with the data that is input.
         The data that is input is checked to ensure that it is compatible with the data that
         is already stored in the ``FrameworkData`` object. If the data is compatible, then the
         data is extended. If the data is not compatible, then an exception is raised.
 
-        :param input_data: The data that is to be extended.
-        :type input_data: ``FrameworkData``
+        :param data: The data that is to be extended.
+        :type data: ``FrameworkData``
 
         :raises NonCompatibleData: Raised when the data that is being input is not compatible with the data that is already stored in the ``FrameworkData`` object.
 
         :return: None
         """
-        data = copy.deepcopy(input_data)
         if len(data.channels) == 0:
             return
         if not data.has_data():

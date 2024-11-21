@@ -1,6 +1,5 @@
 import abc
 from typing import List, Dict, Final, Any
-from statistics import mode
 
 import joblib
 import numpy as np
@@ -145,14 +144,15 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
         :return: The formatted label.
         :rtype: ndarray
         """
-        formatted_label = []
-        for epoch in raw_label.get_data_single_channel():
-            formatted_epoch = epoch
-            if(len(epoch)>1):
-                formatted_epoch = mode(epoch)
-            formatted_label.append(formatted_epoch)
-        formatted_label = np.asarray(formatted_label)
-        return formatted_label
+        # formatted_label = []
+        # for epoch in raw_label.get_data_single_channel():
+        #     formatted_epoch = epoch
+        #     if(len(epoch)>1):
+        #         formatted_epoch = mode(epoch)
+        #     formatted_label.append(formatted_epoch)
+        # formatted_label = np.asarray(formatted_label)
+        # return formatted_label
+        return np.asarray(raw_label.get_data_single_channel())
 
     @abc.abstractmethod
     def _format_processed_data(self, processed_data: Any, sampling_frequency: float) -> FrameworkData:
@@ -201,7 +201,7 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
         """
         formatted_data = self._format_raw_data(data)
         formatted_label = self._format_raw_label(label)
-        self._inner_train_processor(formatted_data[0:self.training_set_size], formatted_label[0:self.training_set_size])
+        self._inner_train_processor(formatted_data, formatted_label)
 
     @abc.abstractmethod
     def _is_next_node_call_enabled(self) -> bool:
@@ -215,6 +215,8 @@ class SKLearnCompatibleTrainableNode(TrainableProcessingNode):
         :return: The outputs of the node.
         :rtype: List[str]
         """
-        return [
+        outputs=  super()._get_outputs()
+        outputs.extend([
             self.OUTPUT_MAIN
-        ]
+        ])
+        return outputs

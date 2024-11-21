@@ -101,11 +101,11 @@ class CSVFile(SingleRunGeneratorNode):
         self.timestamp_column_name = parameters['timestamp_column_name'] \
             if 'timestamp_column_name' in parameters \
             else None
-        self._init_csv_reader()
 
     def _init_csv_reader(self) -> None:
         """This method initializes the CSV reader object. It opens the CSV file and creates a CSV reader object that will be used to read the file.
         """
+        self.print(f'{self.file_path} opened')
         self._csv_file = open(self.file_path)
         self._csv_reader = csv.DictReader(self._csv_file)
 
@@ -116,11 +116,12 @@ class CSVFile(SingleRunGeneratorNode):
         return self._output_buffer[self.OUTPUT_TIMESTAMP].has_data()
 
     def _is_generate_data_condition_satisfied(self) -> bool:
-        return not self._csv_file.closed
+        return True
 
     def _generate_data(self) -> Dict[str, FrameworkData]:
         """This method reads the csv file and store the data in a FrameworkData object.
         """
+        self._init_csv_reader()
         main_data = FrameworkData(self.sampling_frequency, self.channel_column_names)
         timestamp_data = FrameworkData(self.sampling_frequency)
         for row_index, row in enumerate(self._csv_reader):
@@ -132,7 +133,7 @@ class CSVFile(SingleRunGeneratorNode):
             timestamp_data.input_data_on_channel(data=[row_timestamp])
         self._csv_file.close()
 
-        print(f'{self.file_path} closed')
+        self.print(f'{self.file_path} closed')
         return {
             self.OUTPUT_MAIN: main_data,
             self.OUTPUT_TIMESTAMP: timestamp_data

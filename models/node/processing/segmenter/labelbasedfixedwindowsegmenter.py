@@ -57,7 +57,7 @@ class LabelBasedFixedWindowSegmenter(Segmenter):
         "clear_output_buffer_on_data_input": true,
         "clear_input_buffer_after_process": false,
         "clear_output_buffer_after_process": false
-      }
+      },
       "outputs":{
         "data": [],
         "label": []
@@ -99,7 +99,12 @@ class LabelBasedFixedWindowSegmenter(Segmenter):
         :rtype: bool
         """
 
-        return self._input_buffer[self.INPUT_MAIN].get_data_count() >= self._total_window_size
+        return self._input_buffer[self.INPUT_DATA].get_data_count() >= self._total_window_size
+
+    def _is_next_node_call_enabled(self) -> bool:
+        """ Returns whether the next node call is enabled. It's enabled whenever there's data in the main output buffer.
+        """
+        return self._output_buffer[self.OUTPUT_DATA].get_data_count() > 0 and self._output_buffer[self.OUTPUT_LABEL].get_data_count() > 0
 
     def _validate_parameters(self, parameters: dict):
         """
@@ -209,8 +214,9 @@ class LabelBasedFixedWindowSegmenter(Segmenter):
                         window_data = input_data[:, start_index:end_index]
                         window_label = label_data[start_index:end_index]
 
-                    segmented_data[self.OUTPUT_DATA].input_2d_data([window_data])
-                    segmented_data[self.OUTPUT_LABEL].input_data_on_channel([window_label])
+
+                    segmented_data[self.OUTPUT_DATA].input_2d_data(np.expand_dims(window_data, axis=1))
+                    segmented_data[self.OUTPUT_LABEL].input_data_on_channel([np.max(window_label)])
             else:
                 in_label_sequence = False
         return segmented_data

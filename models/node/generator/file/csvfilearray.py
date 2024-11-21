@@ -6,7 +6,6 @@ from typing import List, Dict, Final
 from models.exception.invalid_parameter_value import InvalidParameterValue
 from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
-from models.node.generator.generator_node import GeneratorNode
 from models.node.generator.single_run_generator_node import SingleRunGeneratorNode
 
 
@@ -108,18 +107,25 @@ class CSVFileArray(SingleRunGeneratorNode):
         main_data = FrameworkData(self.sampling_frequency, self.channel_column_names)
         timestamp_data = FrameworkData(self.sampling_frequency)
         for file in self.file_paths:
-            self._csv_file = open(file)
-            self.print(f'{file} opened')
-            csv_reader = csv.DictReader(self._csv_file)
-            for row_index, row in enumerate(csv_reader):
-                if row_index == 0 and self.channel_column_names is None:
-                    self.channel_column_names = row.keys()
+            with open(file) as csv_file:
+                self.print(f'{file} opened')
+                csv_reader = csv.DictReader(csv_file)
+                rows = list(csv_reader)
+
+                if self.channel_column_names is None:
+                    self.channel_column_names = rows[0].keys()
+
                 for channel_name in self.channel_column_names:
-                    main_data.input_data_on_channel([float(row[channel_name])], channel_name)
-                row_timestamp = row_index if self._should_generate_timestamp() else row[self.timestamp_column_name]
-                timestamp_data.input_data_on_channel(data=[row_timestamp])
-            self._csv_file.close()
-            self.print('closed')
+                    channel_data = [float(row[channel_name]) for row in rows]
+                    main_data.input_data_on_channel(channel_data, channel_name)
+
+                if self._should_generate_timestamp():
+                    timestamps = list(range(len(rows)))
+                else:
+                    timestamps = [row[self.timestamp_column_name] for row in rows]
+
+                timestamp_data.input_data_on_channel(timestamps)
+                self.print(f'{file} closed')
 
         return {
             self.OUTPUT_MAIN: main_data,

@@ -110,8 +110,9 @@ class Smoothing(ProcessingNode):
             smoothed_data[key] = FrameworkData(sampling_frequency_hz=data[key].sampling_frequency, channels=data[key].channels)
             for channel in data[key].channels:
                 raw_signal = data[key].get_data_on_channel(channel)
-                smoothed_signal = convolve(raw_signal, self._window, mode=self._convolution_mode)
-                smoothed_data[key].input_data_on_channel(smoothed_signal, channel)
+                smoothed_signal = convolve(raw_signal, self._window, mode=self._convolution_mode)[0:len(raw_signal)]
+                log_smooth = np.log(smoothed_signal)
+                smoothed_data[key].input_data_on_channel(log_smooth, channel)
         return smoothed_data
 
     def _get_inputs(self) -> List[str]:

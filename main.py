@@ -26,7 +26,7 @@ def get_config_path(args: Namespace) -> str:
     return args.config
 
 def get_config_data(config_path:str):
-    configuration_file = open(config_path, 'r')
+    configuration_file = open(config_path, 'r', encoding='utf-8')
     config_data = json.load(configuration_file)
     configuration_file.close()
     return config_data

@@ -1,11 +1,10 @@
 from __future__ import annotations
 import abc
 import copy
-import threading
 import traceback
 import time
 from queue import Queue
-from threading import Thread, Event
+from threading import Thread, Event, Condition
 from typing import List, Dict, Final, Any
 
 from models.exception.invalid_parameter_value import InvalidParameterValue
@@ -38,13 +37,13 @@ class Node:
         self._initialize_children()
 
         self._child_input_relation: Dict[Node, List[str]] = {}
-
+        self._is_disposed = False
         # Threading attributes
         self.local_storage = Queue()
         self.running = False
         self.thread = None
         self.new_data_available = False
-        self.condition = threading.Condition()
+        self.condition = Condition()
         self._stop_event = Event()
         self.is_running_main_process = False
         self.thread = Thread(target=self._thread_runner, name=self.name)
@@ -191,7 +190,7 @@ class Node:
         :param input_name: Node input name.
         :type input_name: str
         """
-        self._input_buffer[input_name].extend(copy.deepcopy(data))
+        self._input_buffer[input_name].extend(data)
         if self._should_print_buffer_size:
             self._print_buffer_size('input', self._input_buffer)
 
@@ -204,7 +203,7 @@ class Node:
         :param output_name: Node output name.
         :type output_name: str
         """
-        self._output_buffer[output_name].extend(copy.deepcopy(data))
+        self._output_buffer[output_name].extend(data)
         if self._should_print_buffer_size:
             self._print_buffer_size('output', self._output_buffer)
 
@@ -251,6 +250,8 @@ class Node:
         """
         for output_name in self._get_outputs():
             output = self._output_buffer[output_name]
+            if output.get_data_count()==0:
+                continue
             output_children = self._children[output_name]
             for child in output_children:
                 child['run'](output)
@@ -346,6 +347,9 @@ class Node:
     def dispose_all(self) -> None:
         """Disposes itself and all its children nodes
         """
+        if self._is_disposed:
+            return
+        self._is_disposed = True
         self._dispose_all_children()
         self.dispose()
         self._dispose()

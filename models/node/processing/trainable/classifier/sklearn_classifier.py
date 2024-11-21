@@ -1,6 +1,7 @@
 import abc
 from typing import Final, Any, List, Dict
 
+import numpy as np
 from sklearn.base import TransformerMixin, BaseEstimator
 
 from models.framework_data import FrameworkData
@@ -55,11 +56,16 @@ class SKLearnClassifier(SKLearnCompatibleTrainableNode):
         """
         raw_data: Any = self._format_raw_data(data[self.INPUT_DATA])
         processed_data: Any = self._inner_process_data(raw_data)
-        class_probabilities: Any = self._get_probability(raw_data)
+        class_probabilities: Any = np.transpose(self._get_probability(raw_data))
         sampling_frequency: float = data[self.INPUT_DATA].sampling_frequency
+
+        formated_prediction = FrameworkData(sampling_frequency_hz=sampling_frequency)
+        formated_prediction.input_data_on_channel(processed_data)
+        formated_probability = FrameworkData(sampling_frequency_hz=sampling_frequency,channels=[f'label_{i}' for i in range(class_probabilities.shape[0])])
+        formated_probability.input_2d_data(class_probabilities)
         return {
-            self.OUTPUT_MAIN: self._format_processed_data(processed_data, sampling_frequency),
-            self.OUTPUT_PROBABILITY: self._format_processed_data(class_probabilities, sampling_frequency)
+            self.OUTPUT_MAIN: formated_prediction,
+            self.OUTPUT_PROBABILITY: formated_probability
         }
 
     def _inner_process_data(self, data: Any) -> Any:
@@ -71,7 +77,8 @@ class SKLearnClassifier(SKLearnCompatibleTrainableNode):
         return self.sklearn_processor.predict_proba(data)
 
     def _get_outputs(self) -> List[str]:
-        return [
-            self.OUTPUT_MAIN,
+        outputs = super()._get_outputs()
+        outputs.extend([
             self.OUTPUT_PROBABILITY
-        ]
+        ])
+        return outputs

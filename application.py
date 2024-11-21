@@ -57,6 +57,7 @@ class Application:
             )
             node_config['name'] = node_name
             node: Node = node_type.from_config_json(node_config)
+            self._nodes[node_name] = node
             self.graphviz_representation += f'\n{node.build_graphviz_representation()}'
             for output_name in node_config['outputs']:
                 if type(node_config['outputs'][output_name]) is not list:

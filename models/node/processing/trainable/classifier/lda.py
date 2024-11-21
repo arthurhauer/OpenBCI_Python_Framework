@@ -4,8 +4,6 @@ from typing import Final, Any
 from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
-from models.exception.invalid_parameter_value import InvalidParameterValue
-from models.exception.missing_parameter import MissingParameterError
 from models.framework_data import FrameworkData
 from models.node.processing.trainable.classifier.sklearn_classifier import SKLearnClassifier
 
@@ -90,5 +88,5 @@ class LDA(SKLearnClassifier):
         :rtype: FrameworkData
         """
         formatted_data = FrameworkData(sampling_frequency_hz=sampling_frequency)
-        formatted_data.input_data_on_channel(processed_data)
+        formatted_data.input_2d_data(processed_data)
         return formatted_data
