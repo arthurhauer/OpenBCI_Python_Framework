@@ -59,7 +59,7 @@ class LDA(SKLearnClassifier):
         :return: The initialized ``LinearDiscriminantAnalysis`` classifier.
         :rtype: (TransformerMixin, BaseEstimator)
         """
-        return LinearDiscriminantAnalysis()
+        return LinearDiscriminantAnalysis(solver='lsqr', shrinkage=0.1)
 
     @abc.abstractmethod
     def _should_retrain(self) -> bool:
@@ -73,7 +73,7 @@ class LDA(SKLearnClassifier):
         """ Checks if the next node call is enabled. In this case it checks if the processor is trained and if the
         output buffer has data.
         """
-        return self._is_trained and self._output_buffer[self.OUTPUT_MAIN].has_data()
+        return self._is_trained
 
     def _format_processed_data(self, processed_data: Any, sampling_frequency: float) -> FrameworkData:
         """ Formats the processed data. In this case it creates a ``FrameworkData`` object and adds the processed data
